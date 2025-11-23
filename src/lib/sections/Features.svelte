@@ -4,7 +4,7 @@
 	import image from '../assets/ivrea.png';
 	import image2 from '../assets/consulenze.png';
 	import image3 from '../assets/people.png';
-	import image4 from '../assets/sold.png'
+	import image4 from '../assets/sold.png';
 
 	interface FeatureProps {
 		title: string;
@@ -35,33 +35,38 @@
 
 	const buyerFeatures: FeatureProps[] = [
 		{
-            title: 'Percorso dedicato agli acquirenti',
-            description:
-                'Ti accompagniamo dalla prima visita al rogito, analizzando documenti, verifiche urbanistiche e sostenibilità del mutuo per farti scegliere in sicurezza la casa giusta per te.',
-            image: image4
-        },
+			title: 'Percorso dedicato agli acquirenti',
+			description:
+				'Ti accompagniamo dalla prima visita al rogito, analizzando documenti, verifiche urbanistiche e sostenibilità del mutuo per farti scegliere in sicurezza la casa giusta per te.',
+			image: image4
+		},
 		{
-            title: 'Soluzioni per chi non accede al mutuo',
-            description:
-                'Se oggi non puoi ottenere un mutuo tradizionale, ti aiutiamo a costruire un percorso alternativo: vendite a riscatto e formule personalizzate per permetterti di entrare subito in casa, pianificando l’acquisto nel tempo in modo sostenibile.',
-            image: image4
-        },
+			title: 'Soluzioni per chi non accede al mutuo',
+			description:
+				'Se oggi non puoi ottenere un mutuo tradizionale, ti aiutiamo a costruire un percorso alternativo: vendite a riscatto e formule personalizzate per permetterti di entrare subito in casa, pianificando l’acquisto nel tempo in modo sostenibile.',
+			image: image4
+		},
 		{
-            title: 'Ricerca casa in affitto',
-            description:
-                'Seguiamo chi cerca una casa in affitto selezionando immobili realistici per budget ed esigenze, spiegando in modo chiaro condizioni, tempi e oneri, così da scegliere con lucidità dove andare a vivere.',
-            image: image3
-        }
+			title: 'Ricerca casa in affitto',
+			description:
+				'Seguiamo chi cerca una casa in affitto selezionando immobili realistici per budget ed esigenze, spiegando in modo chiaro condizioni, tempi e oneri, così da scegliere con lucidità dove andare a vivere.',
+			image: image3
+		}
 	];
 </script>
 
 <section id="features" class="container space-y-8 py-10 sm:py-20">
-	<h2 class="text-3xl font-bold md:text-center lg:text-4xl">
-		Per chi
-		<span class="bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent">
-			possiede un immobile
-		</span>
+	<h2 class="pt-10 text-3xl font-bold md:text-center lg:text-4xl">
+		Il tuo partner immobiliare a
+		<span class="inline bg-gradient-to-r from-[#F596D3] to-[#D247BF] bg-clip-text text-transparent">
+			Ivrea
+		</span>, nel Canavese e oltre
 	</h2>
+	<h3 class="text-xl md:text-center">
+		Conosciamo ogni angolo del territorio. Che tu abbia una proprietà nel centro storico di Ivrea,
+		una villa in provincia di Torino o una casa vacanze in Valle d'Aosta, abbiamo il polso della
+		situazione locale.
+	</h3>
 
 	<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 		{#each sellerFeatures as { title, description, image }}
@@ -76,12 +81,17 @@
 			</Card>
 		{/each}
 	</div>
-	<h2 class="text-3xl font-bold md:text-center lg:text-4xl">
-		Per chi
-		<span class="bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent">
-			cerca un immobile
+	<h2 class="pt-10 text-3xl font-bold md:text-center lg:text-4xl">
+		Cerchi casa? Compra o affitta al
+		<span class="inline bg-gradient-to-r from-[#F596D3] to-[#D247BF] bg-clip-text text-transparent">
+			prezzo giusto
 		</span>
 	</h2>
+	<h3 class="text-xl md:text-center">
+		Se stai cercando la casa per la tua famiglia, affidati a chi conosce il valore reale del
+		mattone. Niente visite a immobili fuori prezzo o con problemi nascosti. Ti guidiamo verso
+		l'acquisto perfetto o la locazione ideale, con trasparenza totale.
+	</h3>
 	<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 		{#each buyerFeatures as { title, description, image }}
 			<Card>
