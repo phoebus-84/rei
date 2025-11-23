@@ -1,0 +1,107 @@
+<script lang="ts">
+  import { Button } from "$lib/components/ui/button";
+
+  const services = [
+    {
+      title: "Vendita a riscatto",
+      description: "La soluzione ideale per acquistare casa in modo graduale.",
+      icon: "🏠",
+    },
+    {
+      title: "Gestione finanziaria delle locazioni",
+      description: "Massimizza i tuoi guadagni con la nostra consulenza.",
+      icon: "💰",
+    },
+    {
+      title: "Compravendita",
+      description: "Assistenza completa per acquistare o vendere il tuo immobile.",
+      icon: "🔑",
+    },
+    {
+      title: "Assistenza fiscale",
+      description: "Risparmia tempo e denaro con i nostri esperti.",
+      icon: "📑",
+    },
+    {
+      title: "Certificazione energetica",
+      description: "Valorizza il tuo immobile con le giuste certificazioni.",
+      icon: "⚡",
+    },
+    {
+      title: "Assistenza legale",
+      description: "Tutela i tuoi diritti con i nostri avvocati specializzati.",
+      icon: "⚖️",
+    },
+  ];
+</script>
+
+<div class="bg-gray-100 text-gray-800">
+  <!-- Hero Section -->
+  <header class="bg-white shadow sticky top-0 z-10">
+    <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-indigo-600">Real Estate Invest</h1>
+      <ul class="flex space-x-6">
+        <li><a href="#services" class="hover:text-indigo-600">Servizi</a></li>
+        <li><a href="#about" class="hover:text-indigo-600">Chi Siamo</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero bg-indigo-600 text-white py-16 text-center">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold mb-4">La tua casa, il tuo investimento</h2>
+      <p class="text-lg mb-6">Affidati ai nostri esperti per compravendite, gestione locazioni, e molto altro ad Ivrea e dintorni.</p>
+      <div class="flex justify-center space-x-4">
+        <a href="#services" class="bg-white text-indigo-600 px-6 py-3 rounded font-bold hover:bg-indigo-100">Scopri i nostri servizi</a>
+        <a href="#contact" class="bg-gray-800 text-white px-6 py-3 rounded font-bold hover:bg-gray-700">Richiedi una consulenza</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="py-16">
+    <div class="container mx-auto px-4 text-center">
+      <h3 class="text-3xl font-bold mb-6">Un'agenzia con radici locali e competenze a 360°</h3>
+      <p class="text-lg">Esperienza nel settore immobiliare locale, trasparenza e soluzioni innovative.</p>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="bg-gray-200 py-16">
+    <div class="container mx-auto px-4">
+      <h3 class="text-3xl font-bold text-center mb-10">Servizi su misura per ogni esigenza immobiliare</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {#each services as service}
+          <div class="bg-white p-6 rounded shadow hover:shadow-lg transition">
+            <div class="text-4xl mb-4">{service.icon}</div>
+            <h4 class="text-xl font-bold mb-2">{service.title}</h4>
+            <p class="text-gray-600">{service.description}</p>
+          </div>
+        {/each}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-16">
+    <div class="container mx-auto px-4 text-center">
+      <h3 class="text-3xl font-bold mb-6">Siamo qui per te</h3>
+      <p class="text-lg mb-6">Contattaci oggi per una consulenza gratuita o visita i nostri uffici a Ivrea.</p>
+      <form class="max-w-lg mx-auto space-y-4">
+        <input type="text" placeholder="Nome" class="w-full px-4 py-2 border rounded" />
+        <input type="email" placeholder="Email" class="w-full px-4 py-2 border rounded" />
+        <textarea placeholder="Messaggio" class="w-full px-4 py-2 border rounded"></textarea>
+        <button type="submit" class="w-full bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Invia</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2025 Real Estate Invest. Tutti i diritti riservati.</p>
+    </div>
+  </footer>
+</div>
+
+
