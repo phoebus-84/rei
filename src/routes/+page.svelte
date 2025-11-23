@@ -23,7 +23,7 @@
 <About />
 <Features />
 <Testimonials />
-<Team />
+<!-- <Team /> -->
 <FAQ />
 <!-- <HowItWorks />
 <Services />

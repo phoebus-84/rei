@@ -9,17 +9,15 @@
 			<img src={pilot} alt="" class="w-[300px] rounded-lg object-contain" />
 			<div class="bg-green-0 flex flex-col justify-between">
 				<div class="pb-6">
-					<h2 class="text-3xl font-bold md:text-4xl">
-						<span class="bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent">
-							About
-						</span>
-						Company
-					</h2>
+					<h2 class="text-3xl font-bold md:text-4xl">Chi siamo</h2>
 					<p class="mt-4 text-xl text-muted-foreground">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-						incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-						exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor
-						sit amet, consectetur adipiscing elit.
+						REI è un'agenzia giovane che parla chiaro e lavora sui numeri. Un approccio diretto,
+						strumenti legali avanzati e una gestione concreta degli asset immobiliari per chi vuole
+						valorizzare, non svendere.
+					</p>
+					<p class="mt-4 text-lg text-muted-foreground">
+						Lavoriamo a Ivrea e nel Canavese concentrandoci su tre pilastri: analisi reale del
+						valore, strategie di vendita su misura e gestione patrimoniale efficace.
 					</p>
 				</div>
 

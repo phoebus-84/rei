@@ -6,20 +6,20 @@
 
 	const stats: StatsProps[] = [
 		{
-			quantity: '2.7K+',
-			description: 'Users'
+			quantity: '150+',
+			description: 'Immobili gestiti'
 		},
 		{
-			quantity: '1.8K+',
-			description: 'Subscribers'
+			quantity: '40gg',
+			description: 'Tempo medio vendita'
 		},
 		{
-			quantity: '112',
-			description: 'Downloads'
+			quantity: '100%',
+			description: 'Valutazioni reali'
 		},
 		{
-			quantity: '4',
-			description: 'Products'
+			quantity: '2023',
+			description: 'Anno fondazione'
 		}
 	];
 </script>

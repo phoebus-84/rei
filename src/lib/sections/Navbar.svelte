@@ -1,5 +1,4 @@
 <script lang="ts">
-	// Import components - paths may need adjustment based on project structure
 	import {
 		Sheet,
 		SheetContent,
@@ -7,105 +6,107 @@
 		SheetTitle,
 		SheetTrigger
 	} from '$lib/components/ui/sheet';
-	import { buttonVariants } from '$lib/components/ui/button';
-	import { Menu } from 'lucide-svelte';
-	// import ModeToggle from "$lib/components/mode-toggle.svelte";
-	// import { GitHubLogoIcon, LogoIcon } from "$lib/components/Icons";
+	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Menu, Phone, Mail } from 'lucide-svelte';
+	import logo from '../assets/logo.png';
 
-	// Define route interface and list
 	interface RouteProps {
 		href: string;
 		label: string;
 	}
 
 	const routeList: RouteProps[] = [
-		{ href: '#features', label: 'Features' },
-		{ href: '#testimonials', label: 'Testimonials' },
-		{ href: '#pricing', label: 'Pricing' },
+		{ href: '#about', label: 'Chi Siamo' },
+		{ href: '#features', label: 'Servizi' },
+		{ href: '#testimonials', label: 'Testimonianze' },
 		{ href: '#faq', label: 'FAQ' }
 	];
 
-	// State for mobile menu
 	let isOpen = false;
 </script>
 
 <header
-	class="sticky top-0 z-40 w-full border-b-[1px] bg-white dark:border-b-slate-700 dark:bg-background"
+	class="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-b-slate-700 dark:bg-background/95"
 >
 	<nav class="mx-auto">
-		<div class="container flex h-14 w-screen justify-between px-4">
-			<div class="flex font-bold">
-				<a rel="noreferrer noopener" href="/" class="ml-2 flex text-xl font-bold">
-					<!-- <LogoIcon /> -->
-					ShadcnUI/Svelte
+		<div class="container flex h-16 items-center justify-between px-4">
+			<!-- Logo -->
+			<div class="flex items-center">
+				<a rel="noreferrer noopener" href="/" class="flex items-center space-x-2">
+					<img src={logo} alt="REI Logo" class="h-10 w-auto" />
 				</a>
 			</div>
 
-			<!-- mobile -->
-			<span class="flex md:hidden">
-				<!-- <ModeToggle /> -->
-
-				<Sheet bind:open={isOpen}>
-					<SheetTrigger class="px-2">
-						<Menu class="flex h-5 w-5 md:hidden" on:click={() => (isOpen = true)}>
-							<span class="sr-only">Menu Icon</span>
-						</Menu>
-					</SheetTrigger>
-
-					<SheetContent side="left">
-						<SheetHeader>
-							<SheetTitle class="text-xl font-bold">Shadcn/Svelte</SheetTitle>
-						</SheetHeader>
-						<nav class="mt-4 flex flex-col items-center justify-center gap-2">
-							{#each routeList as { href, label }}
-								<a
-									rel="noreferrer noopener"
-									{href}
-									on:click={() => (isOpen = false)}
-									class={buttonVariants({ variant: 'ghost' })}
-								>
-									{label}
-								</a>
-							{/each}
-							<a
-								rel="noreferrer noopener"
-								href="https://github.com/leoMirandaa/shadcn-landing-page.git"
-								target="_blank"
-								class="w-[110px] border {buttonVariants({ variant: 'secondary' })}"
-							>
-								<!-- <GitHubLogoIcon class="mr-2 w-5 h-5" /> -->
-								Github
-							</a>
-						</nav>
-					</SheetContent>
-				</Sheet>
-			</span>
-
-			<!-- desktop -->
-			<nav class="hidden gap-2 md:flex">
+			<!-- Desktop Navigation -->
+			<nav class="hidden items-center gap-1 md:flex">
 				{#each routeList as { href, label }}
 					<a
 						rel="noreferrer noopener"
 						{href}
-						class="text-[17px] {buttonVariants({ variant: 'ghost' })}"
+						class="text-sm font-medium transition-colors hover:text-primary {buttonVariants({
+							variant: 'ghost'
+						})}"
 					>
 						{label}
 					</a>
 				{/each}
 			</nav>
 
-			<div class="hidden gap-2 md:flex">
-				<a
-					rel="noreferrer noopener"
-					href="https://github.com/leoMirandaa/shadcn-landing-page.git"
-					target="_blank"
-					class="border {buttonVariants({ variant: 'secondary' })}"
-				>
-					<!-- <GitHubLogoIcon class="mr-2 w-5 h-5" /> -->
-					Github
-				</a>
+			<!-- CTA Button (Desktop) -->
+			<div class="hidden items-center gap-2 md:flex">
+				<Button class="bg-gradient-to-r from-[#F596D3] to-[#D247BF] hover:opacity-90">
+					<Phone class="mr-2 h-4 w-4" />
+					Contattaci
+				</Button>
+			</div>
 
-				<!-- <ModeToggle /> -->
+			<!-- Mobile Menu -->
+			<div class="flex md:hidden">
+				<Sheet bind:open={isOpen}>
+					<SheetTrigger class={buttonVariants({ variant: 'ghost', size: 'icon' })}>
+						<Menu class="h-5 w-5">
+							<span class="sr-only">Menu</span>
+						</Menu>
+					</SheetTrigger>
+
+					<SheetContent side="right" class="w-[300px] sm:w-[400px]">
+						<SheetHeader>
+							<SheetTitle class="flex items-center gap-2 text-left">
+								<img src={logo} alt="REI Logo" class="h-8 w-auto" />
+								<span class="text-xl font-bold">
+									<span
+										class="bg-gradient-to-r from-[#F596D3] to-[#D247BF] bg-clip-text text-transparent"
+										>REI</span
+									>
+								</span>
+							</SheetTitle>
+						</SheetHeader>
+						<nav class="mt-8 flex flex-col gap-4">
+							{#each routeList as { href, label }}
+								<a
+									rel="noreferrer noopener"
+									{href}
+									on:click={() => (isOpen = false)}
+									class="text-lg font-medium transition-colors hover:text-primary"
+								>
+									{label}
+								</a>
+							{/each}
+							<div class="mt-4 space-y-3 border-t pt-4">
+								<Button
+									class="w-full bg-gradient-to-r from-[#F596D3] to-[#D247BF] hover:opacity-90"
+								>
+									<Phone class="mr-2 h-4 w-4" />
+									Contattaci
+								</Button>
+								<Button variant="outline" class="w-full">
+									<Mail class="mr-2 h-4 w-4" />
+									Richiedi Valutazione
+								</Button>
+							</div>
+						</nav>
+					</SheetContent>
+				</Sheet>
 			</div>
 		</div>
 	</nav>

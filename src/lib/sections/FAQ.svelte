@@ -14,41 +14,37 @@
 
 	const FAQList: FAQProps[] = [
 		{
-			question: 'Is this template free?',
-			answer: 'Yes. It is a free ChadcnUI template.',
+			question: "Cos'è la vendita con condizione risolutiva?",
+			answer:
+				'È una modalità di vendita in cui il trasferimento della proprietà è legato al verificarsi di determinate condizioni. Se non si verificano, il contratto si scioglie: è uno strumento potente per tutelare venditore e acquirente.',
 			value: 'item-1'
 		},
 		{
-			question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit?',
+			question: 'Operate solo a Ivrea?',
 			answer:
-				'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.',
+				'Lavoriamo principalmente a Ivrea e nel Canavese. Per operazioni fuori zona valutiamo caso per caso, in base alla complessità dell’immobile e alla reale possibilità di portare valore.',
 			value: 'item-2'
 		},
 		{
-			question: 'Lorem ipsum dolor sit amet  Consectetur natus dolores minus quibusdam?',
+			question: 'Perché collaborate con altre agenzie?',
 			answer:
-				'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore qui nostrum reiciendis veritatis necessitatibus maxime quis ipsa vitae cumque quo?',
+				'Perché l’obiettivo è vendere al meglio, non difendere un logo. Condividere gli immobili con agenzie selezionate aumenta la visibilità e accelera i tempi di vendita.',
 			value: 'item-3'
 		},
 		{
-			question: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit?',
-			answer: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit.',
-			value: 'item-4'
-		},
-		{
-			question: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur natus?',
+			question: 'Quanto costa una valutazione?',
 			answer:
-				'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.',
-			value: 'item-5'
+				'La prima valutazione orientativa è gratuita. Per perizie approfondite o analisi complesse definiamo insieme un compenso chiaro prima di iniziare.',
+			value: 'item-4'
 		}
 	];
 </script>
 
 <section id="faq" class="container py-24 sm:py-32">
 	<h2 class="mb-4 text-3xl font-bold md:text-4xl">
-		Frequently Asked
+		Domande
 		<span class="bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent">
-			Questions
+			frequenti
 		</span>
 	</h2>
 
@@ -66,11 +62,11 @@
 	</Accordion>
 
 	<h3 class="mt-4 font-medium">
-		Still have questions?
+		Hai ancora dubbi?
 		<a
 			rel="noreferrer noopener"
-			href="#"
-			class="border-primary text-primary transition-all hover:border-b-2">Contact us</a
+			href="#contatti"
+			class="border-primary text-primary transition-all hover:border-b-2">Scrivici</a
 		>
 	</h3>
 </section>

@@ -7,83 +7,57 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
-	export let testimonials = [
+
+	const reasons = [
 		{
-			image: 'https://github.com/shadcn.png',
-			name: 'John Doe React',
-			userName: '@john_Doe',
-			comment: 'This landing page is awesome!'
+			title: 'Stop alla svalutazione',
+			description:
+				'Analizziamo il reale valore di mercato e costruiamo strategie di vendita che evitano ribassi inutili e offerte al ribasso.',
+			initials: 'SV'
 		},
 		{
-			image: 'https://github.com/shadcn.png',
-			name: 'John Doe React',
-			userName: '@john_Doe1',
-			comment:
-				'Lorem ipsum dolor sit amet,empor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.'
+			title: 'Burocrazia zero',
+			description:
+				'Contratti, documenti e adempimenti gestiti da noi, con un linguaggio comprensibile e un percorso guidato dalla proposta al rogito.',
+			initials: 'BZ'
 		},
 		{
-			image: 'https://github.com/shadcn.png',
-			name: 'John Doe React',
-			userName: '@john_Doe2',
-			comment:
-				'Lorem ipsum dolor sit amet,exercitation. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.'
-		},
-		{
-			image: 'https://github.com/shadcn.png',
-			name: 'John Doe React',
-			userName: '@john_Doe3',
-			comment:
-				'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.'
-		},
-		{
-			image: 'https://github.com/shadcn.png',
-			name: 'John Doe React',
-			userName: '@john_Doe4',
-			comment:
-				'Lorem ipsum dolor sit amet, tempor incididunt  aliqua. Ut enim ad minim veniam, quis nostrud.'
-		},
-		{
-			image: 'https://github.com/shadcn.png',
-			name: 'John Doe React',
-			userName: '@john_Doe5',
-			comment:
-				'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+			title: 'Nessun vincolo tossico',
+			description:
+				'Mandati chiari, durate definite e totale trasparenza sulle collaborazioni: resti con noi perché portiamo risultati, non perché sei bloccato da un contratto.',
+			initials: 'NV'
 		}
 	];
 </script>
 
 <section id="testimonials" class="container py-24 sm:py-32">
 	<h2 class="text-3xl font-bold md:text-4xl">
-		Discover Why
+		Perché scegliere
 		<span class="bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent">
-			People Love
+			REI
 		</span>
-		This Landing Page
 	</h2>
 
 	<p class="pb-8 pt-4 text-xl text-muted-foreground">
-		Lorem ipsum dolor sit amet, consectetur adipisicing elit. Non unde error facere hic reiciendis
-		illo
+		Non abbiamo decenni di storia, ma abbiamo idee chiare: restituire controllo ai proprietari e
+		rendere ogni trattativa più trasparente e protetta.
 	</p>
 
-	<div
-		class="mx-auto grid columns-2 space-y-4 sm:block md:grid-cols-2 lg:columns-3 lg:grid-cols-4 lg:gap-6 lg:space-y-6"
-	>
-		{#each testimonials as { image, name, userName, comment } (userName)}
-			<Card class="max-w-md overflow-hidden md:break-inside-avoid">
+	<div class="mx-auto grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+		{#each reasons as { title, description, initials } (title)}
+			<Card class="max-w-md overflow-hidden">
 				<CardHeader class="flex flex-row items-center gap-4 pb-2">
-					<Avatar>
-						<AvatarImage alt="" src={image} />
-						<AvatarFallback>OM</AvatarFallback>
+					<Avatar class="border border-foreground/10 bg-muted">
+						<AvatarFallback>{initials}</AvatarFallback>
 					</Avatar>
 
 					<div class="flex flex-col">
-						<CardTitle class="text-lg">{name}</CardTitle>
-						<CardDescription>{userName}</CardDescription>
+						<CardTitle class="text-lg">{title}</CardTitle>
+						<CardDescription>Vantaggio per chi vende con REI</CardDescription>
 					</div>
 				</CardHeader>
 
-				<CardContent>{comment}</CardContent>
+				<CardContent>{description}</CardContent>
 			</Card>
 		{/each}
 	</div>
