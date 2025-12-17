@@ -56,49 +56,58 @@
 </script>
 
 <section id="features" class="container space-y-8 py-10 sm:py-20">
-	<h2 class="pt-10 text-3xl font-bold md:text-center lg:text-4xl">
-		Il tuo partner immobiliare a
-		<span class="inline bg-gradient-to-r from-[#F596D3] to-[#D247BF] bg-clip-text text-transparent">
-			Ivrea
-		</span>, nel Canavese e oltre
-	</h2>
-	<h3 class="text-xl md:text-center">
-		Conosciamo ogni angolo del territorio. Che tu abbia una proprietà nel centro storico di Ivrea,
-		una villa in provincia di Torino o una casa vacanze in Valle d'Aosta, abbiamo il polso della
-		situazione locale.
-	</h3>
+	<div class="mx-auto flex w-full flex-col justify-center gap-8 lg:w-3/5">
+		<h2 class="pt-10 text-5xl font-bold md:text-center lg:text-6xl">
+			Il tuo partner immobiliare a
+			<span
+				class="inline bg-gradient-to-r from-[#F596D3] to-[#D247BF] bg-clip-text text-transparent"
+			>
+				Ivrea
+			</span>, nel Canavese e oltre
+		</h2>
+		<h3 class="text-xl text-muted-foreground md:text-center">
+			Conosciamo ogni angolo del territorio. Che tu abbia una proprietà nel centro storico di Ivrea,
+			una villa in provincia di Torino o una casa vacanze in Valle d'Aosta, abbiamo il polso della
+			situazione locale.
+		</h3>
+	</div>
 
 	<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 		{#each sellerFeatures as { title, description, image }}
 			<Card>
 				<CardHeader>
-					<CardTitle>{title}</CardTitle>
+					<CardTitle class="text-2xl text-foreground">{title}</CardTitle>
 				</CardHeader>
-				<CardContent>{description}</CardContent>
+				<CardContent class="text-muted-foreground">{description}</CardContent>
 				<CardFooter>
 					<img src={image} alt="About feature" class="mx-auto w-[200px] lg:w-[300px]" />
 				</CardFooter>
 			</Card>
 		{/each}
 	</div>
-	<h2 class="pt-10 text-3xl font-bold md:text-center lg:text-4xl">
-		Cerchi casa? Compra o affitta al
-		<span class="inline bg-gradient-to-r from-[#F596D3] to-[#D247BF] bg-clip-text text-transparent">
-			prezzo giusto
-		</span>
-	</h2>
-	<h3 class="text-xl md:text-center">
-		Se stai cercando la casa per la tua famiglia, affidati a chi conosce il valore reale del
-		mattone. Niente visite a immobili fuori prezzo o con problemi nascosti. Ti guidiamo verso
-		l'acquisto perfetto o la locazione ideale, con trasparenza totale.
-	</h3>
+	<div class="mx-auto flex w-full flex-col justify-center gap-8 lg:w-3/5">
+		<h2 class="pt-10 text-3xl font-bold md:text-center lg:text-6xl">
+			Cerchi casa? Compra o affitta al
+			<span
+				class="inline bg-gradient-to-r from-[#F596D3] to-[#D247BF] bg-clip-text text-transparent"
+			>
+				prezzo giusto
+			</span>
+		</h2>
+		<h3 class="text-xl text-muted-foreground md:text-center">
+			Se stai cercando la casa per la tua famiglia, affidati a chi conosce il valore reale del
+			mattone. Niente visite a immobili fuori prezzo o con problemi nascosti. Ti guidiamo verso
+			l'acquisto perfetto o la locazione ideale, con trasparenza totale.
+		</h3>
+	</div>
+
 	<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 		{#each buyerFeatures as { title, description, image }}
 			<Card>
 				<CardHeader>
-					<CardTitle>{title}</CardTitle>
+					<CardTitle class="text-2xl text-foreground">{title}</CardTitle>
 				</CardHeader>
-				<CardContent>{description}</CardContent>
+				<CardContent class="text-muted-foreground">{description}</CardContent>
 				<CardFooter>
 					<img src={image} alt="About feature" class="mx-auto w-[200px] lg:w-[300px]" />
 				</CardFooter>
