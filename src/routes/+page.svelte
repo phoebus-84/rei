@@ -3,6 +3,7 @@
 	// import Cta from '$lib/sections/Cta.svelte';
 	import FAQ from '$lib/sections/FAQ.svelte';
 	import Features from '$lib/sections/Features.svelte';
+	import FeaturedProperties from '$lib/sections/FeaturedProperties.svelte';
 	import Hero from '$lib/sections/Hero.svelte';
 	// import HowItWorks from '$lib/sections/HowItWorks.svelte';
 	import Navbar from '$lib/sections/Navbar.svelte';
@@ -20,6 +21,7 @@
 <Navbar />
 <Hero />
 <!-- <Sponsors /> -->
+<FeaturedProperties />
 <About />
 <Features />
 <Testimonials />
