@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { i18n } from '$lib/i18n';
 	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
-	import Navbar from '$lib/components/layout/Navbar.svelte';
+	import Navbar from '$lib/sections/Navbar.svelte';
 	import Footer from '$lib/sections/Footer.svelte';
 	import '../app.css';
 	let { children } = $props();

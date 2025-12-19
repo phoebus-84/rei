@@ -28,10 +28,10 @@
 			<!-- Desktop Menu -->
 			<div class="hidden items-center gap-1 md:flex">
 				<a
-					href="/properties"
+					href="/immobili"
 					class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
 				>
-					Properties
+					Immobili
 				</a>
 
 				{#if user}
@@ -55,14 +55,14 @@
 								href="/account"
 								class="text-xs text-blue-600 hover:text-blue-700"
 							>
-								View Account
+								Visualizza Account
 							</a>
 						</div>
 
 						<button
 							on:click={handleLogout}
 							class="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600"
-							aria-label="Sign out"
+							aria-label="Esci"
 						>
 							<LogOut size={18} />
 						</button>
@@ -74,13 +74,13 @@
 							href="/login"
 							class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
 						>
-							Sign In
+							Accedi
 						</a>
 						<a
 							href="/register"
 							class="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600"
 						>
-							Sign Up
+							Registrati
 						</a>
 					</div>
 				{/if}
@@ -105,11 +105,11 @@
 			<div class="border-t border-gray-200 py-4 md:hidden">
 				<div class="space-y-2">
 					<a
-						href="/properties"
+						href="/immobili"
 						class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
 						on:click={() => (mobileMenuOpen = false)}
 					>
-						Properties
+						Immobili
 					</a>
 
 					{#if user}
@@ -119,13 +119,13 @@
 								class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
 								on:click={() => (mobileMenuOpen = false)}
 							>
-								My Account
+								Il mio Account
 							</a>
 							<button
 								on:click={handleLogout}
 								class="w-full rounded-lg px-4 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50"
 							>
-								Sign Out
+								Esci
 							</button>
 						</div>
 					{:else}
@@ -135,14 +135,14 @@
 								class="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
 								on:click={() => (mobileMenuOpen = false)}
 							>
-								Sign In
+								Accedi
 							</a>
 							<a
 								href="/register"
 								class="block rounded-lg bg-blue-500 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-600"
 								on:click={() => (mobileMenuOpen = false)}
 							>
-								Sign Up
+								Registrati
 							</a>
 						</div>
 					{/if}

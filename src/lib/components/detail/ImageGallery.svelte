@@ -47,7 +47,7 @@
 <div class="mb-8 rounded-xl overflow-hidden bg-gray-200">
 	{#if images.length === 0}
 		<div class="aspect-video flex items-center justify-center bg-gray-300">
-			<span class="text-gray-600">No images available</span>
+			<span class="text-gray-600">Nessuna immagine disponibile</span>
 		</div>
 	{:else if images.length === 1}
 		<!-- Single Image -->
@@ -57,7 +57,7 @@
 		>
 			<img
 				src={getPropertyImageUrl(property.id, images[0])}
-				alt="Property"
+				alt="Immobile"
 				class="w-full h-[500px] object-cover"
 			/>
 		</button>
@@ -71,7 +71,7 @@
 			>
 				<img
 					src={getPropertyImageUrl(property.id, images[0])}
-					alt="Main property view"
+					alt="Vista principale immobile"
 					class="w-full h-full object-cover"
 				/>
 			</button>
@@ -86,7 +86,7 @@
 				>
 					<img
 						src={getPropertyImageUrl(property.id, image)}
-						alt="Property view {idx + 2}"
+						alt="Vista immobile {idx + 2}"
 						class="w-full h-full object-cover"
 					/>
 
@@ -96,7 +96,7 @@
 							class="absolute inset-0 bg-black/50 flex items-center justify-center rounded-r-xl"
 						>
 							<span class="text-white text-2xl font-bold">
-								+{images.length - 4} more
+								+{images.length - 4} altri
 							</span>
 						</div>
 					{/if}
@@ -119,7 +119,7 @@
 		<button
 			on:click={closeLightbox}
 			class="absolute top-4 right-4 z-50 rounded-full bg-white/20 p-2 hover:bg-white/30 transition-colors"
-			aria-label="Close lightbox"
+			aria-label="Chiudi lightbox"
 		>
 			<X size={24} class="text-white" />
 		</button>
@@ -128,7 +128,7 @@
 		<div class="relative w-full h-full flex items-center justify-center px-4">
 			<img
 				src={getPropertyImageUrl(property.id, images[lightboxIndex])}
-				alt="Property view {lightboxIndex + 1}"
+				alt="Vista immobile {lightboxIndex + 1}"
 				class="max-w-full max-h-full object-contain"
 			/>
 
@@ -137,7 +137,7 @@
 				<button
 					on:click|stopPropagation={prevImage}
 					class="absolute left-4 rounded-full bg-white/20 p-2 hover:bg-white/30 transition-colors"
-					aria-label="Previous image"
+					aria-label="Immagine precedente"
 				>
 					<ChevronLeft size={32} class="text-white" />
 				</button>
@@ -145,7 +145,7 @@
 				<button
 					on:click|stopPropagation={nextImage}
 					class="absolute right-4 rounded-full bg-white/20 p-2 hover:bg-white/30 transition-colors"
-					aria-label="Next image"
+					aria-label="Immagine successiva"
 				>
 					<ChevronRight size={32} class="text-white" />
 				</button>

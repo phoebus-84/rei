@@ -3,6 +3,16 @@ import { twMerge } from "tailwind-merge";
 import { cubicOut } from "svelte/easing";
 import type { TransitionConfig } from "svelte/transition";
 
+// Re-export all utility functions from the utils directory
+export {
+	getImageUrl,
+	getPropertyThumbnailUrl,
+	getPropertyImageUrl,
+	getUserAvatarUrl
+} from './utils/imageUrl';
+export { formatCurrency, formatArea, formatNumber } from './utils/currency';
+export { slugify, formatDate } from './utils/index';
+
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }

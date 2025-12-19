@@ -21,10 +21,10 @@
 </script>
 
 <svelte:head>
-	<title>Properties for Sale & Rent | Paons Immobiliare</title>
+	<title>Immobili in Vendita e Affitto | Paons Immobiliare</title>
 	<meta
 		name="description"
-		content="Browse our selection of properties for sale and rent in Ireland. Find your dream home with Paons Immobiliare."
+		content="Scopri la nostra selezione di immobili in vendita e affitto. Trova la tua casa ideale con Paons Immobiliare."
 	/>
 </svelte:head>
 
@@ -37,9 +37,9 @@
 		<!-- Header -->
 		<div class="border-b border-gray-200 bg-white px-4 py-8 sm:px-6 lg:px-8">
 			<div class="mx-auto max-w-7xl">
-				<h1 class="text-3xl font-bold text-gray-900">Properties</h1>
+				<h1 class="text-3xl font-bold text-gray-900">Immobili</h1>
 				<p class="mt-2 text-gray-600">
-					{data.totalItems} properties found
+					{data.totalItems} immobili trovati
 				</p>
 			</div>
 		</div>
@@ -61,10 +61,10 @@
 								on:click={() => goToPage(currentPage - 1)}
 								disabled={currentPage === 1}
 								class="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-all disabled:opacity-50 hover:enabled:bg-gray-50"
-								aria-label="Previous page"
+								aria-label="Pagina precedente"
 							>
 								<ChevronLeft size={20} />
-								<span class="hidden sm:inline">Previous</span>
+								<span class="hidden sm:inline">Precedente</span>
 							</button>
 
 							<div class="flex gap-1">
@@ -92,17 +92,17 @@
 								on:click={() => goToPage(currentPage + 1)}
 								disabled={currentPage === totalPages}
 								class="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-all disabled:opacity-50 hover:enabled:bg-gray-50"
-								aria-label="Next page"
+								aria-label="Pagina successiva"
 							>
-								<span class="hidden sm:inline">Next</span>
+								<span class="hidden sm:inline">Successiva</span>
 								<ChevronRight size={20} />
 							</button>
 						</div>
 					{/if}
 				{:else}
 					<div class="py-12 text-center">
-						<h3 class="text-lg font-medium text-gray-900">No properties found</h3>
-						<p class="mt-1 text-gray-600">Try adjusting your filters</p>
+						<h3 class="text-lg font-medium text-gray-900">Nessun immobile trovato</h3>
+						<p class="mt-1 text-gray-600">Prova ad aggiustare i filtri</p>
 					</div>
 				{/if}
 			</div>

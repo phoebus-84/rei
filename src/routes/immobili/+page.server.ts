@@ -61,14 +61,14 @@ export const load: PageServerLoad = async ({ url }) => {
 			pageSize
 		};
 	} catch (error) {
-		console.error('Failed to fetch properties:', error);
+		console.error('Errore nel caricamento immobili:', error);
 		return {
 			properties: [],
 			totalItems: 0,
 			totalPages: 0,
 			currentPage: page,
 			pageSize,
-			error: 'Failed to load properties'
+			error: 'Errore nel caricamento degli immobili'
 		};
 	}
 };

@@ -102,7 +102,7 @@
 								Browse properties and click the heart icon to save them
 							</p>
 							<a
-								href="/properties"
+								href="/immobili"
 								class="mt-6 inline-block rounded-lg bg-blue-500 px-6 py-2.5 font-medium text-white transition-all hover:bg-blue-600"
 							>
 								Browse Properties

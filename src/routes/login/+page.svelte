@@ -26,7 +26,7 @@
 		try {
 			await pb.collection('users').authWithPassword(email, password);
 			// Redirect to properties page on success
-			goto('/properties');
+			goto('/immobili');
 		} catch (err: any) {
 			error = err.message || 'Failed to login. Please check your credentials.';
 			console.error('Login error:', err);

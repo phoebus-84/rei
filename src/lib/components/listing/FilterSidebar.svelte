@@ -14,18 +14,18 @@
 
 	// Options
 	const statusOptions = [
-		{ value: 'for_sale', label: 'Buy' },
-		{ value: 'for_rent', label: 'Rent' }
+		{ value: 'for_sale', label: 'In Vendita' },
+		{ value: 'for_rent', label: 'In Affitto' }
 	];
 
 	const propertyTypes = [
-		{ value: 'house', label: 'House' },
-		{ value: 'apartment', label: 'Apartment' },
-		{ value: 'commercial', label: 'Commercial' },
-		{ value: 'land', label: 'Land' }
+		{ value: 'house', label: 'Casa' },
+		{ value: 'apartment', label: 'Appartamento' },
+		{ value: 'commercial', label: 'Commerciale' },
+		{ value: 'land', label: 'Terreno' }
 	];
 
-	const bedroomOptions = ['Any', '1', '2', '3', '4+'];
+	const bedroomOptions = ['1', '2', '3', '4+'];
 
 	function applyFilters() {
 		const params = new URLSearchParams();
@@ -43,7 +43,7 @@
 			}
 		}
 
-		goto(`/properties?${params.toString()}`, { replaceState: true });
+		goto(`/immobili?${params.toString()}`, { replaceState: true });
 		isOpen = false;
 	}
 
@@ -54,7 +54,7 @@
 		maxPrice = '';
 		propertyType = '';
 		bedrooms = '';
-		goto('/properties', { replaceState: true });
+		goto('/immobili', { replaceState: true });
 		isOpen = false;
 	}
 
@@ -81,11 +81,11 @@
 >
 	<!-- Header (Mobile Only) -->
 	<div class="mb-6 flex items-center justify-between lg:hidden">
-		<h2 class="text-xl font-bold text-gray-900">Filters</h2>
+		<h2 class="text-xl font-bold text-gray-900">Filtri</h2>
 		<button
 			on:click={() => (isOpen = false)}
 			class="text-gray-500 hover:text-gray-700"
-			aria-label="Close filters"
+			aria-label="Chiudi filtri"
 		>
 			<X size={24} />
 		</button>
@@ -93,18 +93,18 @@
 
 	<!-- Keyword Search -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700">Search</label>
+		<label class="block text-sm font-medium text-gray-700">Ricerca</label>
 		<input
 			type="text"
 			bind:value={keyword}
-			placeholder="City, zip, address..."
+			placeholder="Città, CAP, indirizzo..."
 			class="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none"
 		/>
 	</div>
 
 	<!-- Status Toggle -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700 mb-3">Type</label>
+		<label class="block text-sm font-medium text-gray-700 mb-3">Tipo</label>
 		<div class="flex gap-2">
 			{#each statusOptions as opt (opt.value)}
 				<button
@@ -123,7 +123,7 @@
 
 	<!-- Price Range -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700 mb-3">Price Range</label>
+		<label class="block text-sm font-medium text-gray-700 mb-3">Fascia Prezzo</label>
 		<div class="grid grid-cols-2 gap-2">
 			<input
 				type="number"
@@ -142,7 +142,7 @@
 
 	<!-- Property Type -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700 mb-3">Property Type</label>
+		<label class="block text-sm font-medium text-gray-700 mb-3">Tipo di Immobile</label>
 		<div class="space-y-2">
 			{#each propertyTypes as type (type.value)}
 				<label class="flex items-center gap-3 cursor-pointer">
@@ -161,7 +161,7 @@
 
 	<!-- Bedrooms -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700 mb-3">Bedrooms</label>
+		<label class="block text-sm font-medium text-gray-700 mb-3">Camere da Letto</label>
 		<div class="flex flex-wrap gap-2">
 			{#each bedroomOptions as option (option)}
 				<button
@@ -184,13 +184,13 @@
 			on:click={resetFilters}
 			class="flex-1 rounded-lg border border-gray-300 py-2.5 font-medium text-gray-700 transition-all hover:bg-gray-50"
 		>
-			Reset
+			Ripristina
 		</button>
 		<button
 			on:click={applyFilters}
 			class="flex-1 rounded-lg bg-blue-500 py-2.5 font-medium text-white transition-all hover:bg-blue-600"
 		>
-			Apply
+			Applica
 		</button>
 	</div>
 </aside>
@@ -199,7 +199,7 @@
 <button
 	on:click={() => (isOpen = !isOpen)}
 	class="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-blue-500 text-white shadow-lg hover:bg-blue-600 lg:hidden"
-	aria-label="Open filters"
+	aria-label="Apri filtri"
 >
 	<Filter size={24} />
 </button>

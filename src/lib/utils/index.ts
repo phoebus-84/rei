@@ -1,6 +1,11 @@
 // Export all utility functions
-export * from './imageUrl';
-export * from './currency';
+export {
+	getImageUrl,
+	getPropertyThumbnailUrl,
+	getPropertyImageUrl,
+	getUserAvatarUrl
+} from './imageUrl';
+export { formatCurrency, formatArea, formatNumber } from './currency';
 
 /**
  * Generate a URL-friendly slug from a string

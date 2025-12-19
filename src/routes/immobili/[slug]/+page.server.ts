@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			agent: record.expand?.agent || null
 		};
 	} catch (err) {
-		console.error('Failed to fetch property:', err);
-		throw error(404, 'Property not found');
+		console.error('Errore nel caricamento immobile:', err);
+		throw error(404, 'Immobile non trovato');
 	}
 };

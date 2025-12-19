@@ -1,11 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { currentUser } from '$lib/stores/auth';
-	import {
-		getPropertyThumbnailUrl,
-		formatCurrency,
-		formatArea
-	} from '$lib/utils';
+	import { getPropertyThumbnailUrl, formatCurrency, formatArea } from '$lib/utils';
 	import { Heart, MapPin, Bed, Bath, Square } from 'lucide-svelte';
 	import type { RecordModel } from 'pocketbase';
 	import { pb } from '$lib/pocketbase';
@@ -26,7 +22,7 @@
 
 		if (!$currentUser) {
 			// TODO: Show modal to login
-			alert('Please login to save properties');
+			alert('Accedi per salvare immobili');
 			return;
 		}
 
@@ -42,8 +38,8 @@
 				isLiked = !isLiked;
 			})
 			.catch((err) => {
-				console.error('Failed to save property:', err);
-				alert('Failed to save property');
+				console.error('Errore nel salvataggio immobile:', err);
+				alert('Errore nel salvataggio immobile');
 			})
 			.finally(() => {
 				isLoading = false;
@@ -51,14 +47,17 @@
 	}
 
 	function handleClick() {
-		goto(`/properties/${property.slug}`);
+		goto(`/immobili/${property.slug}`);
 	}
 
 	// Get first image or placeholder
 	const imageName = property.images?.[0];
+	console.log('Property images:', property.images);
 	const imageUrl = imageName
 		? getPropertyThumbnailUrl(property.id, imageName)
 		: '/placeholder-property.jpg';
+
+	console.log('Image URL:', imageUrl);
 
 	// Determine badge
 	const badgeInfo = {
@@ -70,9 +69,12 @@
 	const badge = badgeInfo[property.status as keyof typeof badgeInfo] || badgeInfo.for_sale;
 </script>
 
-<button
+<div
+	role="button"
+	tabindex="0"
 	on:click={handleClick}
-	class="group relative overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+	on:keydown={(e) => e.key === 'Enter' && handleClick()}
+	class="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
 >
 	<!-- Image Container (60%) -->
 	<div class="relative h-[240px] overflow-hidden bg-gray-200">
@@ -84,9 +86,7 @@
 		/>
 
 		<!-- Status Badge -->
-		<div
-			class={`absolute left-3 top-3 rounded px-2 py-1 text-xs font-bold text-white ${badge.bg}`}
-		>
+		<div class={`absolute left-3 top-3 rounded px-2 py-1 text-xs font-bold text-white ${badge.bg}`}>
 			{badge.text}
 		</div>
 
@@ -95,7 +95,7 @@
 			on:click={toggleLike}
 			disabled={isLoading}
 			class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 backdrop-blur transition-all duration-200 hover:bg-white disabled:opacity-50"
-			aria-label="Save property"
+			aria-label="Salva immobile"
 		>
 			<Heart
 				size={20}
@@ -105,7 +105,9 @@
 
 		<!-- Featured Badge (if applicable) -->
 		{#if property.featured}
-			<div class="absolute right-3 bottom-3 rounded bg-yellow-500 px-2 py-1 text-xs font-bold text-white">
+			<div
+				class="absolute bottom-3 right-3 rounded bg-yellow-500 px-2 py-1 text-xs font-bold text-white"
+			>
 				Featured
 			</div>
 		{/if}
@@ -153,4 +155,4 @@
 			</div>
 		</div>
 	</div>
-</button>
+</div>

@@ -18,13 +18,12 @@
 
 </script>
 
-<Navbar />
 <Hero />
 <!-- <Sponsors /> -->
-<FeaturedProperties />
 <About />
 <Features />
 <Testimonials />
+<FeaturedProperties />
 <!-- <Team /> -->
 <FAQ />
 <!-- <HowItWorks />

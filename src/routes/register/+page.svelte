@@ -75,7 +75,7 @@
 			await pb.collection('users').authWithPassword(formData.email, formData.password);
 
 			// Redirect to properties page
-			goto('/properties');
+			goto('/immobili');
 		} catch (err: any) {
 			error = err.message || 'Failed to create account. Please try again.';
 			console.error('Registration error:', err);

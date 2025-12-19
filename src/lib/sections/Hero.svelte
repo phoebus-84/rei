@@ -46,7 +46,7 @@
 
 				<a
 					rel="noreferrer noopener"
-					href="#immobili"
+					href="/immobili"
 					class={`w-full text-lg md:w-1/3 ${buttonVariants({ variant: 'outline' })}`}
 				>
 					Vedi Immobili

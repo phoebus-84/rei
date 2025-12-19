@@ -23,16 +23,16 @@
 
 	// Status badge
 	const statusInfo: Record<string, { label: string; color: string }> = {
-		for_sale: { label: 'For Sale', color: 'bg-emerald-100 text-emerald-800' },
-		for_rent: { label: 'For Rent', color: 'bg-blue-100 text-blue-800' },
-		sold: { label: 'Sold', color: 'bg-gray-100 text-gray-800' },
-		rented: { label: 'Rented', color: 'bg-slate-100 text-slate-800' }
+		for_sale: { label: 'In Vendita', color: 'bg-emerald-100 text-emerald-800' },
+		for_rent: { label: 'In Affitto', color: 'bg-blue-100 text-blue-800' },
+		sold: { label: 'Venduto', color: 'bg-gray-100 text-gray-800' },
+		rented: { label: 'Affittato', color: 'bg-slate-100 text-slate-800' }
 	};
 
 	const statusBadge = statusInfo[property.status] || statusInfo.for_sale;
 	const propertyTypeLabel = property.property_type
 		?.replace(/_/g, ' ')
-		.replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Property';
+		.replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Immobile';
 </script>
 
 <svelte:head>
@@ -84,7 +84,7 @@
 								<Bed size={28} class="text-blue-600" />
 							</div>
 							<div class="text-2xl font-bold text-gray-900">{property.bedrooms}</div>
-							<div class="text-sm text-gray-600">Bedroom{property.bedrooms !== 1 ? 's' : ''}</div>
+							<div class="text-sm text-gray-600">Camera da letto{property.bedrooms !== 1 ? 's' : ''}</div>
 						</div>
 					{/if}
 
@@ -94,7 +94,7 @@
 								<Bath size={28} class="text-blue-600" />
 							</div>
 							<div class="text-2xl font-bold text-gray-900">{property.bathrooms}</div>
-							<div class="text-sm text-gray-600">Bathroom{property.bathrooms !== 1 ? 's' : ''}</div>
+							<div class="text-sm text-gray-600">Bagno{property.bathrooms !== 1 ? 's' : ''}</div>
 						</div>
 					{/if}
 
@@ -113,14 +113,14 @@
 							<Home size={28} class="text-blue-600" />
 						</div>
 						<div class="text-2xl font-bold text-gray-900 capitalize">{propertyTypeLabel}</div>
-						<div class="text-sm text-gray-600">Type</div>
+						<div class="text-sm text-gray-600">Tipo</div>
 					</div>
 				</div>
 
 				<!-- Description -->
 				{#if property.description}
 					<div>
-						<h2 class="text-2xl font-bold text-gray-900 mb-4">About This Property</h2>
+						<h2 class="text-2xl font-bold text-gray-900 mb-4">Descrizione Immobile</h2>
 						<div class="prose prose-sm max-w-none text-gray-700">
 							{property.description}
 						</div>
@@ -130,7 +130,7 @@
 				<!-- Amenities -->
 				{#if amenities.length > 0}
 					<div>
-						<h2 class="text-2xl font-bold text-gray-900 mb-4">Amenities</h2>
+						<h2 class="text-2xl font-bold text-gray-900 mb-4">Servizi e Dotazioni</h2>
 						<div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
 							{#each amenities as amenity}
 								<div class="flex items-center gap-3 rounded-lg bg-white border border-gray-200 px-4 py-3">
@@ -144,13 +144,13 @@
 
 				<!-- Property Details -->
 				<div>
-					<h2 class="text-2xl font-bold text-gray-900 mb-4">Property Details</h2>
+					<h2 class="text-2xl font-bold text-gray-900 mb-4">Dettagli Immobile</h2>
 					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 						{#if property.property_type}
 							<div class="flex items-start gap-3">
 								<DoorOpen size={20} class="mt-1 text-gray-600" />
 								<div>
-									<div class="text-sm font-medium text-gray-600">Property Type</div>
+									<div class="text-sm font-medium text-gray-600">Tipo di Immobile</div>
 									<div class="text-gray-900 capitalize">{property.property_type}</div>
 								</div>
 							</div>
@@ -160,7 +160,7 @@
 							<div class="flex items-start gap-3">
 								<Square size={20} class="mt-1 text-gray-600" />
 								<div>
-									<div class="text-sm font-medium text-gray-600">Total Area</div>
+									<div class="text-sm font-medium text-gray-600">Area Totale</div>
 									<div class="text-gray-900">{formatArea(property.area_sqm)}</div>
 								</div>
 							</div>
@@ -170,9 +170,9 @@
 							<div class="flex items-start gap-3">
 								<Calendar size={20} class="mt-1 text-gray-600" />
 								<div>
-									<div class="text-sm font-medium text-gray-600">Listed</div>
+									<div class="text-sm font-medium text-gray-600">Pubblicato il</div>
 									<div class="text-gray-900">
-										{new Date(property.created_at).toLocaleDateString('en-IE', {
+										{new Date(property.created_at).toLocaleDateString('it-IT', {
 											year: 'numeric',
 											month: 'long',
 											day: 'numeric'
@@ -186,7 +186,7 @@
 							<div class="flex items-start gap-3">
 								<Home size={20} class="mt-1 text-gray-600" />
 								<div>
-									<div class="text-sm font-medium text-gray-600">Status</div>
+									<div class="text-sm font-medium text-gray-600">Stato</div>
 									<div class="text-gray-900 capitalize">{property.status.replace(/_/g, ' ')}</div>
 								</div>
 							</div>

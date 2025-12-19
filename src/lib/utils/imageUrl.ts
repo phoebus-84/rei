@@ -1,6 +1,6 @@
 /**
  * Generate a PocketBase image URL
- * @param collectionId - The collection ID or name (e.g., 'properties')
+ * @param collectionId - The collection ID or name (e.g., 'pbc_properties_001')
  * @param recordId - The record ID
  * @param fileName - The file name
  * @param size - Thumbnail size (e.g., '300x300', '0x0' for original)
@@ -23,7 +23,7 @@ export function getImageUrl(
  * @returns The thumbnail URL (300x300)
  */
 export function getPropertyThumbnailUrl(recordId: string, fileName: string): string {
-	return getImageUrl('properties', recordId, fileName, '300x300');
+	return getImageUrl('pbc_properties_001', recordId, fileName, '300x300');
 }
 
 /**
@@ -33,7 +33,7 @@ export function getPropertyThumbnailUrl(recordId: string, fileName: string): str
  * @returns The full-size image URL
  */
 export function getPropertyImageUrl(recordId: string, fileName: string): string {
-	return getImageUrl('properties', recordId, fileName, '0x0');
+	return getImageUrl('pbc_properties_001', recordId, fileName, '0x0');
 }
 
 /**

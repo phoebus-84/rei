@@ -36,23 +36,23 @@
 
 		// Validation
 		if (!formData.customer_name.trim()) {
-			error = 'Name is required';
+			error = 'Il nome è obbligatorio';
 			return;
 		}
 		if (!formData.customer_email.trim()) {
-			error = 'Email is required';
+			error = 'L\'email è obbligatoria';
 			return;
 		}
 		if (!validateEmail(formData.customer_email)) {
-			error = 'Please enter a valid email';
+			error = 'Inserisci un\'email valida';
 			return;
 		}
 		if (!formData.customer_phone.trim()) {
-			error = 'Phone is required';
+			error = 'Il telefono è obbligatorio';
 			return;
 		}
 		if (!validatePhone(formData.customer_phone)) {
-			error = 'Please enter a valid phone number';
+			error = 'Inserisci un numero di telefono valido';
 			return;
 		}
 
@@ -81,15 +81,15 @@
 				};
 			}, 3000);
 		} catch (err) {
-			error = 'Failed to send inquiry. Please try again.';
-			console.error('Inquiry submission error:', err);
+			error = 'Errore nell\'invio della richiesta. Riprova.';
+			console.error('Errore invio richiesta:', err);
 		} finally {
 			isSubmitting = false;
 		}
 	}
 
 	function handleWhatsApp() {
-		const message = `Hi, I'm interested in the property: ${property.title}`;
+		const message = `Ciao, sono interessato all'immobile: ${property.title}`;
 		const encoded = encodeURIComponent(message);
 		const phone = agent?.phone?.replace(/\D/g, '') || '';
 		if (phone) {
@@ -116,9 +116,9 @@
 					<Check size={32} class="text-green-600" />
 				</div>
 			</div>
-			<h3 class="text-lg font-semibold text-gray-900">Message Sent!</h3>
+			<h3 class="text-lg font-semibold text-gray-900">Messaggio Inviato!</h3>
 			<p class="text-sm text-gray-600">
-				Thank you for your inquiry. The agent will contact you shortly.
+				Grazie per la tua richiesta. L'agente ti contatterà a breve.
 			</p>
 		</div>
 	{:else}
@@ -136,7 +136,7 @@
 				{/if}
 				<div class="flex-1">
 					<h3 class="font-semibold text-gray-900">{agent.name}</h3>
-					<p class="text-sm text-gray-600">Agent</p>
+					<p class="text-sm text-gray-600">Agente</p>
 				</div>
 			</div>
 		{/if}
@@ -144,12 +144,12 @@
 		<!-- Contact Form -->
 		<form on:submit={handleSubmit} class="space-y-4">
 			<div>
-				<label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+				<label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
 				<input
 					type="text"
 					id="name"
 					bind:value={formData.customer_name}
-					placeholder="Your name"
+					placeholder="Il tuo nome"
 					class="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none"
 				/>
 			</div>
@@ -160,28 +160,28 @@
 					type="email"
 					id="email"
 					bind:value={formData.customer_email}
-					placeholder="your@email.com"
+					placeholder="tuo@email.com"
 					class="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none"
 				/>
 			</div>
 
 			<div>
-				<label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+				<label for="phone" class="block text-sm font-medium text-gray-700">Telefono</label>
 				<input
 					type="tel"
 					id="phone"
 					bind:value={formData.customer_phone}
-					placeholder="+353 123 456 7890"
+					placeholder="+39 123 456 7890"
 					class="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none"
 				/>
 			</div>
 
 			<div>
-				<label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+				<label for="message" class="block text-sm font-medium text-gray-700">Messaggio</label>
 				<textarea
 					id="message"
 					bind:value={formData.message}
-					placeholder="Tell us about your interest..."
+					placeholder="Parlaci del tuo interesse..."
 					rows={4}
 					class="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none"
 				/>
@@ -198,7 +198,7 @@
 				disabled={isSubmitting}
 				class="w-full rounded-lg bg-blue-500 py-2.5 font-semibold text-white transition-all hover:bg-blue-600 disabled:opacity-50"
 			>
-				{isSubmitting ? 'Sending...' : 'Send Message'}
+				{isSubmitting ? 'Invio in corso...' : 'Invia Messaggio'}
 			</button>
 		</form>
 
@@ -210,7 +210,7 @@
 					class="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 py-2.5 font-medium text-gray-700 transition-all hover:bg-gray-50"
 				>
 					<Phone size={18} />
-					Call Agent
+					Chiama Agente
 				</button>
 				<button
 					on:click={handleWhatsApp}

@@ -45,9 +45,9 @@
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<!-- Header -->
 		<div class="mb-12 text-center">
-			<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">Featured Properties</h2>
+			<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">Immobili in Evidenza</h2>
 			<p class="mt-4 text-lg text-gray-600">
-				Discover our hand-picked selection of premium properties
+				Scopri la nostra selezione esclusiva di immobili premium
 			</p>
 		</div>
 
@@ -61,7 +61,7 @@
 			</div>
 		{:else if properties.length === 0}
 			<div class="rounded-lg bg-gray-50 border border-gray-200 p-8 text-center text-gray-600">
-				<p>No featured properties available yet</p>
+				<p>Nessun immobile in evidenza disponibile al momento</p>
 			</div>
 		{:else}
 			<!-- Carousel -->
@@ -80,7 +80,7 @@
 					<button
 						on:click={prevSlide}
 						class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 z-10 rounded-full bg-blue-500 p-2 text-white hover:bg-blue-600 transition-all"
-						aria-label="Previous properties"
+						aria-label="Immobili precedenti"
 					>
 						<ChevronLeft size={24} />
 					</button>
@@ -88,7 +88,7 @@
 					<button
 						on:click={nextSlide}
 						class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 z-10 rounded-full bg-blue-500 p-2 text-white hover:bg-blue-600 transition-all"
-						aria-label="Next properties"
+						aria-label="Immobili successivi"
 					>
 						<ChevronRight size={24} />
 					</button>
@@ -112,10 +112,10 @@
 			<!-- CTA -->
 			<div class="mt-12 text-center">
 				<a
-					href="/properties"
+					href="/immobili"
 					class="inline-block rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white hover:bg-blue-700 transition-all"
 				>
-					Browse All Properties
+					Visualizza tutti gli immobili
 				</a>
 			</div>
 		{/if}
