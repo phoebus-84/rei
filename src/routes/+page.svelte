@@ -23,7 +23,7 @@
 <About />
 <Features />
 <Testimonials />
-<FeaturedProperties />
+<!-- <FeaturedProperties /> -->
 <!-- <Team /> -->
 <FAQ />
 <!-- <HowItWorks />

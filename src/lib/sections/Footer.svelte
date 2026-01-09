@@ -50,7 +50,7 @@
 				</a>
 			</div>
 			<div>
-				<a rel="noreferrer noopener" href="#immobili" class="opacity-60 hover:opacity-100">
+				<a rel="noreferrer noopener" href="/immobili" class="opacity-60 hover:opacity-100">
 					Immobili
 				</a>
 			</div>

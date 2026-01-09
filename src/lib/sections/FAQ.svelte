@@ -65,7 +65,7 @@
 		Hai ancora dubbi?
 		<a
 			rel="noreferrer noopener"
-			href="#contatti"
+			href="/"
 			class="border-primary text-primary transition-all hover:border-b-2">Scrivici</a
 		>
 	</h3>
