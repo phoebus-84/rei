@@ -16,11 +16,11 @@
 	}
 
 	const routeList: RouteProps[] = [
-		{ href: '#about', label: 'Chi Siamo' },
-		{ href: '#features', label: 'Servizi' },
+		{ href: '/#about', label: 'Chi Siamo' },
+		{ href: '/#features', label: 'Servizi' },
 		{ href: '/immobili', label: 'Immobili' },
-		{ href: '#testimonials', label: 'Testimonianze' },
-		{ href: '#faq', label: 'Domande Frequenti' }
+		{ href: '/#testimonials', label: 'Testimonianze' },
+		{ href: '/#faq', label: 'Domande Frequenti' }
 	];
 
 	let isOpen = false;
