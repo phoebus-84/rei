@@ -74,10 +74,10 @@
 	tabindex="0"
 	on:click={handleClick}
 	on:keydown={(e) => e.key === 'Enter' && handleClick()}
-	class="group relative cursor-pointer overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+	class="group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
 >
 	<!-- Image Container (60%) -->
-	<div class="relative h-[240px] overflow-hidden bg-gray-200">
+	<div class="relative h-[240px] overflow-hidden bg-muted">
 		<img
 			src={imageUrl}
 			alt={property.title}
@@ -99,7 +99,7 @@
 		>
 			<Heart
 				size={20}
-				class="transition-all {isLiked ? 'fill-red-500 text-red-500' : 'text-gray-600'}"
+				class="transition-all {isLiked ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}"
 			/>
 		</button>
 
@@ -116,24 +116,24 @@
 	<!-- Content Container (40%) -->
 	<div class="flex flex-col gap-3 p-4">
 		<!-- Price -->
-		<div class="text-xl font-bold text-gray-900">
+		<div class="text-xl font-bold text-foreground">
 			{formatCurrency(property.price)}
 		</div>
 
 		<!-- Title -->
-		<h3 class="truncate text-lg font-medium text-gray-800">
+		<h3 class="truncate text-lg font-medium text-foreground">
 			{property.title}
 		</h3>
 
 		<!-- Address -->
-		<div class="flex items-center gap-1 text-sm text-gray-500">
+		<div class="flex items-center gap-1 text-sm text-muted-foreground">
 			<MapPin size={16} />
 			<span class="truncate">{property.address}, {property.city}</span>
 		</div>
 
 		<!-- Specs Row -->
-		<div class="border-t border-gray-200 pt-3">
-			<div class="flex gap-4 text-sm text-gray-600">
+		<div class="border-t border-border pt-3">
+			<div class="flex gap-4 text-sm text-muted-foreground">
 				{#if property.bedrooms}
 					<div class="flex items-center gap-1">
 						<Bed size={16} />

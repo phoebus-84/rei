@@ -75,16 +75,16 @@
 
 <!-- Sidebar -->
 <aside
-	class={`fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-y-auto rounded-t-2xl bg-white p-6 transition-transform duration-300 lg:static lg:max-h-none lg:w-80 lg:rounded-none lg:border-r lg:border-gray-200 lg:p-6 ${
+	class={`fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-y-auto rounded-t-2xl bg-card p-6 transition-transform duration-300 lg:static lg:max-h-none lg:w-80 lg:rounded-none lg:border-r lg:border-border lg:p-6 ${
 		isOpen ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'
 	}`}
 >
 	<!-- Header (Mobile Only) -->
 	<div class="mb-6 flex items-center justify-between lg:hidden">
-		<h2 class="text-xl font-bold text-gray-900">Filtri</h2>
+		<h2 class="text-xl font-bold text-foreground">Filtri</h2>
 		<button
 			on:click={() => (isOpen = false)}
-			class="text-gray-500 hover:text-gray-700"
+			class="text-muted-foreground hover:text-foreground"
 			aria-label="Chiudi filtri"
 		>
 			<X size={24} />
@@ -93,26 +93,26 @@
 
 	<!-- Keyword Search -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700">Ricerca</label>
+		<label class="block text-sm font-medium text-foreground">Ricerca</label>
 		<input
 			type="text"
 			bind:value={keyword}
 			placeholder="Città, CAP, indirizzo..."
-			class="mt-2 w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+			class="mt-2 w-full rounded-md border border-input bg-background px-4 py-2 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
 		/>
 	</div>
 
 	<!-- Status Toggle -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700 mb-3">Tipo</label>
+		<label class="block text-sm font-medium text-foreground mb-3">Tipo</label>
 		<div class="flex gap-2">
 			{#each statusOptions as opt (opt.value)}
 				<button
 					on:click={() => (status = opt.value)}
-					class={`flex-1 rounded-lg py-2 px-3 font-medium transition-all ${
+					class={`flex-1 rounded-md py-2 px-3 font-medium transition-all ${
 						status === opt.value
-							? 'bg-blue-500 text-white'
-							: 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+							? 'bg-primary text-primary-foreground'
+							: 'bg-muted text-foreground hover:bg-muted/80'
 					}`}
 				>
 					{opt.label}
@@ -123,26 +123,26 @@
 
 	<!-- Price Range -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700 mb-3">Fascia Prezzo</label>
+		<label class="block text-sm font-medium text-foreground mb-3">Fascia Prezzo</label>
 		<div class="grid grid-cols-2 gap-2">
 			<input
 				type="number"
 				bind:value={minPrice}
 				placeholder="Min"
-				class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+				class="rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
 			/>
 			<input
 				type="number"
 				bind:value={maxPrice}
 				placeholder="Max"
-				class="rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none"
+				class="rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
 			/>
 		</div>
 	</div>
 
 	<!-- Property Type -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700 mb-3">Tipo di Immobile</label>
+		<label class="block text-sm font-medium text-foreground mb-3">Tipo di Immobile</label>
 		<div class="space-y-2">
 			{#each propertyTypes as type (type.value)}
 				<label class="flex items-center gap-3 cursor-pointer">
@@ -151,9 +151,9 @@
 						checked={propertyType === type.value}
 						on:change={() =>
 							(propertyType = propertyType === type.value ? '' : type.value)}
-						class="h-4 w-4 rounded border-gray-300 text-blue-500"
+						class="h-4 w-4 rounded border-input text-primary focus:ring-primary"
 					/>
-					<span class="text-sm text-gray-700">{type.label}</span>
+					<span class="text-sm text-foreground">{type.label}</span>
 				</label>
 			{/each}
 		</div>
@@ -161,15 +161,15 @@
 
 	<!-- Bedrooms -->
 	<div class="mb-6">
-		<label class="block text-sm font-medium text-gray-700 mb-3">Camere da Letto</label>
+		<label class="block text-sm font-medium text-foreground mb-3">Camere da Letto</label>
 		<div class="flex flex-wrap gap-2">
 			{#each bedroomOptions as option (option)}
 				<button
 					on:click={() => handleBedroomClick(option)}
 					class={`h-10 w-10 rounded-full font-medium transition-all ${
 						bedrooms === option
-							? 'bg-blue-500 text-white'
-							: 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+							? 'bg-primary text-primary-foreground'
+							: 'bg-muted text-foreground hover:bg-muted/80'
 					}`}
 				>
 					{option}
@@ -182,13 +182,13 @@
 	<div class="flex gap-3 pt-6">
 		<button
 			on:click={resetFilters}
-			class="flex-1 rounded-lg border border-gray-300 py-2.5 font-medium text-gray-700 transition-all hover:bg-gray-50"
+			class="flex-1 rounded-md border border-input bg-background py-2.5 font-medium text-foreground transition-all hover:bg-muted"
 		>
 			Ripristina
 		</button>
 		<button
 			on:click={applyFilters}
-			class="flex-1 rounded-lg bg-blue-500 py-2.5 font-medium text-white transition-all hover:bg-blue-600"
+			class="flex-1 rounded-md bg-primary py-2.5 font-medium text-primary-foreground transition-all hover:bg-primary/90"
 		>
 			Applica
 		</button>
@@ -198,7 +198,7 @@
 <!-- Mobile FAB Button -->
 <button
 	on:click={() => (isOpen = !isOpen)}
-	class="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-blue-500 text-white shadow-lg hover:bg-blue-600 lg:hidden"
+	class="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 lg:hidden"
 	aria-label="Apri filtri"
 >
 	<Filter size={24} />

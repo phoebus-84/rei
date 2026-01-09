@@ -28,17 +28,17 @@
 	/>
 </svelte:head>
 
-<div class="flex min-h-screen bg-gray-50 lg:gap-0">
+<div class="flex min-h-screen bg-background lg:gap-0">
 	<!-- Filters Sidebar -->
 	<FilterSidebar bind:isOpen={filterOpen} />
 
 	<!-- Main Content -->
 	<main class="flex-1">
 		<!-- Header -->
-		<div class="border-b border-gray-200 bg-white px-4 py-8 sm:px-6 lg:px-8">
+		<div class="border-b border-border bg-card px-4 py-8 sm:px-6 lg:px-8">
 			<div class="mx-auto max-w-7xl">
-				<h1 class="text-3xl font-bold text-gray-900">Immobili</h1>
-				<p class="mt-2 text-gray-600">
+				<h1 class="text-3xl font-bold text-foreground">Immobili</h1>
+				<p class="mt-2 text-muted-foreground">
 					{data.totalItems} immobili trovati
 				</p>
 			</div>
@@ -60,7 +60,7 @@
 							<button
 								on:click={() => goToPage(currentPage - 1)}
 								disabled={currentPage === 1}
-								class="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-all disabled:opacity-50 hover:enabled:bg-gray-50"
+								class="flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-foreground transition-all disabled:opacity-50 hover:enabled:bg-muted"
 								aria-label="Pagina precedente"
 							>
 								<ChevronLeft size={20} />
@@ -78,8 +78,8 @@
 											on:click={() => goToPage(pageNum)}
 											class={`h-10 w-10 rounded-lg font-medium transition-all ${
 												currentPage === pageNum
-													? 'bg-blue-500 text-white'
-													: 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+													? 'bg-primary text-primary-foreground'
+													: 'border border-border text-foreground hover:bg-muted'
 											}`}
 										>
 											{pageNum}
@@ -91,7 +91,7 @@
 							<button
 								on:click={() => goToPage(currentPage + 1)}
 								disabled={currentPage === totalPages}
-								class="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-all disabled:opacity-50 hover:enabled:bg-gray-50"
+								class="flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-foreground transition-all disabled:opacity-50 hover:enabled:bg-muted"
 								aria-label="Pagina successiva"
 							>
 								<span class="hidden sm:inline">Successiva</span>
@@ -101,8 +101,8 @@
 					{/if}
 				{:else}
 					<div class="py-12 text-center">
-						<h3 class="text-lg font-medium text-gray-900">Nessun immobile trovato</h3>
-						<p class="mt-1 text-gray-600">Prova ad aggiustare i filtri</p>
+						<h3 class="text-lg font-medium text-foreground">Nessun immobile trovato</h3>
+						<p class="mt-1 text-muted-foreground">Prova ad aggiustare i filtri</p>
 					</div>
 				{/if}
 			</div>

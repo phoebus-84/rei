@@ -25,8 +25,8 @@
 	const statusInfo: Record<string, { label: string; color: string }> = {
 		for_sale: { label: 'In Vendita', color: 'bg-emerald-100 text-emerald-800' },
 		for_rent: { label: 'In Affitto', color: 'bg-blue-100 text-blue-800' },
-		sold: { label: 'Venduto', color: 'bg-gray-100 text-gray-800' },
-		rented: { label: 'Affittato', color: 'bg-slate-100 text-slate-800' }
+		sold: { label: 'Venduto', color: 'bg-muted text-muted-foreground' },
+		rented: { label: 'Affittato', color: 'bg-muted text-muted-foreground' }
 	};
 
 	const statusBadge = statusInfo[property.status] || statusInfo.for_sale;
@@ -49,7 +49,7 @@
 	<meta property="og:type" content="website" />
 </svelte:head>
 
-<main class="bg-gray-50">
+<main class="bg-background">
 	<!-- Image Gallery -->
 	<ImageGallery {property} />
 
@@ -60,68 +60,68 @@
 				<!-- Header -->
 				<div>
 					<div class="flex flex-wrap items-center gap-3 mb-4">
-						<h1 class="text-3xl font-bold text-gray-900">{property.title}</h1>
+						<h1 class="text-3xl font-bold text-foreground">{property.title}</h1>
 						<span class={`rounded-full px-3 py-1 text-sm font-medium ${statusBadge.color}`}>
 							{statusBadge.label}
 						</span>
 					</div>
 
-					<div class="flex items-center gap-2 text-gray-600 mb-4">
+					<div class="flex items-center gap-2 text-muted-foreground mb-4">
 						<MapPin size={18} />
 						<span>{property.address}, {property.city}</span>
 					</div>
 
-					<div class="text-3xl font-bold text-gray-900">
+					<div class="text-3xl font-bold text-foreground">
 						{formatCurrency(property.price)}
 					</div>
 				</div>
 
 				<!-- Quick Stats -->
-				<div class="grid grid-cols-2 gap-4 sm:grid-cols-4 border-y border-gray-200 py-6">
+				<div class="grid grid-cols-2 gap-4 sm:grid-cols-4 border-y border-border py-6">
 					{#if property.bedrooms}
 						<div class="text-center">
 							<div class="flex justify-center mb-2">
-								<Bed size={28} class="text-blue-600" />
+								<Bed size={28} class="text-primary" />
 							</div>
-							<div class="text-2xl font-bold text-gray-900">{property.bedrooms}</div>
-							<div class="text-sm text-gray-600">Camera da letto{property.bedrooms !== 1 ? 's' : ''}</div>
+							<div class="text-2xl font-bold text-foreground">{property.bedrooms}</div>
+							<div class="text-sm text-muted-foreground">Camera da letto{property.bedrooms !== 1 ? 's' : ''}</div>
 						</div>
 					{/if}
 
 					{#if property.bathrooms}
 						<div class="text-center">
 							<div class="flex justify-center mb-2">
-								<Bath size={28} class="text-blue-600" />
+								<Bath size={28} class="text-primary" />
 							</div>
-							<div class="text-2xl font-bold text-gray-900">{property.bathrooms}</div>
-							<div class="text-sm text-gray-600">Bagno{property.bathrooms !== 1 ? 's' : ''}</div>
+							<div class="text-2xl font-bold text-foreground">{property.bathrooms}</div>
+							<div class="text-sm text-muted-foreground">Bagno{property.bathrooms !== 1 ? 's' : ''}</div>
 						</div>
 					{/if}
 
 					{#if property.area_sqm}
 						<div class="text-center">
 							<div class="flex justify-center mb-2">
-								<Square size={28} class="text-blue-600" />
+								<Square size={28} class="text-primary" />
 							</div>
-							<div class="text-2xl font-bold text-gray-900">{property.area_sqm}</div>
-							<div class="text-sm text-gray-600">m²</div>
+							<div class="text-2xl font-bold text-foreground">{property.area_sqm}</div>
+							<div class="text-sm text-muted-foreground">m²</div>
 						</div>
 					{/if}
 
 					<div class="text-center">
 						<div class="flex justify-center mb-2">
-							<Home size={28} class="text-blue-600" />
+							<Home size={28} class="text-primary" />
 						</div>
-						<div class="text-2xl font-bold text-gray-900 capitalize">{propertyTypeLabel}</div>
-						<div class="text-sm text-gray-600">Tipo</div>
+						<div class="text-2xl font-bold text-foreground capitalize">{propertyTypeLabel}</div>
+						<div class="text-sm text-muted-foreground">Tipo</div>
 					</div>
 				</div>
 
 				<!-- Description -->
 				{#if property.description}
 					<div>
-						<h2 class="text-2xl font-bold text-gray-900 mb-4">Descrizione Immobile</h2>
-						<div class="prose prose-sm max-w-none text-gray-700">
+						<h2 class="text-2xl font-bold text-foreground mb-4">Descrizione Immobile</h2>
+						<div class="prose prose-sm max-w-none text-muted-foreground">
 							{property.description}
 						</div>
 					</div>
@@ -130,12 +130,12 @@
 				<!-- Amenities -->
 				{#if amenities.length > 0}
 					<div>
-						<h2 class="text-2xl font-bold text-gray-900 mb-4">Servizi e Dotazioni</h2>
+						<h2 class="text-2xl font-bold text-foreground mb-4">Servizi e Dotazioni</h2>
 						<div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
 							{#each amenities as amenity}
-								<div class="flex items-center gap-3 rounded-lg bg-white border border-gray-200 px-4 py-3">
-									<Wifi size={20} class="text-blue-600 flex-shrink-0" />
-									<span class="text-sm font-medium text-gray-900">{amenity}</span>
+								<div class="flex items-center gap-3 rounded-lg bg-card border border-border px-4 py-3">
+									<Wifi size={20} class="text-primary flex-shrink-0" />
+									<span class="text-sm font-medium text-foreground">{amenity}</span>
 								</div>
 							{/each}
 						</div>
@@ -144,7 +144,7 @@
 
 				<!-- Property Details -->
 				<div>
-					<h2 class="text-2xl font-bold text-gray-900 mb-4">Dettagli Immobile</h2>
+					<h2 class="text-2xl font-bold text-foreground mb-4">Dettagli Immobile</h2>
 					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 						{#if property.property_type}
 							<div class="flex items-start gap-3">
