@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { i18n } from '$lib/i18n';
 	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
 	import Navbar from '$lib/sections/Navbar.svelte';
@@ -8,7 +9,11 @@
 </script>
 
 <ParaglideJS {i18n}>
-	<Navbar />
+	{#if !page.url.pathname.startsWith('/admin')}
+		<Navbar />
+	{/if}
 	{@render children()}
-	<Footer />
+	{#if !page.url.pathname.startsWith('/admin')}
+		<Footer />
+	{/if}
 </ParaglideJS>
