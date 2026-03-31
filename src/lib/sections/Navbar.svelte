@@ -48,9 +48,7 @@
 			{#each routeList as { href, label }}
 				<a
 					{href}
-					class="text-sm font-medium transition-colors hover:text-primary {buttonVariants({
-						variant: 'ghost'
-					})} {isActive(href, $page.url.pathname) ? 'text-primary' : ''}"
+					class="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-primary {isActive(href, $page.url.pathname) ? 'text-primary' : ''}"
 					aria-current={isActive(href, $page.url.pathname) ? 'page' : undefined}
 				>
 					{label}
