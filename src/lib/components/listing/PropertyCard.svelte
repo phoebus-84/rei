@@ -21,8 +21,7 @@
 		e.stopPropagation();
 
 		if (!$currentUser) {
-			// TODO: Show modal to login
-			alert('Accedi per salvare immobili');
+			goto('/login');
 			return;
 		}
 
@@ -39,7 +38,6 @@
 			})
 			.catch((err) => {
 				console.error('Errore nel salvataggio immobile:', err);
-				alert('Errore nel salvataggio immobile');
 			})
 			.finally(() => {
 				isLoading = false;
@@ -52,19 +50,16 @@
 
 	// Get first image or placeholder
 	const imageName = property.images?.[0];
-	console.log('Property images:', property.images);
 	const imageUrl = imageName
 		? getPropertyThumbnailUrl(property.id, imageName)
 		: '/placeholder-property.jpg';
 
-	console.log('Image URL:', imageUrl);
-
 	// Determine badge
 	const badgeInfo = {
-		for_sale: { bg: 'bg-emerald-500', text: 'For Sale' },
-		for_rent: { bg: 'bg-blue-500', text: 'For Rent' },
-		sold: { bg: 'bg-gray-500', text: 'Sold' },
-		rented: { bg: 'bg-slate-500', text: 'Rented' }
+		for_sale: { bg: 'bg-primary', text: 'In Vendita' },
+		for_rent: { bg: 'bg-accent', text: 'In Affitto' },
+		sold: { bg: 'bg-muted-foreground', text: 'Venduto' },
+		rented: { bg: 'bg-muted-foreground/80', text: 'Affittato' }
 	};
 	const badge = badgeInfo[property.status as keyof typeof badgeInfo] || badgeInfo.for_sale;
 </script>
@@ -106,9 +101,9 @@
 		<!-- Featured Badge (if applicable) -->
 		{#if property.featured}
 			<div
-				class="absolute bottom-3 right-3 rounded bg-yellow-500 px-2 py-1 text-xs font-bold text-white"
+				class="absolute bottom-3 right-3 rounded bg-accent px-2 py-1 text-xs font-bold text-white"
 			>
-				Featured
+				In Evidenza
 			</div>
 		{/if}
 	</div>

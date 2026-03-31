@@ -13,11 +13,11 @@
 		error = '';
 
 		if (!email.trim()) {
-			error = 'Email is required';
+			error = 'Inserisci la tua email';
 			return;
 		}
 		if (!password) {
-			error = 'Password is required';
+			error = 'Inserisci la password';
 			return;
 		}
 
@@ -28,31 +28,27 @@
 			// Redirect to properties page on success
 			goto('/immobili');
 		} catch (err: any) {
-			error = err.message || 'Failed to login. Please check your credentials.';
+			error = 'Credenziali non valide. Controlla email e password.';
 			console.error('Login error:', err);
 		} finally {
 			isLoading = false;
 		}
 	}
 
-	function handleKeydown(e: KeyboardEvent) {
-		if (e.key === 'Enter') {
-			handleLogin();
-		}
-	}
+
 </script>
 
 <svelte:head>
-	<title>Login | Paons Immobiliare</title>
-	<meta name="description" content="Login to your Paons Immobiliare account" />
+	<title>Accedi | REI Immobiliare</title>
+	<meta name="description" content="Accedi al tuo account REI Immobiliare" />
 </svelte:head>
 
-<main class="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+<main class="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
 	<div class="w-full max-w-md space-y-8">
 		<!-- Header -->
 		<div class="text-center">
-			<h2 class="text-3xl font-bold text-gray-900">Welcome Back</h2>
-			<p class="mt-2 text-gray-600">Sign in to your account to continue</p>
+			<h2 class="text-3xl font-bold text-foreground">Bentornato</h2>
+			<p class="mt-2 text-muted-foreground">Accedi al tuo account per continuare</p>
 		</div>
 
 		<!-- Login Form -->
@@ -60,16 +56,16 @@
 			<div class="space-y-4">
 				<!-- Email Field -->
 				<div>
-					<label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+					<label for="email" class="block text-sm font-medium text-foreground">Email</label>
 					<div class="relative mt-2">
-						<Mail size={20} class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+						<Mail size={20} class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
 						<input
 							type="email"
 							id="email"
 							bind:value={email}
-							on:keydown={handleKeydown}
-							placeholder="you@example.com"
-							class="w-full rounded-lg border border-gray-300 bg-white py-3 pl-10 pr-4 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+
+							placeholder="tu@esempio.com"
+							class="w-full rounded-lg border border-border bg-card py-3 pl-10 pr-4 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
 							disabled={isLoading}
 						/>
 					</div>
@@ -77,23 +73,23 @@
 
 				<!-- Password Field -->
 				<div>
-					<label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+					<label for="password" class="block text-sm font-medium text-foreground">Password</label>
 					<div class="relative mt-2">
-						<Lock size={20} class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+						<Lock size={20} class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
 						<input
 							type={showPassword ? 'text' : 'password'}
 							id="password"
 							bind:value={password}
-							on:keydown={handleKeydown}
+
 							placeholder="••••••••"
-							class="w-full rounded-lg border border-gray-300 bg-white py-3 pl-10 pr-12 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+							class="w-full rounded-lg border border-border bg-card py-3 pl-10 pr-12 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
 							disabled={isLoading}
 						/>
 						<button
 							type="button"
 							on:click={() => (showPassword = !showPassword)}
-							class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-							aria-label={showPassword ? 'Hide password' : 'Show password'}
+							class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+							aria-label={showPassword ? 'Nascondi password' : 'Mostra password'}
 						>
 							{#if showPassword}
 								<EyeOff size={20} />
@@ -116,16 +112,16 @@
 			<button
 				type="submit"
 				disabled={isLoading}
-				class="w-full rounded-lg bg-blue-500 py-3 font-semibold text-white transition-all hover:bg-blue-600 disabled:opacity-50"
+				class="w-full rounded-lg bg-primary py-3 font-semibold text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50"
 			>
-				{isLoading ? 'Signing in...' : 'Sign In'}
+				{isLoading ? 'Accesso in corso...' : 'Accedi'}
 			</button>
 		</form>
 
 		<!-- Footer -->
-		<p class="text-center text-gray-600">
-			Don't have an account?
-			<a href="/register" class="font-medium text-blue-500 hover:text-blue-600">Sign up</a>
+		<p class="text-center text-muted-foreground">
+			Non hai un account?
+			<a href="/register" class="font-medium text-primary hover:text-primary/80">Registrati</a>
 		</p>
 	</div>
 </main>

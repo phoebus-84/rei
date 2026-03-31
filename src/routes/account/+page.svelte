@@ -20,8 +20,8 @@
 </script>
 
 <svelte:head>
-	<title>My Account | Paons Immobiliare</title>
-	<meta name="description" content="Your Paons Immobiliare account dashboard" />
+	<title>Il mio Account | REI Immobiliare</title>
+	<meta name="description" content="Il tuo account REI Immobiliare" />
 </svelte:head>
 
 <main class="min-h-screen bg-gray-50">

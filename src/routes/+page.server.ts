@@ -2,8 +2,8 @@ export const prerender = true;
 
 export function load() {
 	return {
-		title: 'Paons Immobiliare | Find Your Dream Home',
+		title: 'REI Immobiliare | Agenzia Immobiliare a Ivrea',
 		description:
-			'Discover the finest properties for sale and rent in Ireland. Browse our curated selection of residential and commercial properties.'
+			'Valorizziamo il tuo patrimonio con professionalità e trasparenza. Vendita, acquisto e valutazioni immobiliari a Ivrea e nel Canavese.'
 	};
 }

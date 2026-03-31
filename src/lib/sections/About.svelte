@@ -1,6 +1,7 @@
 <script>
 	import Statistics from '$lib/sections/Statistics.svelte';
-	import pilot from '../assets/profile.png';
+	import pilot from '../assets/profile.webp';
+	import { scrollReveal } from '$lib/utils/scroll-reveal';
 </script>
 
 <section class="relative bg-background py-20 transition-colors duration-300" id="about">
@@ -9,32 +10,51 @@
 			<div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
 				<div class="order-2 flex justify-center lg:order-1 lg:col-span-5">
 					<div
-						class="relative flex aspect-square w-full max-w-md items-center justify-center overflow-hidden rounded-2xl border-4 border-background bg-background shadow-inner"
+						class="scroll-reveal-left relative flex aspect-square w-full max-w-md items-center justify-center overflow-hidden rounded-2xl border-4 border-background bg-background shadow-inner"
+						use:scrollReveal={{ delay: 0 }}
 					>
 						<img
 							alt="Professional Consultant"
 							class="h-full w-full object-cover opacity-90 grayscale transition-transform duration-500 hover:scale-105 hover:grayscale-0"
 							src={pilot}
+							loading="lazy"
+							decoding="async"
+							width="1024"
+							height="1024"
 						/>
 					</div>
 				</div>
 				<div class="order-1 lg:order-2 lg:col-span-7">
-					<span class="mb-2 block text-sm font-bold uppercase tracking-wider text-[#D247BF]"
-						>La nostra agenzia</span
+					<span
+						class="scroll-reveal-up mb-2 block text-xs font-semibold uppercase tracking-[0.15em] text-accent"
+						use:scrollReveal={{ delay: 0 }}
+						>Il nostro studio</span
 					>
-					<h2 class="font-display mb-6 text-3xl font-bold text-foreground md:text-4xl">
+					<h2
+						class="scroll-reveal-up font-display text-fluid-sub mb-6 font-bold text-foreground"
+						use:scrollReveal={{ delay: 100 }}
+					>
 						Chi siamo
 					</h2>
-					<p class="mb-6 text-lg leading-relaxed text-muted-foreground">
-						REI è un'agenzia giovane che parla chiaro e lavora sui numeri. Un approccio diretto,
-						strumenti legali avanzati e una gestione concreta degli asset immobiliari per chi vuole
+					<p
+						class="scroll-reveal-up mb-6 text-lg leading-relaxed text-muted-foreground"
+						use:scrollReveal={{ delay: 200 }}
+					>
+						REI è uno studio immobiliare giovane, ma con un team che porta oltre 20 anni di
+						esperienza nel settore. Parliamo chiaro, lavoriamo sui numeri e offriamo strumenti
+						legali avanzati e una gestione concreta degli asset immobiliari per chi vuole
 						valorizzare, non svendere.
 					</p>
-					<p class="mb-10 text-lg leading-relaxed text-muted-foreground">
-						Lavoriamo a Ivrea e nel Canavese concentrandoci su tre pilastri: analisi reale del
-						valore, strategie di vendita su misura e gestione patrimoniale efficace.
+					<p
+						class="scroll-reveal-up mb-10 text-lg leading-relaxed text-muted-foreground"
+						use:scrollReveal={{ delay: 350 }}
+					>
+						Lavoriamo nel Canavese e non solo, concentrandoci su analisi reale del valore, strategie
+						di vendita su misura e gestione patrimoniale efficace.
 					</p>
-					<Statistics />
+					<div class="scroll-reveal-up" use:scrollReveal={{ delay: 500 }}>
+						<Statistics />
+					</div>
 				</div>
 			</div>
 		</div>

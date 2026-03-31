@@ -5,6 +5,7 @@
 		AccordionTrigger,
 		AccordionContent
 	} from '$lib/components/ui/accordion';
+	import { scrollReveal } from '$lib/utils/scroll-reveal';
 
 	interface FAQProps {
 		question: string;
@@ -41,15 +42,22 @@
 </script>
 
 <section id="faq" class="container py-24 sm:py-32">
-	<h2 class="mb-4 text-3xl font-bold md:text-4xl">
+	<h2
+		class="scroll-reveal-up mb-4 font-display text-fluid-section font-bold"
+		use:scrollReveal={{ delay: 0 }}
+	>
 		Domande
-		<span class="bg-gradient-to-b from-primary/60 to-primary bg-clip-text text-transparent">
+		<span class="text-primary">
 			frequenti
 		</span>
 	</h2>
 
 	<Accordion class="AccordionRoot w-full">
-		{#each FAQList as { question, answer, value } (value)}
+		{#each FAQList as { question, answer, value }, idx (value)}
+			<div
+				class="scroll-reveal-up"
+				use:scrollReveal={{ delay: 100 + idx * 100 }}
+			>
 			<AccordionItem {value}>
 				<AccordionTrigger class="text-left">
 					{question}
@@ -58,14 +66,17 @@
 					{answer}
 				</AccordionContent>
 			</AccordionItem>
+			</div>
 		{/each}
 	</Accordion>
 
-	<h3 class="mt-4 font-medium">
+	<h3
+		class="scroll-reveal-up mt-4 font-medium"
+		use:scrollReveal={{ delay: 500 }}
+	>
 		Hai ancora dubbi?
 		<a
-			rel="noreferrer noopener"
-			href="/"
+			href="mailto:info@rei-immobiliare.it"
 			class="border-primary text-primary transition-all hover:border-b-2">Scrivici</a
 		>
 	</h3>

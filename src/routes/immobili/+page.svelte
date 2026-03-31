@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import PropertyCard from '$lib/components/listing/PropertyCard.svelte';
 	import FilterSidebar from '$lib/components/listing/FilterSidebar.svelte';
 	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
@@ -16,15 +17,15 @@
 		if (p < 1 || p > totalPages) return;
 		const newUrl = new URL($page.url);
 		newUrl.searchParams.set('page', p.toString());
-		window.location.href = newUrl.toString();
+		goto(newUrl.pathname + newUrl.search);
 	}
 </script>
 
 <svelte:head>
-	<title>Immobili in Vendita e Affitto | Paons Immobiliare</title>
+	<title>Immobili in Vendita e Affitto | REI Immobiliare</title>
 	<meta
 		name="description"
-		content="Scopri la nostra selezione di immobili in vendita e affitto. Trova la tua casa ideale con Paons Immobiliare."
+		content="Scopri la nostra selezione di immobili in vendita e affitto. Trova la tua casa ideale con REI Immobiliare."
 	/>
 </svelte:head>
 

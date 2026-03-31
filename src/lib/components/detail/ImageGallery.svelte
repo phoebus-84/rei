@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { getPropertyImageUrl } from '$lib/utils';
-	import { ChevronLeft, ChevronRight, X } from 'lucide-svelte';
+	import { ChevronLeft, ChevronRight, X, Maximize } from 'lucide-svelte';
 	import type { RecordModel } from 'pocketbase';
 
 	export let property: RecordModel;
@@ -44,22 +44,27 @@
 </script>
 
 <!-- Main Image Grid -->
-<div class="mb-8 rounded-xl overflow-hidden bg-gray-200">
+<div class="mb-8 rounded-xl overflow-hidden bg-muted">
 	{#if images.length === 0}
-		<div class="aspect-video flex items-center justify-center bg-gray-300">
-			<span class="text-gray-600">Nessuna immagine disponibile</span>
+		<div class="aspect-video flex items-center justify-center bg-muted">
+			<span class="text-muted-foreground">Nessuna immagine disponibile</span>
 		</div>
 	{:else if images.length === 1}
 		<!-- Single Image -->
 		<button
 			on:click={() => openLightbox(0)}
-			class="w-full block cursor-pointer hover:opacity-90 transition-opacity"
+			class="group relative w-full block cursor-pointer transition-opacity"
 		>
 			<img
 				src={getPropertyImageUrl(property.id, images[0])}
 				alt="Immobile"
 				class="w-full h-[500px] object-cover"
 			/>
+			<div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/20">
+				<div class="rounded-full bg-white/80 p-3 opacity-0 transition-opacity group-hover:opacity-100">
+					<Maximize size={20} class="text-foreground" />
+				</div>
+			</div>
 		</button>
 	{:else}
 		<!-- Grid Layout: 4 cols, 2 rows -->
@@ -67,20 +72,25 @@
 			<!-- Main Image: 2x2 (left side) -->
 			<button
 				on:click={() => openLightbox(0)}
-				class="col-span-2 row-span-2 rounded-l-xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+				class="group relative col-span-2 row-span-2 rounded-l-xl overflow-hidden cursor-pointer"
 			>
 				<img
 					src={getPropertyImageUrl(property.id, images[0])}
 					alt="Vista principale immobile"
 					class="w-full h-full object-cover"
 				/>
+				<div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/20">
+					<div class="rounded-full bg-white/80 p-3 opacity-0 transition-opacity group-hover:opacity-100">
+						<Maximize size={24} class="text-foreground" />
+					</div>
+				</div>
 			</button>
 
 			<!-- Secondary Images: 1x1 each (right side) -->
 			{#each images.slice(1, 4) as image, idx}
 				<button
 					on:click={() => openLightbox(idx + 1)}
-					class={`relative cursor-pointer hover:opacity-90 transition-opacity overflow-hidden ${
+					class={`group relative cursor-pointer overflow-hidden ${
 						idx === 2 ? 'rounded-r-xl' : ''
 					}`}
 				>
@@ -89,6 +99,14 @@
 						alt="Vista immobile {idx + 2}"
 						class="w-full h-full object-cover"
 					/>
+					<!-- Hover affordance -->
+					{#if !(idx === 2 && images.length > 4)}
+						<div class="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/20">
+							<div class="rounded-full bg-white/80 p-2 opacity-0 transition-opacity group-hover:opacity-100">
+								<Maximize size={16} class="text-foreground" />
+							</div>
+						</div>
+					{/if}
 
 					<!-- +N more overlay on last image -->
 					{#if idx === 2 && images.length > 4}

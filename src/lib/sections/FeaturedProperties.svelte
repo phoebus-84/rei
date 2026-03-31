@@ -4,11 +4,16 @@
 	import PropertyCard from '$lib/components/listing/PropertyCard.svelte';
 	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
 	import type { RecordModel } from 'pocketbase';
+	import { scrollReveal } from '$lib/utils/scroll-reveal';
 
 	let properties: RecordModel[] = [];
-	let currentIndex = 0;
+	let currentPage = 0;
 	let loading = true;
 	let error = '';
+	let paused = false;
+
+	$: pageCount = Math.max(1, Math.ceil(properties.length / 3));
+	$: visibleProperties = properties.slice(currentPage * 3, currentPage * 3 + 3);
 
 	onMount(async () => {
 		try {
@@ -20,66 +25,89 @@
 			properties = result.items;
 		} catch (err) {
 			console.error('Failed to load featured properties:', err);
-			error = 'Failed to load featured properties';
+			error = 'Impossibile caricare gli immobili in evidenza';
 		} finally {
 			loading = false;
 		}
 	});
 
 	function nextSlide() {
-		currentIndex = (currentIndex + 1) % Math.max(1, properties.length - 2);
+		currentPage = (currentPage + 1) % pageCount;
 	}
 
 	function prevSlide() {
-		currentIndex = (currentIndex - 1 + Math.max(1, properties.length - 2)) % Math.max(1, properties.length - 2);
+		currentPage = (currentPage - 1 + pageCount) % pageCount;
 	}
 
-	// Auto-rotate carousel every 5 seconds
+	// Auto-rotate carousel every 5 seconds, pause on hover/focus
 	onMount(() => {
-		const interval = setInterval(nextSlide, 5000);
+		const interval = setInterval(() => {
+			if (!paused) nextSlide();
+		}, 5000);
 		return () => clearInterval(interval);
 	});
 </script>
 
-<section class="bg-gradient-to-b from-blue-50 to-white py-16 sm:py-24">
+<section class="bg-muted/30 py-16 sm:py-24 featured-section">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<!-- Header -->
 		<div class="mb-12 text-center">
-			<h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">Immobili in Evidenza</h2>
-			<p class="mt-4 text-lg text-gray-600">
+			<h2
+				class="scroll-reveal-up font-display text-fluid-sub font-bold text-foreground"
+				use:scrollReveal={{ delay: 0 }}
+			>Immobili in Evidenza</h2>
+			<p
+				class="scroll-reveal-up mt-4 text-lg text-muted-foreground"
+				use:scrollReveal={{ delay: 100 }}
+			>
 				Scopri la nostra selezione esclusiva di immobili premium
 			</p>
 		</div>
 
 		{#if loading}
 			<div class="flex justify-center py-12">
-				<div class="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
+				<div class="h-12 w-12 animate-spin rounded-full border-4 border-muted border-t-primary"></div>
 			</div>
 		{:else if error}
 			<div class="rounded-lg bg-red-50 border border-red-200 p-4 text-center text-red-700">
 				{error}
 			</div>
 		{:else if properties.length === 0}
-			<div class="rounded-lg bg-gray-50 border border-gray-200 p-8 text-center text-gray-600">
-				<p>Nessun immobile in evidenza disponibile al momento</p>
+			<div class="rounded-lg bg-muted border border-border p-12 text-center">
+				<p class="text-lg font-medium text-foreground">Nessun immobile in evidenza al momento</p>
+				<p class="mt-2 text-muted-foreground">Stiamo aggiornando la nostra selezione. Torna presto!</p>
+				<a
+					href="/immobili"
+					class="mt-6 inline-block rounded-lg bg-primary px-6 py-2 font-semibold text-primary-foreground hover:bg-primary/90 transition-all"
+				>
+					Sfoglia tutti gli immobili
+				</a>
 			</div>
 		{:else}
 			<!-- Carousel -->
-			<div class="relative">
+			<div
+				class="relative"
+				on:mouseenter={() => (paused = true)}
+				on:mouseleave={() => (paused = false)}
+				on:focusin={() => (paused = true)}
+				on:focusout={() => (paused = false)}
+				role="region"
+				aria-label="Carosello immobili in evidenza"
+			>
 				<!-- Cards Grid -->
 				<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 overflow-hidden">
-					{#each properties.slice(currentIndex, currentIndex + 3) as property (property.id)}
-						<div class="animate-fadeIn">
+					{#each visibleProperties as property (currentPage + '-' + property.id)}
+						<div class="carousel-card-enter property-ken-burns">
 							<PropertyCard {property} />
 						</div>
 					{/each}
 				</div>
 
 				<!-- Navigation Buttons -->
-				{#if properties.length > 3}
+				{#if pageCount > 1}
 					<button
 						on:click={prevSlide}
-						class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-16 z-10 rounded-full bg-blue-500 p-2 text-white hover:bg-blue-600 transition-all"
+						class="absolute left-2 top-1/2 -translate-y-1/2 z-10 rounded-full bg-background/90 border border-border p-2 text-foreground shadow-md backdrop-blur hover:bg-muted transition-all"
 						aria-label="Immobili precedenti"
 					>
 						<ChevronLeft size={24} />
@@ -87,7 +115,7 @@
 
 					<button
 						on:click={nextSlide}
-						class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-16 z-10 rounded-full bg-blue-500 p-2 text-white hover:bg-blue-600 transition-all"
+						class="absolute right-2 top-1/2 -translate-y-1/2 z-10 rounded-full bg-background/90 border border-border p-2 text-foreground shadow-md backdrop-blur hover:bg-muted transition-all"
 						aria-label="Immobili successivi"
 					>
 						<ChevronRight size={24} />
@@ -95,25 +123,28 @@
 				{/if}
 
 				<!-- Dots Indicator -->
-				<div class="mt-8 flex justify-center gap-2">
-					{#each Array.from({ length: Math.max(1, properties.length - 2) }) as _, idx}
+				<div class="mt-8 flex justify-center gap-3">
+					{#each Array.from({ length: pageCount }) as _, idx}
 						<button
-							on:click={() => (currentIndex = idx)}
-							class={`h-3 w-3 rounded-full transition-all ${
-								idx === currentIndex ? 'bg-blue-600 w-8' : 'bg-gray-300'
+							on:click={() => (currentPage = idx)}
+							class={`h-3 rounded-full transition-all ${
+								idx === currentPage ? 'bg-primary w-8' : 'bg-muted-foreground/30 w-3'
 							}`}
-							aria-label="Go to slide {idx + 1}"
-							aria-current={idx === currentIndex}
-						/>
+							aria-label="Vai alla pagina {idx + 1}"
+							aria-current={idx === currentPage}
+						></button>
 					{/each}
 				</div>
 			</div>
 
 			<!-- CTA -->
-			<div class="mt-12 text-center">
+			<div
+				class="scroll-reveal-up mt-12 text-center"
+				use:scrollReveal={{ delay: 300 }}
+			>
 				<a
 					href="/immobili"
-					class="inline-block rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white hover:bg-blue-700 transition-all"
+					class="inline-block rounded-lg bg-primary px-8 py-3 font-semibold text-primary-foreground hover:bg-primary/90 transition-all"
 				>
 					Visualizza tutti gli immobili
 				</a>
@@ -123,16 +154,20 @@
 </section>
 
 <style>
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
+	/* Allow browser to skip rendering when section is off-screen */
+	.featured-section {
+		content-visibility: auto;
+		contain-intrinsic-size: auto 600px;
 	}
 
-	.animate-fadeIn {
-		animation: fadeIn 0.5s ease-in-out;
+	/* Ken Burns: gentle zoom on property card images */
+	.property-ken-burns :global(img) {
+		animation: kenBurns 18s ease-in-out infinite alternate;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.property-ken-burns :global(img) {
+			animation: none;
+		}
 	}
 </style>

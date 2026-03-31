@@ -9,13 +9,12 @@
 		{
 			quantity: '150+',
 			description: 'Immobili gestiti',
-			colorClass: 'bg-gradient-to-r from-[#F596D3] to-[#D247BF] bg-clip-text text-transparent'
+			colorClass: 'text-accent'
 		},
 		{
 			quantity: '40gg',
 			description: 'Tempo medio',
-			colorClass:
-				'bg-gradient-to-r from-[#61DAFB] via-[#1fc0f1] to-[#03a3d7] bg-clip-text text-transparent'
+			colorClass: 'text-primary'
 		},
 		{
 			quantity: '100%',
@@ -85,7 +84,7 @@
 	{#each stats as { quantity, description, colorClass }}
 		<div class="text-center md:text-left">
 			<div
-				class="font-display text-3xl font-bold {colorClass}"
+				class="font-display text-3xl font-bold tabular-nums {colorClass}"
 				use:animateCount={{ value: quantity }}
 			>
 				{quantity}
