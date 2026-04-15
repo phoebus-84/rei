@@ -1,23 +1,64 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 	import { Filter, X } from 'lucide-svelte';
 
 	export let isOpen = false;
 
+	// Read current URL params as the "applied" baseline
+	function readParams(p: URLSearchParams) {
+		return {
+			keyword: p.get('keyword') || '',
+			status: p.get('status') || 'for_sale',
+			minPrice: p.get('minPrice') || '',
+			maxPrice: p.get('maxPrice') || '',
+			propertyType: p.get('type') || '',
+			bedrooms: p.get('minBedrooms') ? p.get('minBedrooms') + '+' : p.get('bedrooms') || '',
+			minRooms: p.get('minRooms') ? (parseInt(p.get('minRooms')!) >= 5 ? '5+' : p.get('minRooms')!) : '',
+			heatingType: p.get('heating') || '',
+			condition: p.get('condition') || '',
+			hasElevator: p.get('elevator') === '1',
+			hasGarage: p.get('garage') === '1',
+			hasParking: p.get('parking') === '1',
+			hasCellar: p.get('cellar') === '1'
+		};
+	}
+
+	// Initialize from URL
+	let applied = readParams($page.url.searchParams);
+
 	// Filter state
-	let keyword = '';
-	let status = 'for_sale';
-	let minPrice: string | number = '';
-	let maxPrice: string | number = '';
-	let propertyType = '';
-	let bedrooms = '';
-	let minRooms = '';
-	let heatingType = '';
-	let condition = '';
-	let hasElevator = false;
-	let hasGarage = false;
-	let hasParking = false;
-	let hasCellar = false;
+	let keyword = applied.keyword;
+	let status = applied.status;
+	let minPrice: string | number = applied.minPrice;
+	let maxPrice: string | number = applied.maxPrice;
+	let propertyType = applied.propertyType;
+	let bedrooms = applied.bedrooms;
+	let minRooms = applied.minRooms;
+	let heatingType = applied.heatingType;
+	let condition = applied.condition;
+	let hasElevator = applied.hasElevator;
+	let hasGarage = applied.hasGarage;
+	let hasParking = applied.hasParking;
+	let hasCellar = applied.hasCellar;
+
+	// Update applied baseline when URL changes (e.g. after apply/reset)
+	$: applied = readParams($page.url.searchParams);
+
+	$: hasChanges =
+		keyword !== applied.keyword ||
+		status !== applied.status ||
+		String(minPrice) !== String(applied.minPrice) ||
+		String(maxPrice) !== String(applied.maxPrice) ||
+		propertyType !== applied.propertyType ||
+		bedrooms !== applied.bedrooms ||
+		minRooms !== applied.minRooms ||
+		heatingType !== applied.heatingType ||
+		condition !== applied.condition ||
+		hasElevator !== applied.hasElevator ||
+		hasGarage !== applied.hasGarage ||
+		hasParking !== applied.hasParking ||
+		hasCellar !== applied.hasCellar;
 
 	// Options
 	const statusOptions = [
@@ -320,7 +361,8 @@
 		</button>
 		<button
 			on:click={applyFilters}
-			class="flex-1 rounded-md bg-primary py-2.5 font-medium text-primary-foreground transition-all hover:bg-primary/90"
+			disabled={!hasChanges}
+			class="flex-1 rounded-md bg-primary py-2.5 font-medium text-primary-foreground transition-all hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
 		>
 			Applica
 		</button>
