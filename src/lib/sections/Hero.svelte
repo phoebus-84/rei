@@ -134,12 +134,12 @@
 			</div>
 
 			<a
-				href="tel:+390125000000"
+				href="tel:+390125282335"
 				class="inline-flex items-center gap-2 py-2 text-muted-foreground transition-colors hover:text-primary hero-fade hero-fade-delay-2"
 				class:hero-visible={visible}
 			>
 				<Phone class="h-4 w-4" />
-				<span>+39 0125 000000</span>
+				<span>+39 0125 282335</span>
 			</a>
 		</div>
 	</div>

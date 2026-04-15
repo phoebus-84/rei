@@ -25,8 +25,8 @@
 				</a>
 			</div>
 			<div>
-				<a href="tel:+390125000000" class="opacity-60 hover:opacity-100">
-					+39 0125 000000
+				<a href="tel:+390125282335" class="opacity-60 hover:opacity-100">
+					+39 0125 282335
 				</a>
 			</div>
 			<div>

@@ -9,13 +9,9 @@
 		Check,
 		Home,
 		MapPin,
-		Calendar,
 		ChevronRight,
 		Phone,
 		DoorOpen,
-		Flame,
-		Building,
-		ArrowUpDown
 	} from 'lucide-svelte';
 	import type { PageData } from './$types';
 

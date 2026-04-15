@@ -57,7 +57,7 @@
 		</nav>
 
 		<div class="hidden items-center gap-2 md:flex">
-			<a href="tel:+390125000000" class={buttonVariants({ variant: 'default' })}>
+			<a href="tel:+390125282335" class={buttonVariants({ variant: 'default' })}>
 				<Phone class="mr-2 h-4 w-4" />
 				Contattaci
 			</a>
@@ -92,7 +92,7 @@
 							</a>
 						{/each}
 						<div class="mt-4 space-y-3 border-t pt-4">
-							<a href="tel:+390125000000" class="{buttonVariants({ variant: 'default' })} w-full">
+							<a href="tel:+390125282335" class="{buttonVariants({ variant: 'default' })} w-full">
 								<Phone class="mr-2 h-4 w-4" />
 								Contattaci
 							</a>
