@@ -11,7 +11,11 @@
 	let imageLoaded = false;
 	let thumbnailStrip: HTMLDivElement;
 
-	const images = property.images || [];
+	const rawImages: string[] = property.images || [];
+	// Put cover image first if set
+	const images = property.cover_image && rawImages.includes(property.cover_image)
+		? [property.cover_image, ...rawImages.filter((img: string) => img !== property.cover_image)]
+		: rawImages;
 
 	$: lightboxIndex, imageLoaded = false;
 

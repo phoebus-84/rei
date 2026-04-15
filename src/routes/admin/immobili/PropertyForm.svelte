@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import { X, Upload } from 'lucide-svelte';
+	import { X, Upload, Star } from 'lucide-svelte';
 
 	interface Props {
 		property?: any;
@@ -47,6 +47,7 @@
 			: ''
 	);
 
+	let coverImage = $state(property?.cover_image ?? '');
 	let existingImages = $state<string[]>(property?.images ? [...property.images] : []);
 	let removedImages = $state<string[]>([]);
 	let newFiles = $state<File[]>([]);
@@ -78,6 +79,7 @@
 	function removeExistingImage(filename: string) {
 		existingImages = existingImages.filter((f) => f !== filename);
 		removedImages = [...removedImages, filename];
+		if (coverImage === filename) coverImage = '';
 	}
 
 	function handleFileSelect(e: Event) {
@@ -133,6 +135,7 @@
 		formData.append('total_floors', String(totalFloors));
 		formData.append('has_elevator', String(hasElevator));
 		formData.append('condition', condition);
+		formData.append('cover_image', coverImage);
 
 		const amenitiesList = amenities
 			.split(',')
@@ -435,11 +438,21 @@
 	<div class="rounded-lg border bg-background p-6">
 		<h2 class="mb-4 text-lg font-semibold">Immagini</h2>
 
+		<p class="mb-3 text-sm text-muted-foreground">Clicca la stella per scegliere l'immagine di copertina.</p>
+
 		{#if existingImages.length > 0}
 			<div class="mb-4 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
 				{#each existingImages as filename (filename)}
-					<div class="group relative aspect-square overflow-hidden rounded-md border">
+					<div class="group relative aspect-square overflow-hidden rounded-md border {coverImage === filename ? 'ring-2 ring-primary' : ''}">
 						<img src={getImageUrl(filename)} alt="" class="h-full w-full object-cover" />
+						<button
+							type="button"
+							onclick={() => (coverImage = coverImage === filename ? '' : filename)}
+							class="absolute left-1 top-1 rounded-full p-1 transition-opacity {coverImage === filename ? 'bg-primary text-primary-foreground opacity-100' : 'bg-black/50 text-white opacity-0 group-hover:opacity-100'}"
+							title="Imposta come copertina"
+						>
+							<Star class="h-3 w-3 {coverImage === filename ? 'fill-current' : ''}" />
+						</button>
 						<button
 							type="button"
 							onclick={() => removeExistingImage(filename)}

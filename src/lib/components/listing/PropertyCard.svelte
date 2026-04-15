@@ -49,7 +49,7 @@
 	}
 
 	// Get first image or placeholder
-	const imageName = property.images?.[0];
+	const imageName = property.cover_image || property.images?.[0];
 	const imageUrl = imageName
 		? getPropertyThumbnailUrl(property.id, imageName)
 		: '/placeholder-property.jpg';
