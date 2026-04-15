@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
 	import { onMount } from 'svelte';
-	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { ChevronLeft, ChevronRight, Search, Download } from 'lucide-svelte';
 
 	let inquiries = $state<any[]>([]);
 	let currentPage = $state(1);
@@ -9,6 +9,7 @@
 	let totalItems = $state(0);
 	let loading = $state(true);
 	let filterStatus = $state('');
+	let searchEmail = $state('');
 
 	const perPage = 20;
 
@@ -26,10 +27,14 @@
 	async function loadInquiries() {
 		loading = true;
 		try {
-			let filter = '';
+			const filters: string[] = [];
 			if (filterStatus) {
-				filter = `status = "${filterStatus}"`;
+				filters.push(`status = "${filterStatus}"`);
 			}
+			if (searchEmail.trim()) {
+				filters.push(`customer_email ~ "${searchEmail.trim()}"`);
+			}
+			const filter = filters.join(' && ');
 			const result = await pb.collection('inquiries').getList(currentPage, perPage, {
 				sort: '-created',
 				expand: 'property',
@@ -56,6 +61,49 @@
 		loadInquiries();
 	}
 
+	function onSearchEmail() {
+		currentPage = 1;
+		loadInquiries();
+	}
+
+	async function exportByEmail() {
+		if (!searchEmail.trim()) return;
+		try {
+			const results = await pb.collection('inquiries').getFullList({
+				filter: `customer_email ~ "${searchEmail.trim()}"`,
+				expand: 'property'
+			});
+			const exportData = {
+				exported_at: new Date().toISOString(),
+				purpose: 'GDPR Data Subject Access Request (Art. 15/20)',
+				email: searchEmail.trim(),
+				total_records: results.length,
+				records: results.map((r: any) => ({
+					customer_name: r.customer_name,
+					customer_email: r.customer_email,
+					customer_phone: r.customer_phone,
+					message: r.message,
+					property_reference: r.expand?.property?.title ?? r.property,
+					status: r.status,
+					created: r.created,
+					updated: r.updated,
+					privacy_accepted: r.privacy_accepted ?? false,
+					privacy_accepted_at: r.privacy_accepted_at ?? null,
+					privacy_policy_version: r.privacy_policy_version ?? null
+				}))
+			};
+			const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.href = url;
+			a.download = `dsar_${searchEmail.trim().replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().slice(0, 10)}.json`;
+			a.click();
+			URL.revokeObjectURL(url);
+		} catch (err) {
+			console.error('Export error:', err);
+		}
+	}
+
 	onMount(loadInquiries);
 </script>
 
@@ -69,16 +117,37 @@
 			<h1 class="text-2xl font-bold text-foreground">Richieste</h1>
 			<p class="mt-1 text-sm text-muted-foreground">{totalItems} richieste totali</p>
 		</div>
-		<select
-			bind:value={filterStatus}
-			onchange={onFilterChange}
-			class="h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-		>
-			<option value="">Tutte le richieste</option>
-			<option value="new">Nuove</option>
-			<option value="read">Lette</option>
-			<option value="responded">Con risposta</option>
-		</select>
+		<div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+			<div class="relative flex items-center">
+				<Search class="absolute left-3 h-4 w-4 text-muted-foreground" />
+				<input
+					type="email"
+					bind:value={searchEmail}
+					onkeydown={(e) => { if (e.key === 'Enter') onSearchEmail(); }}
+					placeholder="Cerca per email (DSAR)..."
+					class="h-10 w-56 rounded-md border border-input bg-background pl-9 pr-3 text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring"
+				/>
+				{#if searchEmail.trim()}
+					<button
+						onclick={exportByEmail}
+						title="Esporta JSON per questa email"
+						class="ml-1 rounded-md border border-blue-300 bg-blue-50 p-2 text-blue-700 hover:bg-blue-100"
+					>
+						<Download class="h-4 w-4" />
+					</button>
+				{/if}
+			</div>
+			<select
+				bind:value={filterStatus}
+				onchange={onFilterChange}
+				class="h-10 rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+			>
+				<option value="">Tutte le richieste</option>
+				<option value="new">Nuove</option>
+				<option value="read">Lette</option>
+				<option value="responded">Con risposta</option>
+			</select>
+		</div>
 	</div>
 
 	{#if loading}

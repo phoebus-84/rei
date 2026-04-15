@@ -1,5 +1,6 @@
 <script>
 	import logo from '$lib/assets/logo.png';
+	import * as m from '$lib/paraglide/messages';
 	const year = new Date().getFullYear();
 </script>
 <footer id="footer">
@@ -59,20 +60,27 @@
 		</div>
 
 		<div class="flex flex-col gap-2">
-			<h3 class="text-lg font-bold">Social</h3>
+			<h3 class="text-lg font-bold">Legale</h3>
 			<div>
-				<a rel="noreferrer noopener" href="https://facebook.com" target="_blank" class="opacity-60 hover:opacity-100"> Facebook </a>
+				<a href="/pp" class="opacity-60 hover:opacity-100">
+					{m.footer_privacy()}
+				</a>
 			</div>
 			<div>
-				<a rel="noreferrer noopener" href="https://instagram.com" target="_blank" class="opacity-60 hover:opacity-100"> Instagram </a>
-			</div>
-			<div>
-				<a rel="noreferrer noopener" href="https://linkedin.com" target="_blank" class="opacity-60 hover:opacity-100"> Linkedin </a>
+				<button
+					onclick={() => {
+						localStorage.removeItem('cookie_consent');
+						window.location.reload();
+					}}
+					class="text-left opacity-60 hover:opacity-100"
+				>
+					{m.footer_cookie_settings()}
+				</button>
 			</div>
 		</div>
 	</section>
 
 	<section class="container pb-14 text-center">
-		<h3>&copy; {year} REI Immobiliare</h3>
+		<h3>&copy; {year} REI Immobiliare — {m.footer_copyright()}</h3>
 	</section>
 </footer>

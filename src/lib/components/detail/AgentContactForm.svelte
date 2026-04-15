@@ -2,6 +2,7 @@
 	import { pb } from '$lib/pocketbase';
 	import { getUserAvatarUrl } from '$lib/utils';
 	import { Phone, MessageCircle, Check } from 'lucide-svelte';
+	import * as m from '$lib/paraglide/messages';
 	import type { RecordModel } from 'pocketbase';
 
 	export let property: RecordModel;
@@ -16,7 +17,8 @@
 		customer_name: '',
 		customer_email: '',
 		customer_phone: '',
-		message: ''
+		message: '',
+		privacy_accepted: false
 	};
 
 	function validateEmail(email: string): boolean {
@@ -56,6 +58,11 @@
 			return;
 		}
 
+		if (!formData.privacy_accepted) {
+			error = m.privacy_consent_required();
+			return;
+		}
+
 		isSubmitting = true;
 
 		try {
@@ -65,7 +72,9 @@
 				customer_email: formData.customer_email,
 				customer_phone: formData.customer_phone,
 				message: formData.message,
-				status: 'new'
+				status: 'new',
+				privacy_accepted: true,
+				privacy_policy_version: '1.0'
 			});
 
 			isSuccess = true;
@@ -110,7 +119,7 @@
 				Grazie per la tua richiesta. L'agente ti contatterà a breve.
 			</p>
 			<button
-				on:click={() => { isSuccess = false; formData = { customer_name: '', customer_email: '', customer_phone: '', message: '' }; }}
+				on:click={() => { isSuccess = false; formData = { customer_name: '', customer_email: '', customer_phone: '', message: '', privacy_accepted: false }; }}
 				class="mt-2 text-sm font-medium text-primary underline-offset-2 hover:underline"
 			>
 				Invia un altro messaggio
@@ -180,6 +189,22 @@
 					rows={4}
 					class="mt-2 w-full rounded-lg border border-border bg-background px-4 py-2.5 text-foreground placeholder:text-muted-foreground/50 focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
 				/>
+			</div>
+
+			<!-- GDPR Privacy Consent -->
+			<div class="flex items-start gap-3">
+				<input
+					type="checkbox"
+					id="privacy_consent"
+					bind:checked={formData.privacy_accepted}
+					class="mt-1 h-4 w-4 shrink-0 rounded border-border text-primary focus:ring-ring"
+				/>
+				<label for="privacy_consent" class="text-sm leading-snug text-muted-foreground">
+					{m.privacy_consent_checkbox()}
+					<a href="/pp" target="_blank" class="text-primary underline underline-offset-2 hover:text-primary/80">
+						{m.privacy_policy_title()}
+					</a>
+				</label>
 			</div>
 
 			{#if error}
