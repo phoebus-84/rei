@@ -47,7 +47,6 @@
 
 	$: hasChanges =
 		keyword !== applied.keyword ||
-		status !== applied.status ||
 		String(minPrice) !== String(applied.minPrice) ||
 		String(maxPrice) !== String(applied.maxPrice) ||
 		propertyType !== applied.propertyType ||
@@ -148,6 +147,12 @@
 	function handleRoomClick(value: string) {
 		minRooms = minRooms === value ? '' : value;
 	}
+
+	function switchStatus(value: string) {
+		if (status === value) return;
+		status = value;
+		applyFilters();
+	}
 </script>
 
 <!-- Mobile Overlay -->
@@ -195,7 +200,7 @@
 		<div class="flex gap-2">
 			{#each statusOptions as opt (opt.value)}
 				<button
-					on:click={() => (status = opt.value)}
+					on:click={() => switchStatus(opt.value)}
 					class={`flex-1 rounded-md py-2 px-3 font-medium transition-all ${
 						status === opt.value
 							? 'bg-primary text-primary-foreground'
