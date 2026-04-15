@@ -15,6 +15,16 @@ export const load: PageServerLoad = async ({ url }) => {
 	const type = url.searchParams.get('type');
 	const bedrooms = url.searchParams.get('bedrooms');
 	const minBedrooms = url.searchParams.get('minBedrooms');
+	const minRooms = url.searchParams.get('minRooms');
+	const heating = url.searchParams.get('heating');
+	const condition = url.searchParams.get('condition');
+	const elevator = url.searchParams.get('elevator');
+	const garage = url.searchParams.get('garage');
+	const parking = url.searchParams.get('parking');
+	const cellar = url.searchParams.get('cellar');
+
+	const validHeating = ['autonomo', 'centralizzato', 'a_pavimento', 'assente'];
+	const validCondition = ['nuovo', 'ristrutturato', 'abitabile', 'da_ristrutturare'];
 
 	// Status filter
 	if (status) {
@@ -44,6 +54,35 @@ export const load: PageServerLoad = async ({ url }) => {
 		filter += ` && bedrooms >= ${minBedrooms}`;
 	} else if (bedrooms) {
 		filter += ` && bedrooms = ${bedrooms}`;
+	}
+
+	// Rooms
+	if (minRooms) {
+		filter += ` && rooms >= ${minRooms}`;
+	}
+
+	// Heating
+	if (heating && validHeating.includes(heating)) {
+		filter += ` && heating_type = "${heating}"`;
+	}
+
+	// Condition
+	if (condition && validCondition.includes(condition)) {
+		filter += ` && condition = "${condition}"`;
+	}
+
+	// Boolean amenities
+	if (elevator) {
+		filter += ' && has_elevator = true';
+	}
+	if (garage) {
+		filter += ' && has_garage = true';
+	}
+	if (parking) {
+		filter += ' && has_parking = true';
+	}
+	if (cellar) {
+		filter += ' && has_cellar = true';
 	}
 
 	try {

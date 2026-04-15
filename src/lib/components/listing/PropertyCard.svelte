@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { currentUser } from '$lib/stores/auth';
 	import { getPropertyThumbnailUrl, formatCurrency, formatArea } from '$lib/utils';
-	import { Heart, MapPin, Bed, Bath, Square } from 'lucide-svelte';
+	import { Heart, MapPin, Bed, Bath, Square, DoorOpen, ArrowUpDown } from 'lucide-svelte';
 	import type { RecordModel } from 'pocketbase';
 	import { pb } from '$lib/pocketbase';
 
@@ -129,22 +129,33 @@
 		<!-- Specs Row -->
 		<div class="border-t border-border pt-3">
 			<div class="flex gap-4 text-sm text-muted-foreground">
-				{#if property.bedrooms}
-					<div class="flex items-center gap-1">
+				{#if property.rooms}
+					<div class="flex items-center gap-1" title="Locali">
+						<DoorOpen size={16} />
+						<span>{property.rooms}</span>
+					</div>
+				{:else if property.bedrooms}
+					<div class="flex items-center gap-1" title="Camere">
 						<Bed size={16} />
 						<span>{property.bedrooms}</span>
 					</div>
 				{/if}
 				{#if property.bathrooms}
-					<div class="flex items-center gap-1">
+					<div class="flex items-center gap-1" title="Bagni">
 						<Bath size={16} />
 						<span>{property.bathrooms}</span>
 					</div>
 				{/if}
 				{#if property.area_sqm}
-					<div class="flex items-center gap-1">
+					<div class="flex items-center gap-1" title="Superficie">
 						<Square size={16} />
 						<span>{formatArea(property.area_sqm)}</span>
+					</div>
+				{/if}
+				{#if property.floor != null && property.floor >= 0 && property.total_floors}
+					<div class="flex items-center gap-1" title="Piano">
+						<ArrowUpDown size={16} />
+						<span>{property.floor === 0 ? 'T' : property.floor}/{property.total_floors}</span>
 					</div>
 				{/if}
 			</div>

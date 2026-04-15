@@ -22,6 +22,23 @@
 	let bathrooms = $state<number>(property?.bathrooms ?? 0);
 	let areaSqm = $state<number>(property?.area_sqm ?? 0);
 	let featured = $state(property?.featured ?? false);
+
+	// New detail fields
+	let condoFees = $state<number>(property?.condo_fees ?? 0);
+	let heatingType = $state(property?.heating_type ?? '');
+	let rooms = $state<number>(property?.rooms ?? 0);
+	let kitchens = $state<number>(property?.kitchens ?? 0);
+	let balconies = $state<number>(property?.balconies ?? 0);
+	let hasCellar = $state(property?.has_cellar ?? false);
+	let hasGarage = $state(property?.has_garage ?? false);
+	let garageSqm = $state<number>(property?.garage_sqm ?? 0);
+	let landSqm = $state<number>(property?.land_sqm ?? 0);
+	let hasParking = $state(property?.has_parking ?? false);
+	let floor = $state<number>(property?.floor ?? 0);
+	let totalFloors = $state<number>(property?.total_floors ?? 0);
+	let hasElevator = $state(property?.has_elevator ?? false);
+	let condition = $state(property?.condition ?? '');
+
 	let amenities = $state(
 		property?.amenities
 			? Array.isArray(property.amenities)
@@ -100,6 +117,22 @@
 		formData.append('bathrooms', String(bathrooms));
 		formData.append('area_sqm', String(areaSqm));
 		formData.append('featured', String(featured));
+
+		// New detail fields
+		formData.append('condo_fees', String(condoFees));
+		formData.append('heating_type', heatingType);
+		formData.append('rooms', String(rooms));
+		formData.append('kitchens', String(kitchens));
+		formData.append('balconies', String(balconies));
+		formData.append('has_cellar', String(hasCellar));
+		formData.append('has_garage', String(hasGarage));
+		formData.append('garage_sqm', String(garageSqm));
+		formData.append('land_sqm', String(landSqm));
+		formData.append('has_parking', String(hasParking));
+		formData.append('floor', String(floor));
+		formData.append('total_floors', String(totalFloors));
+		formData.append('has_elevator', String(hasElevator));
+		formData.append('condition', condition);
 
 		const amenitiesList = amenities
 			.split(',')
@@ -181,6 +214,18 @@
 			</div>
 
 			<div>
+				<label for="condo_fees" class="block text-sm font-medium">Spese condominiali (€/mese)</label>
+				<input
+					id="condo_fees"
+					type="number"
+					bind:value={condoFees}
+					min="0"
+					step="0.01"
+					class={inputClass}
+				/>
+			</div>
+
+			<div>
 				<label for="status" class="block text-sm font-medium">Stato</label>
 				<select id="status" bind:value={status} class={inputClass}>
 					<option value="for_sale">In vendita</option>
@@ -231,8 +276,12 @@
 
 	<!-- Details -->
 	<div class="rounded-lg border bg-background p-6">
-		<h2 class="mb-4 text-lg font-semibold">Dettagli</h2>
+		<h2 class="mb-4 text-lg font-semibold">Composizione</h2>
 		<div class="grid gap-4 sm:grid-cols-3">
+			<div>
+				<label for="rooms" class="block text-sm font-medium">Locali</label>
+				<input id="rooms" type="number" bind:value={rooms} min="0" class={inputClass} />
+			</div>
 			<div>
 				<label for="bedrooms" class="block text-sm font-medium">Camere</label>
 				<input
@@ -244,6 +293,10 @@
 				/>
 			</div>
 			<div>
+				<label for="kitchens" class="block text-sm font-medium">Cucine</label>
+				<input id="kitchens" type="number" bind:value={kitchens} min="0" class={inputClass} />
+			</div>
+			<div>
 				<label for="bathrooms" class="block text-sm font-medium">Bagni</label>
 				<input
 					id="bathrooms"
@@ -252,6 +305,10 @@
 					min="0"
 					class={inputClass}
 				/>
+			</div>
+			<div>
+				<label for="balconies" class="block text-sm font-medium">Balconi</label>
+				<input id="balconies" type="number" bind:value={balconies} min="0" class={inputClass} />
 			</div>
 			<div>
 				<label for="area_sqm" class="block text-sm font-medium">Superficie (m²)</label>
@@ -275,6 +332,102 @@
 				placeholder="es. Parcheggio, Giardino, Balcone"
 				class={inputClass}
 			/>
+		</div>
+	</div>
+
+	<!-- Building -->
+	<div class="rounded-lg border bg-background p-6">
+		<h2 class="mb-4 text-lg font-semibold">Edificio</h2>
+		<div class="grid gap-4 sm:grid-cols-3">
+			<div>
+				<label for="floor" class="block text-sm font-medium">Piano</label>
+				<input id="floor" type="number" bind:value={floor} min="0" class={inputClass} />
+			</div>
+			<div>
+				<label for="total_floors" class="block text-sm font-medium">Piani totali</label>
+				<input id="total_floors" type="number" bind:value={totalFloors} min="0" class={inputClass} />
+			</div>
+			<div class="flex items-end">
+				<label for="has_elevator" class="flex items-center gap-2 pb-2 text-sm font-medium">
+					<input
+						id="has_elevator"
+						type="checkbox"
+						bind:checked={hasElevator}
+						class="h-4 w-4 rounded border-input text-primary focus:ring-ring"
+					/>
+					Ascensore
+				</label>
+			</div>
+			<div>
+				<label for="condition" class="block text-sm font-medium">Stato immobile</label>
+				<select id="condition" bind:value={condition} class={inputClass}>
+					<option value="">— Seleziona —</option>
+					<option value="nuovo">Nuovo</option>
+					<option value="ristrutturato">Ristrutturato</option>
+					<option value="abitabile">Abitabile</option>
+					<option value="da_ristrutturare">Da ristrutturare</option>
+				</select>
+			</div>
+			<div>
+				<label for="heating_type" class="block text-sm font-medium">Riscaldamento</label>
+				<select id="heating_type" bind:value={heatingType} class={inputClass}>
+					<option value="">— Seleziona —</option>
+					<option value="autonomo">Autonomo</option>
+					<option value="centralizzato">Centralizzato</option>
+					<option value="a_pavimento">A pavimento</option>
+					<option value="assente">Assente</option>
+				</select>
+			</div>
+		</div>
+	</div>
+
+	<!-- Extras -->
+	<div class="rounded-lg border bg-background p-6">
+		<h2 class="mb-4 text-lg font-semibold">Dotazioni</h2>
+		<div class="grid gap-4 sm:grid-cols-3">
+			<div class="flex items-end">
+				<label for="has_cellar" class="flex items-center gap-2 pb-2 text-sm font-medium">
+					<input
+						id="has_cellar"
+						type="checkbox"
+						bind:checked={hasCellar}
+						class="h-4 w-4 rounded border-input text-primary focus:ring-ring"
+					/>
+					Cantina
+				</label>
+			</div>
+			<div class="flex items-end">
+				<label for="has_parking" class="flex items-center gap-2 pb-2 text-sm font-medium">
+					<input
+						id="has_parking"
+						type="checkbox"
+						bind:checked={hasParking}
+						class="h-4 w-4 rounded border-input text-primary focus:ring-ring"
+					/>
+					Parcheggio
+				</label>
+			</div>
+			<div class="flex items-end">
+				<label for="has_garage" class="flex items-center gap-2 pb-2 text-sm font-medium">
+					<input
+						id="has_garage"
+						type="checkbox"
+						bind:checked={hasGarage}
+						class="h-4 w-4 rounded border-input text-primary focus:ring-ring"
+					/>
+					Box / Garage
+				</label>
+			</div>
+			{#if hasGarage}
+				<div>
+					<label for="garage_sqm" class="block text-sm font-medium">Superficie box (m²)</label>
+					<input id="garage_sqm" type="number" bind:value={garageSqm} min="0" class={inputClass} />
+				</div>
+			{/if}
+			<div>
+				<label for="land_sqm" class="block text-sm font-medium">Terreno (m²)</label>
+				<input id="land_sqm" type="number" bind:value={landSqm} min="0" class={inputClass} />
+			</div>
 		</div>
 	</div>
 

@@ -11,6 +11,13 @@
 	let maxPrice: string | number = '';
 	let propertyType = '';
 	let bedrooms = '';
+	let minRooms = '';
+	let heatingType = '';
+	let condition = '';
+	let hasElevator = false;
+	let hasGarage = false;
+	let hasParking = false;
+	let hasCellar = false;
 
 	// Options
 	const statusOptions = [
@@ -26,6 +33,21 @@
 	];
 
 	const bedroomOptions = ['1', '2', '3', '4+'];
+	const roomOptions = ['2', '3', '4', '5+'];
+
+	const heatingOptions = [
+		{ value: 'autonomo', label: 'Autonomo' },
+		{ value: 'centralizzato', label: 'Centralizzato' },
+		{ value: 'a_pavimento', label: 'A pavimento' },
+		{ value: 'assente', label: 'Assente' }
+	];
+
+	const conditionOptions = [
+		{ value: 'nuovo', label: 'Nuovo' },
+		{ value: 'ristrutturato', label: 'Ristrutturato' },
+		{ value: 'abitabile', label: 'Abitabile' },
+		{ value: 'da_ristrutturare', label: 'Da ristrutturare' }
+	];
 
 	function applyFilters() {
 		const params = new URLSearchParams();
@@ -42,6 +64,19 @@
 				params.set('bedrooms', bedrooms);
 			}
 		}
+		if (minRooms) {
+			if (minRooms === '5+') {
+				params.set('minRooms', '5');
+			} else {
+				params.set('minRooms', minRooms);
+			}
+		}
+		if (heatingType) params.set('heating', heatingType);
+		if (condition) params.set('condition', condition);
+		if (hasElevator) params.set('elevator', '1');
+		if (hasGarage) params.set('garage', '1');
+		if (hasParking) params.set('parking', '1');
+		if (hasCellar) params.set('cellar', '1');
 
 		goto(`/immobili?${params.toString()}`, { replaceState: true });
 		isOpen = false;
@@ -54,12 +89,23 @@
 		maxPrice = '';
 		propertyType = '';
 		bedrooms = '';
+		minRooms = '';
+		heatingType = '';
+		condition = '';
+		hasElevator = false;
+		hasGarage = false;
+		hasParking = false;
+		hasCellar = false;
 		goto('/immobili', { replaceState: true });
 		isOpen = false;
 	}
 
 	function handleBedroomClick(value: string) {
 		bedrooms = bedrooms === value ? '' : value;
+	}
+
+	function handleRoomClick(value: string) {
+		minRooms = minRooms === value ? '' : value;
 	}
 </script>
 
@@ -175,6 +221,92 @@
 					{option}
 				</button>
 			{/each}
+		</div>
+	</div>
+
+	<!-- Rooms -->
+	<div class="mb-6">
+		<label class="block text-sm font-medium text-foreground mb-3">Locali (min)</label>
+		<div class="flex flex-wrap gap-2">
+			{#each roomOptions as option (option)}
+				<button
+					on:click={() => handleRoomClick(option)}
+					class={`h-10 min-w-10 rounded-full px-2 font-medium transition-all ${
+						minRooms === option
+							? 'bg-primary text-primary-foreground'
+							: 'bg-muted text-foreground hover:bg-muted/80'
+					}`}
+				>
+					{option}
+				</button>
+			{/each}
+		</div>
+	</div>
+
+	<!-- Condition -->
+	<div class="mb-6">
+		<label class="block text-sm font-medium text-foreground mb-3">Stato immobile</label>
+		<select
+			bind:value={condition}
+			class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
+		>
+			<option value="">Tutti</option>
+			{#each conditionOptions as opt (opt.value)}
+				<option value={opt.value}>{opt.label}</option>
+			{/each}
+		</select>
+	</div>
+
+	<!-- Heating -->
+	<div class="mb-6">
+		<label class="block text-sm font-medium text-foreground mb-3">Riscaldamento</label>
+		<select
+			bind:value={heatingType}
+			class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
+		>
+			<option value="">Tutti</option>
+			{#each heatingOptions as opt (opt.value)}
+				<option value={opt.value}>{opt.label}</option>
+			{/each}
+		</select>
+	</div>
+
+	<!-- Amenity Toggles -->
+	<div class="mb-6">
+		<label class="block text-sm font-medium text-foreground mb-3">Dotazioni</label>
+		<div class="space-y-2">
+			<label class="flex items-center gap-3 cursor-pointer">
+				<input
+					type="checkbox"
+					bind:checked={hasElevator}
+					class="h-4 w-4 rounded border-input text-primary focus:ring-primary"
+				/>
+				<span class="text-sm text-foreground">Ascensore</span>
+			</label>
+			<label class="flex items-center gap-3 cursor-pointer">
+				<input
+					type="checkbox"
+					bind:checked={hasGarage}
+					class="h-4 w-4 rounded border-input text-primary focus:ring-primary"
+				/>
+				<span class="text-sm text-foreground">Box / Garage</span>
+			</label>
+			<label class="flex items-center gap-3 cursor-pointer">
+				<input
+					type="checkbox"
+					bind:checked={hasParking}
+					class="h-4 w-4 rounded border-input text-primary focus:ring-primary"
+				/>
+				<span class="text-sm text-foreground">Parcheggio</span>
+			</label>
+			<label class="flex items-center gap-3 cursor-pointer">
+				<input
+					type="checkbox"
+					bind:checked={hasCellar}
+					class="h-4 w-4 rounded border-input text-primary focus:ring-primary"
+				/>
+				<span class="text-sm text-foreground">Cantina</span>
+			</label>
 		</div>
 	</div>
 
