@@ -11,7 +11,11 @@
 		MapPin,
 		Calendar,
 		ChevronRight,
-		Phone
+		Phone,
+		DoorOpen,
+		Flame,
+		Building,
+		ArrowUpDown
 	} from 'lucide-svelte';
 	import type { PageData } from './$types';
 
@@ -41,6 +45,20 @@
 		for_rent: 'In Affitto',
 		sold: 'Venduto',
 		rented: 'Affittato'
+	};
+
+	const heatingLabelIt: Record<string, string> = {
+		autonomo: 'Autonomo',
+		centralizzato: 'Centralizzato',
+		a_pavimento: 'A pavimento',
+		assente: 'Assente'
+	};
+
+	const conditionLabelIt: Record<string, string> = {
+		nuovo: 'Nuovo',
+		ristrutturato: 'Ristrutturato',
+		abitabile: 'Abitabile',
+		da_ristrutturare: 'Da ristrutturare'
 	};
 </script>
 
@@ -92,17 +110,30 @@
 					<div class="font-display text-3xl font-bold text-accent">
 						{formatCurrency(property.price)}
 					</div>
+					{#if property.condo_fees}
+						<div class="text-sm text-muted-foreground mt-1">
+							Spese condominiali: {formatCurrency(property.condo_fees)}/mese
+						</div>
+					{/if}
 				</div>
 
 				<!-- Quick Stats -->
 				<div class="grid grid-cols-2 gap-4 sm:grid-cols-4 border-y border-border py-6">
-					{#if property.bedrooms}
+					{#if property.rooms}
+						<div class="text-center">
+							<div class="flex justify-center mb-2">
+								<DoorOpen size={28} class="text-primary" />
+							</div>
+							<div class="font-display text-2xl font-bold tabular-nums text-foreground">{property.rooms}</div>
+							<div class="text-sm text-muted-foreground">{property.rooms === 1 ? 'Locale' : 'Locali'}</div>
+						</div>
+					{:else if property.bedrooms}
 						<div class="text-center">
 							<div class="flex justify-center mb-2">
 								<Bed size={28} class="text-primary" />
 							</div>
 							<div class="font-display text-2xl font-bold tabular-nums text-foreground">{property.bedrooms}</div>
-							<div class="text-sm text-muted-foreground">{property.bedrooms === 1 ? 'Camera da letto' : 'Camere da letto'}</div>
+							<div class="text-sm text-muted-foreground">{property.bedrooms === 1 ? 'Camera' : 'Camere'}</div>
 						</div>
 					{/if}
 
@@ -160,35 +191,127 @@
 					</div>
 				{/if}
 
-				<!-- Property Details (only non-duplicate metadata) -->
+				<!-- Property Details -->
 				<div>
 					<h2 class="font-display text-xl font-bold text-foreground mb-4">Dettagli</h2>
-					<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-						{#if property.created_at}
-							<div class="flex items-start gap-3">
-								<Calendar size={20} class="mt-1 text-muted-foreground" />
-								<div>
-									<div class="text-sm font-medium text-muted-foreground">Pubblicato il</div>
-									<div class="text-foreground">
+					<div class="rounded-lg border border-border overflow-hidden">
+						<dl class="divide-y divide-border">
+							<!-- Composizione -->
+							{#if property.rooms}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Locali</dt>
+									<dd class="text-sm font-medium text-foreground">{property.rooms}</dd>
+								</div>
+							{/if}
+							{#if property.bedrooms}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Camere da letto</dt>
+									<dd class="text-sm font-medium text-foreground">{property.bedrooms}</dd>
+								</div>
+							{/if}
+							{#if property.kitchens != null}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Cucina</dt>
+									<dd class="text-sm font-medium text-foreground">{property.kitchens}</dd>
+								</div>
+							{/if}
+							{#if property.bathrooms}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Bagni</dt>
+									<dd class="text-sm font-medium text-foreground">{property.bathrooms}</dd>
+								</div>
+							{/if}
+							{#if property.balconies}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Balconi</dt>
+									<dd class="text-sm font-medium text-foreground">{property.balconies}</dd>
+								</div>
+							{/if}
+							{#if property.area_sqm}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Superficie</dt>
+									<dd class="text-sm font-medium text-foreground">{property.area_sqm} m²</dd>
+								</div>
+							{/if}
+
+							<!-- Pertinenze -->
+							{#if property.has_cellar}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Cantina</dt>
+									<dd class="text-sm font-medium text-foreground">Sì</dd>
+								</div>
+							{/if}
+							{#if property.has_garage}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Box / Garage</dt>
+									<dd class="text-sm font-medium text-foreground">
+										{property.garage_sqm ? `Sì (${property.garage_sqm} m²)` : 'Sì'}
+									</dd>
+								</div>
+							{/if}
+							{#if property.land_sqm}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Terreno</dt>
+									<dd class="text-sm font-medium text-foreground">{property.land_sqm} m²</dd>
+								</div>
+							{/if}
+							{#if property.has_parking}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Parcheggio</dt>
+									<dd class="text-sm font-medium text-foreground">Sì</dd>
+								</div>
+							{/if}
+
+							<!-- Edificio -->
+							{#if property.floor != null}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Piano</dt>
+									<dd class="text-sm font-medium text-foreground">
+										{property.floor === 0 ? 'Terra' : property.floor}{property.total_floors ? ` di ${property.total_floors}` : ''}
+									</dd>
+								</div>
+							{/if}
+							{#if property.has_elevator != null}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Ascensore</dt>
+									<dd class="text-sm font-medium text-foreground">{property.has_elevator ? 'Sì' : 'No'}</dd>
+								</div>
+							{/if}
+
+							<!-- Impianti e stato -->
+							{#if property.heating_type}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Riscaldamento</dt>
+									<dd class="text-sm font-medium text-foreground">{heatingLabelIt[property.heating_type] || property.heating_type}</dd>
+								</div>
+							{/if}
+							{#if property.condition}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Stato immobile</dt>
+									<dd class="text-sm font-medium text-foreground">{conditionLabelIt[property.condition] || property.condition}</dd>
+								</div>
+							{/if}
+
+							<!-- Meta -->
+							{#if property.status}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Contratto</dt>
+									<dd class="text-sm font-medium text-foreground">{statusLabelIt[property.status] || property.status}</dd>
+								</div>
+							{/if}
+							{#if property.created_at}
+								<div class="grid grid-cols-2 px-4 py-3">
+									<dt class="text-sm text-muted-foreground">Pubblicato il</dt>
+									<dd class="text-sm font-medium text-foreground">
 										{new Date(property.created_at).toLocaleDateString('it-IT', {
 											year: 'numeric',
 											month: 'long',
 											day: 'numeric'
 										})}
-									</div>
+									</dd>
 								</div>
-							</div>
-						{/if}
-
-						{#if property.status}
-							<div class="flex items-start gap-3">
-								<Home size={20} class="mt-1 text-muted-foreground" />
-								<div>
-									<div class="text-sm font-medium text-muted-foreground">Stato</div>
-									<div class="text-foreground">{statusLabelIt[property.status] || property.status}</div>
-								</div>
-							</div>
-						{/if}
+							{/if}
+						</dl>
 					</div>
 				</div>
 			</div>
