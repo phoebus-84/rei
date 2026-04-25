@@ -4,7 +4,7 @@
 	import image from '../assets/ivrea.webp';
 	import image2 from '../assets/consulenze.webp';
 	import image3 from '../assets/people.webp';
-	import image4 from '../assets/sold.webp';
+	import image4 from '../assets/sold.png';
 	import { scrollReveal, tilt3d } from '$lib/utils/scroll-reveal';
 
 	interface FeatureProps {
