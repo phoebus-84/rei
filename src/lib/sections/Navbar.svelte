@@ -57,9 +57,9 @@
 		</nav>
 
 		<div class="hidden items-center gap-2 md:flex">
-			<a href="tel:+390125282335" class={buttonVariants({ variant: 'default' })}>
-				<Phone class="mr-2 h-4 w-4" />
-				Contattaci
+			<a href="/valutazione" class={buttonVariants({ variant: 'default' })}>
+				<Mail class="mr-2 h-4 w-4" />
+				Richiedi Valutazione
 			</a>
 		</div>
 
@@ -92,13 +92,13 @@
 							</a>
 						{/each}
 						<div class="mt-4 space-y-3 border-t pt-4">
-							<a href="tel:+390125282335" class="{buttonVariants({ variant: 'default' })} w-full">
-								<Phone class="mr-2 h-4 w-4" />
-								Contattaci
-							</a>
-							<a href="mailto:info@rei-immobiliare.it" class="{buttonVariants({ variant: 'outline' })} w-full">
+							<a href="/valutazione" class="{buttonVariants({ variant: 'default' })} w-full">
 								<Mail class="mr-2 h-4 w-4" />
 								Richiedi Valutazione
+							</a>
+							<a href="tel:+390125282335" class="{buttonVariants({ variant: 'outline' })} w-full">
+								<Phone class="mr-2 h-4 w-4" />
+								Contattaci
 							</a>
 						</div>
 					</nav>

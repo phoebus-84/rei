@@ -119,7 +119,7 @@
 				class:hero-visible={visible}
 			>
 				<a
-					href="mailto:info@rei-immobiliare.it"
+					href="/valutazione"
 					class={`w-full md:w-auto ${buttonVariants({ variant: 'default', size: 'lg' })}`}
 				>
 					Richiedi Valutazione
