@@ -3,17 +3,59 @@
 	import { currentUser } from '$lib/stores/auth';
 	import { getPropertyThumbnailUrl, formatCurrency, formatArea } from '$lib/utils';
 	import { Heart, MapPin, Bed, Bath, Square, DoorOpen, ArrowUpDown } from 'lucide-svelte';
+	import { onMount } from 'svelte';
 	import type { RecordModel } from 'pocketbase';
 	import { pb } from '$lib/pocketbase';
 
 	export let property: RecordModel;
 
+	const GUEST_SAVED_PROPERTIES_KEY = 'guest_saved_properties';
+
 	let isLiked = false;
 	let isLoading = false;
+	let guestSavedProperties: string[] = [];
+
+	function readGuestSavedProperties(): string[] {
+		try {
+			const stored = localStorage.getItem(GUEST_SAVED_PROPERTIES_KEY);
+			const parsed = stored ? JSON.parse(stored) : [];
+
+			return Array.isArray(parsed) ? parsed.filter((id): id is string => typeof id === 'string') : [];
+		} catch (err) {
+			console.warn('Errore nella lettura degli immobili salvati localmente:', err);
+			return [];
+		}
+	}
+
+	function writeGuestSavedProperties(propertyIds: string[]) {
+		try {
+			localStorage.setItem(GUEST_SAVED_PROPERTIES_KEY, JSON.stringify(propertyIds));
+		} catch (err) {
+			console.warn("Errore nel salvataggio locale dell'immobile:", err);
+		}
+	}
+
+	onMount(() => {
+		guestSavedProperties = readGuestSavedProperties();
+
+		function handleStorage(event: StorageEvent) {
+			if (event.key === GUEST_SAVED_PROPERTIES_KEY) {
+				guestSavedProperties = readGuestSavedProperties();
+			}
+		}
+
+		window.addEventListener('storage', handleStorage);
+
+		return () => {
+			window.removeEventListener('storage', handleStorage);
+		};
+	});
 
 	// Check if property is in user's saved_properties
 	$: if ($currentUser) {
 		isLiked = $currentUser.saved_properties?.includes(property.id) ?? false;
+	} else {
+		isLiked = guestSavedProperties.includes(property.id);
 	}
 
 	function toggleLike(e: Event) {
@@ -21,7 +63,12 @@
 		e.stopPropagation();
 
 		if (!$currentUser) {
-			goto('/login');
+			const updated = isLiked
+				? guestSavedProperties.filter((id) => id !== property.id)
+				: Array.from(new Set([...guestSavedProperties, property.id]));
+
+			guestSavedProperties = updated;
+			writeGuestSavedProperties(updated);
 			return;
 		}
 
