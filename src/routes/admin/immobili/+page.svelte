@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
+	import { getPropertyCoverUrl } from '$lib/utils';
 	import { onMount } from 'svelte';
-	import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { Plus, Pencil, Trash2, ChevronLeft, ChevronRight, Images } from 'lucide-svelte';
 
 	let properties = $state<any[]>([]);
 	let currentPage = $state(1);
@@ -63,7 +64,7 @@
 
 	function getThumbUrl(property: any): string {
 		if (!property.images?.length) return '';
-		return pb.files.getUrl(property, property.images[0], { thumb: '80x80' });
+		return getPropertyCoverUrl(property, 'thumb') || pb.files.getUrl(property, property.images[0], { thumb: '80x80' });
 	}
 
 	function formatPrice(price: number): string {
@@ -82,18 +83,27 @@
 </svelte:head>
 
 <div>
-	<div class="flex items-center justify-between">
+	<div class="flex items-center justify-between gap-4">
 		<div>
 			<h1 class="text-2xl font-bold text-foreground">Immobili</h1>
 			<p class="mt-1 text-sm text-muted-foreground">{totalItems} immobili totali</p>
 		</div>
-		<a
-			href="/admin/immobili/nuovo"
-			class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-		>
-			<Plus class="h-4 w-4" />
-			Nuovo immobile
-		</a>
+		<div class="flex flex-wrap justify-end gap-2">
+			<a
+				href="/admin/immobili/backfill-images"
+				class="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+			>
+				<Images class="h-4 w-4" />
+				Ottimizza immagini
+			</a>
+			<a
+				href="/admin/immobili/nuovo"
+				class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+			>
+				<Plus class="h-4 w-4" />
+				Nuovo immobile
+			</a>
+		</div>
 	</div>
 
 	{#if loading}

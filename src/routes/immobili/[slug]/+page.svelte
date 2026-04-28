@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ImageGallery from '$lib/components/detail/ImageGallery.svelte';
 	import AgentContactForm from '$lib/components/detail/AgentContactForm.svelte';
-	import { formatCurrency, formatArea } from '$lib/utils';
+	import { formatCurrency, formatArea, getPropertyCoverUrl } from '$lib/utils';
 	import {
 		Bed,
 		Bath,
@@ -31,6 +31,7 @@
 	};
 
 	const statusBadge = statusInfo[property.status] || statusInfo.for_sale;
+	const ogImageUrl = property.images?.length ? getPropertyCoverUrl(property, 'hero') : '';
 	const propertyTypeLabel = property.property_type
 		?.replace(/_/g, ' ')
 		.replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Immobile';
@@ -63,11 +64,9 @@
 	<meta name="description" content={property.description || property.title} />
 	<meta property="og:title" content={property.title} />
 	<meta property="og:description" content={property.description || ''} />
-	{#if property.images?.[0]}
-		<meta
-			property="og:image"
-			content="https://paons-immobiliare.com/api/files/properties/{property.id}/{property.images[0]}"
-		/>
+	{#if ogImageUrl}
+		<meta property="og:image" content={ogImageUrl} />
+		<meta name="twitter:image" content={ogImageUrl} />
 	{/if}
 	<meta property="og:type" content="article" />
 </svelte:head>

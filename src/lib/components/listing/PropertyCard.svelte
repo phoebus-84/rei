@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { currentUser } from '$lib/stores/auth';
-	import { getPropertyThumbnailUrl, formatCurrency, formatArea } from '$lib/utils';
+	import { getPropertyCoverUrl, getPropertyImageAlt, formatCurrency, formatArea } from '$lib/utils';
 	import { Heart, MapPin, Bed, Bath, Square, DoorOpen, ArrowUpDown } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { RecordModel } from 'pocketbase';
@@ -96,9 +96,8 @@
 	}
 
 	// Get first image or placeholder
-	const imageName = property.cover_image || property.images?.[0];
-	const imageUrl = imageName
-		? getPropertyThumbnailUrl(property.id, imageName)
+	const imageUrl = property.images?.length
+		? getPropertyCoverUrl(property, 'card')
 		: '/placeholder-property.jpg';
 
 	// Determine badge
@@ -122,7 +121,7 @@
 	<div class="relative h-[240px] overflow-hidden bg-muted">
 		<img
 			src={imageUrl}
-			alt={property.title}
+			alt={getPropertyImageAlt(property)}
 			loading="lazy"
 			class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
 		/>

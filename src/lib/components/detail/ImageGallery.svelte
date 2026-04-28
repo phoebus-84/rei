@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { onMount, afterUpdate } from 'svelte';
-	import { getPropertyImageUrl, getPropertyThumbnailUrl } from '$lib/utils';
+	import {
+		getOrderedPropertyImages,
+		getPropertyImageAlt,
+		getPropertyVariantUrl
+	} from '$lib/utils';
 	import { ChevronLeft, ChevronRight, X, Maximize } from 'lucide-svelte';
 	import type { RecordModel } from 'pocketbase';
 
@@ -11,11 +15,7 @@
 	let imageLoaded = false;
 	let thumbnailStrip: HTMLDivElement;
 
-	const rawImages: string[] = property.images || [];
-	// Put cover image first if set
-	const images = property.cover_image && rawImages.includes(property.cover_image)
-		? [property.cover_image, ...rawImages.filter((img: string) => img !== property.cover_image)]
-		: rawImages;
+	const images = getOrderedPropertyImages(property);
 
 	$: lightboxIndex, imageLoaded = false;
 
@@ -115,8 +115,8 @@
 			class="group relative w-full block cursor-pointer transition-opacity"
 		>
 			<img
-				src={getPropertyImageUrl(property.id, images[0])}
-				alt="Immobile"
+				src={getPropertyVariantUrl(property, 'hero', images[0])}
+				alt={getPropertyImageAlt(property)}
 				class="w-full h-[500px] object-cover"
 				on:error={handleImageError}
 			/>
@@ -135,8 +135,8 @@
 				class="group relative w-full cursor-pointer"
 			>
 				<img
-					src={getPropertyImageUrl(property.id, images[0])}
-					alt="Vista principale immobile"
+					src={getPropertyVariantUrl(property, 'hero', images[0])}
+					alt={getPropertyImageAlt(property)}
 					class="w-full h-[300px] object-cover"
 					on:error={handleImageError}
 				/>
@@ -164,8 +164,8 @@
 				class="group relative col-span-2 row-span-2 rounded-l-xl overflow-hidden cursor-pointer"
 			>
 				<img
-					src={getPropertyImageUrl(property.id, images[0])}
-					alt="Vista principale immobile"
+					src={getPropertyVariantUrl(property, 'hero', images[0])}
+					alt={getPropertyImageAlt(property)}
 					class="w-full h-full object-cover"
 					on:error={handleImageError}
 				/>
@@ -185,8 +185,8 @@
 					}`}
 				>
 					<img
-						src={getPropertyImageUrl(property.id, image)}
-						alt="Vista immobile {idx + 2}"
+						src={getPropertyVariantUrl(property, 'card', image)}
+						alt={getPropertyImageAlt(property, idx + 1)}
 						class="w-full h-full object-cover"
 						on:error={handleImageError}
 					/>
@@ -248,8 +248,8 @@
 
 			{#key lightboxIndex}
 				<img
-					src={getPropertyImageUrl(property.id, images[lightboxIndex])}
-					alt="Vista immobile {lightboxIndex + 1}"
+					src={getPropertyVariantUrl(property, 'hero', images[lightboxIndex])}
+					alt={getPropertyImageAlt(property, lightboxIndex)}
 					class="max-w-full max-h-full object-contain transition-opacity duration-300"
 					class:opacity-0={!imageLoaded}
 					class:opacity-100={imageLoaded}
@@ -300,8 +300,8 @@
 							aria-current={idx === lightboxIndex ? 'true' : undefined}
 						>
 							<img
-								src={getPropertyThumbnailUrl(property.id, image)}
-								alt="Miniatura {idx + 1}"
+								src={getPropertyVariantUrl(property, 'thumb', image)}
+								alt={getPropertyImageAlt(property, idx)}
 								class="w-full h-full object-cover"
 								loading="lazy"
 							/>

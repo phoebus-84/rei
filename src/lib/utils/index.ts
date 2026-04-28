@@ -5,6 +5,28 @@ export {
 	getPropertyImageUrl,
 	getUserAvatarUrl
 } from './imageUrl';
+export {
+	getOrderedPropertyImages,
+	getPropertyCoverUrl,
+	getPropertyImageAlt,
+	getPropertyVariantFileName,
+	getPropertyVariantUrl
+} from './propertyImages';
+export {
+	optimizePropertyImage,
+	optimizePropertyImages,
+	PROPERTY_IMAGE_VARIANTS,
+	type OptimizedPropertyImage,
+	type PropertyImageVariantName
+} from './propertyImageOptimization';
+export {
+	buildPropertyImageMetadata,
+	getSubmittedCoverImage,
+	readPropertyImageMetadata,
+	type ImageSeoFields,
+	type PropertyImageMetadataEntry,
+	type PropertyImageSubmitOptions
+} from './propertyImageMetadata';
 export { formatCurrency, formatArea, formatNumber } from './currency';
 
 /**

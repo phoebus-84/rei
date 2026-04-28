@@ -1,58 +1,121 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
-	import { X, Upload, Star } from 'lucide-svelte';
+	import type { RecordModel } from 'pocketbase';
+	import {
+		getPropertyVariantUrl,
+		optimizePropertyImages,
+		type ImageSeoFields,
+		type OptimizedPropertyImage,
+		type PropertyImageSubmitOptions
+	} from '$lib/utils';
+	import { onDestroy } from 'svelte';
+	import { X, Upload, Star, Image as ImageIcon } from 'lucide-svelte';
+
+	type PropertyFormRecord = RecordModel & {
+		title?: string;
+		slug?: string;
+		description?: string;
+		price?: number;
+		status?: string;
+		property_type?: string;
+		address?: string;
+		city?: string;
+		bedrooms?: number;
+		bathrooms?: number;
+		area_sqm?: number;
+		featured?: boolean;
+		condo_fees?: number;
+		heating_type?: string;
+		rooms?: number;
+		kitchens?: number;
+		balconies?: number;
+		has_cellar?: boolean;
+		has_garage?: boolean;
+		garage_sqm?: number;
+		land_sqm?: number;
+		has_parking?: boolean;
+		floor?: number;
+		total_floors?: number;
+		has_elevator?: boolean;
+		condition?: string;
+		amenities?: unknown;
+		cover_image?: string;
+		images?: string[];
+		images_thumb_webp?: string[];
+		images_card_webp?: string[];
+		images_hero_webp?: string[];
+		image_alt?: string;
+		image_title?: string;
+		image_caption?: string;
+	};
 
 	interface Props {
-		property?: any;
-		onsubmit: (formData: FormData) => Promise<void>;
+		property?: PropertyFormRecord | null;
+		onsubmit: (formData: FormData, options: PropertyImageSubmitOptions) => Promise<void>;
 		isLoading?: boolean;
 	}
 
 	let { property = null, onsubmit, isLoading = false }: Props = $props();
 
-	let title = $state(property?.title ?? '');
-	let slug = $state(property?.slug ?? '');
-	let description = $state(property?.description ?? '');
-	let price = $state<number>(property?.price ?? 0);
-	let status = $state(property?.status ?? 'for_sale');
-	let propertyType = $state(property?.property_type ?? 'apartment');
-	let address = $state(property?.address ?? '');
-	let city = $state(property?.city ?? '');
-	let bedrooms = $state<number>(property?.bedrooms ?? 0);
-	let bathrooms = $state<number>(property?.bathrooms ?? 0);
-	let areaSqm = $state<number>(property?.area_sqm ?? 0);
-	let featured = $state(property?.featured ?? false);
+	function getInitialProperty() {
+		return property;
+	}
+
+	const initialProperty = getInitialProperty();
+
+	let title = $state(initialProperty?.title ?? '');
+	let slug = $state(initialProperty?.slug ?? '');
+	let description = $state(initialProperty?.description ?? '');
+	let price = $state<number>(initialProperty?.price ?? 0);
+	let status = $state(initialProperty?.status ?? 'for_sale');
+	let propertyType = $state(initialProperty?.property_type ?? 'apartment');
+	let address = $state(initialProperty?.address ?? '');
+	let city = $state(initialProperty?.city ?? '');
+	let bedrooms = $state<number>(initialProperty?.bedrooms ?? 0);
+	let bathrooms = $state<number>(initialProperty?.bathrooms ?? 0);
+	let areaSqm = $state<number>(initialProperty?.area_sqm ?? 0);
+	let featured = $state(initialProperty?.featured ?? false);
 
 	// New detail fields
-	let condoFees = $state<number>(property?.condo_fees ?? 0);
-	let heatingType = $state(property?.heating_type ?? '');
-	let rooms = $state<number>(property?.rooms ?? 0);
-	let kitchens = $state<number>(property?.kitchens ?? 0);
-	let balconies = $state<number>(property?.balconies ?? 0);
-	let hasCellar = $state(property?.has_cellar ?? false);
-	let hasGarage = $state(property?.has_garage ?? false);
-	let garageSqm = $state<number>(property?.garage_sqm ?? 0);
-	let landSqm = $state<number>(property?.land_sqm ?? 0);
-	let hasParking = $state(property?.has_parking ?? false);
-	let floor = $state<number>(property?.floor ?? 0);
-	let totalFloors = $state<number>(property?.total_floors ?? 0);
-	let hasElevator = $state(property?.has_elevator ?? false);
-	let condition = $state(property?.condition ?? '');
+	let condoFees = $state<number>(initialProperty?.condo_fees ?? 0);
+	let heatingType = $state(initialProperty?.heating_type ?? '');
+	let rooms = $state<number>(initialProperty?.rooms ?? 0);
+	let kitchens = $state<number>(initialProperty?.kitchens ?? 0);
+	let balconies = $state<number>(initialProperty?.balconies ?? 0);
+	let hasCellar = $state(initialProperty?.has_cellar ?? false);
+	let hasGarage = $state(initialProperty?.has_garage ?? false);
+	let garageSqm = $state<number>(initialProperty?.garage_sqm ?? 0);
+	let landSqm = $state<number>(initialProperty?.land_sqm ?? 0);
+	let hasParking = $state(initialProperty?.has_parking ?? false);
+	let floor = $state<number>(initialProperty?.floor ?? 0);
+	let totalFloors = $state<number>(initialProperty?.total_floors ?? 0);
+	let hasElevator = $state(initialProperty?.has_elevator ?? false);
+	let condition = $state(initialProperty?.condition ?? '');
 
 	let amenities = $state(
-		property?.amenities
-			? Array.isArray(property.amenities)
-				? property.amenities.join(', ')
+		initialProperty?.amenities
+			? Array.isArray(initialProperty.amenities)
+				? initialProperty.amenities.join(', ')
 				: ''
 			: ''
 	);
 
-	let coverImage = $state(property?.cover_image ?? '');
-	let existingImages = $state<string[]>(property?.images ? [...property.images] : []);
+	let coverImage = $state(initialProperty?.cover_image ?? '');
+	let existingImages = $state<string[]>(initialProperty?.images ? [...initialProperty.images] : []);
+	let existingThumbImages = $state<string[]>(initialProperty?.images_thumb_webp ? [...initialProperty.images_thumb_webp] : []);
+	let existingCardImages = $state<string[]>(initialProperty?.images_card_webp ? [...initialProperty.images_card_webp] : []);
+	let existingHeroImages = $state<string[]>(initialProperty?.images_hero_webp ? [...initialProperty.images_hero_webp] : []);
 	let removedImages = $state<string[]>([]);
-	let newFiles = $state<File[]>([]);
-	let newPreviews = $state<string[]>([]);
-	let slugManual = $state(!!property);
+	let removedThumbImages = $state<string[]>([]);
+	let removedCardImages = $state<string[]>([]);
+	let removedHeroImages = $state<string[]>([]);
+	let newUploads = $state<OptimizedPropertyImage[]>([]);
+	let imageAlt = $state(initialProperty?.image_alt ?? '');
+	let imageTitle = $state(initialProperty?.image_title ?? '');
+	let imageCaption = $state(initialProperty?.image_caption ?? '');
+	let imageError = $state('');
+	let isOptimizing = $state(false);
+	let slugManual = $state(!!initialProperty);
 
 	const inputClass =
 		'mt-1 h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring';
@@ -77,32 +140,76 @@
 	}
 
 	function removeExistingImage(filename: string) {
+		const index = existingImages.indexOf(filename);
+		const thumbFilename = index >= 0 ? existingThumbImages[index] : '';
+		const cardFilename = index >= 0 ? existingCardImages[index] : '';
+		const heroFilename = index >= 0 ? existingHeroImages[index] : '';
+
 		existingImages = existingImages.filter((f) => f !== filename);
+		existingThumbImages = existingThumbImages.filter((_, i) => i !== index);
+		existingCardImages = existingCardImages.filter((_, i) => i !== index);
+		existingHeroImages = existingHeroImages.filter((_, i) => i !== index);
 		removedImages = [...removedImages, filename];
+		if (thumbFilename) removedThumbImages = [...removedThumbImages, thumbFilename];
+		if (cardFilename) removedCardImages = [...removedCardImages, cardFilename];
+		if (heroFilename) removedHeroImages = [...removedHeroImages, heroFilename];
 		if (coverImage === filename) coverImage = '';
 	}
 
-	function handleFileSelect(e: Event) {
+	async function handleFileSelect(e: Event) {
 		const input = e.target as HTMLInputElement;
 		if (!input.files) return;
 		const files = Array.from(input.files);
-		newFiles = [...newFiles, ...files];
-		for (const file of files) {
-			newPreviews = [...newPreviews, URL.createObjectURL(file)];
+
+		imageError = '';
+		isOptimizing = true;
+
+		try {
+			const optimized = await optimizePropertyImages(files);
+			newUploads = [...newUploads, ...optimized];
+
+			if (!coverImage && optimized[0]) {
+				coverImage = `upload:${optimized[0].id}`;
+			}
+		} catch (err: unknown) {
+			imageError = err instanceof Error ? err.message : 'Errore durante la conversione delle immagini.';
+		} finally {
+			isOptimizing = false;
+			input.value = '';
 		}
-		input.value = '';
 	}
 
 	function removeNewFile(index: number) {
-		URL.revokeObjectURL(newPreviews[index]);
-		newFiles = newFiles.filter((_, i) => i !== index);
-		newPreviews = newPreviews.filter((_, i) => i !== index);
+		const upload = newUploads[index];
+		if (upload) URL.revokeObjectURL(upload.previewUrl);
+		newUploads = newUploads.filter((_, i) => i !== index);
+
+		if (upload && coverImage === `upload:${upload.id}`) {
+			coverImage = existingImages[0] || (newUploads[0] ? `upload:${newUploads[0].id}` : '');
+		}
 	}
 
 	function getImageUrl(filename: string): string {
 		if (!property) return '';
-		return pb.files.getUrl(property, filename, { thumb: '200x200' });
+		return getPropertyVariantUrl(property, 'thumb', filename) || pb.files.getUrl(property, filename, { thumb: '200x200' });
 	}
+
+	function getImageSeo(): ImageSeoFields {
+		const fallbackTitle = title || 'Immobile REI';
+		const fallbackAlt = [fallbackTitle, city].filter(Boolean).join(' - ');
+
+		return {
+			alt: imageAlt.trim() || fallbackAlt,
+			title: imageTitle.trim() || fallbackTitle,
+			caption: imageCaption.trim()
+		};
+	}
+
+	onDestroy(() => {
+		for (const upload of newUploads) {
+			URL.revokeObjectURL(upload.previewUrl);
+		}
+	});
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
@@ -135,7 +242,13 @@
 		formData.append('total_floors', String(totalFloors));
 		formData.append('has_elevator', String(hasElevator));
 		formData.append('condition', condition);
-		formData.append('cover_image', coverImage);
+
+		const imageSeo = getImageSeo();
+		const coverUploadId = coverImage.startsWith('upload:') ? coverImage.replace('upload:', '') : '';
+		formData.append('cover_image', coverUploadId ? '' : coverImage);
+		formData.append('image_alt', imageSeo.alt);
+		formData.append('image_title', imageSeo.title);
+		formData.append('image_caption', imageSeo.caption);
 
 		const amenitiesList = amenities
 			.split(',')
@@ -143,8 +256,8 @@
 			.filter(Boolean);
 		formData.append('amenities', JSON.stringify(amenitiesList));
 
-		const authModel = pb.authStore.model as Record<string, any> | null;
-		if (authModel?.id) {
+		const authModel = pb.authStore.model as Record<string, unknown> | null;
+		if (typeof authModel?.id === 'string') {
 			formData.append('agent', authModel.id);
 		}
 
@@ -152,16 +265,38 @@
 			for (const filename of removedImages) {
 				formData.append('images-', filename);
 			}
-			for (const file of newFiles) {
-				formData.append('images+', file);
+			for (const filename of removedThumbImages) {
+				formData.append('images_thumb_webp-', filename);
+			}
+			for (const filename of removedCardImages) {
+				formData.append('images_card_webp-', filename);
+			}
+			for (const filename of removedHeroImages) {
+				formData.append('images_hero_webp-', filename);
+			}
+			for (const upload of newUploads) {
+				formData.append('images+', upload.heroFile);
+				formData.append('images_thumb_webp+', upload.thumbFile);
+				formData.append('images_card_webp+', upload.cardFile);
+				formData.append('images_hero_webp+', upload.heroFile);
 			}
 		} else {
-			for (const file of newFiles) {
-				formData.append('images', file);
+			for (const upload of newUploads) {
+				formData.append('images', upload.heroFile);
+				formData.append('images_thumb_webp', upload.thumbFile);
+				formData.append('images_card_webp', upload.cardFile);
+				formData.append('images_hero_webp', upload.heroFile);
 			}
 		}
 
-		await onsubmit(formData);
+		await onsubmit(formData, {
+			coverImage: coverUploadId ? '' : coverImage,
+			coverUploadId,
+			existingImageCountAfterRemoval: existingImages.length,
+			optimizedImages: newUploads,
+			removedImages,
+			imageSeo
+		});
 	}
 </script>
 
@@ -436,9 +571,18 @@
 
 	<!-- Images -->
 	<div class="rounded-lg border bg-background p-6">
-		<h2 class="mb-4 text-lg font-semibold">Immagini</h2>
+		<div class="mb-4 flex items-center gap-2">
+			<ImageIcon class="h-5 w-5 text-primary" />
+			<h2 class="text-lg font-semibold">Immagini</h2>
+		</div>
 
-		<p class="mb-3 text-sm text-muted-foreground">Clicca la stella per scegliere l'immagine di copertina.</p>
+		<p class="mb-3 text-sm text-muted-foreground">Le immagini vengono convertite in WebP e salvate nei formati miniatura, card e hero. Clicca la stella per scegliere la copertina.</p>
+
+		{#if imageError}
+			<div class="mb-4 rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+				{imageError}
+			</div>
+		{/if}
 
 		{#if existingImages.length > 0}
 			<div class="mb-4 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
@@ -465,13 +609,21 @@
 			</div>
 		{/if}
 
-		{#if newPreviews.length > 0}
+		{#if newUploads.length > 0}
 			<div class="mb-4 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6">
-				{#each newPreviews as preview, i (preview)}
+				{#each newUploads as upload, i (upload.id)}
 					<div
-						class="group relative aspect-square overflow-hidden rounded-md border border-dashed border-primary"
+						class="group relative aspect-square overflow-hidden rounded-md border border-dashed border-primary {coverImage === `upload:${upload.id}` ? 'ring-2 ring-primary' : ''}"
 					>
-						<img src={preview} alt="" class="h-full w-full object-cover" />
+						<img src={upload.previewUrl} alt="" class="h-full w-full object-cover" />
+						<button
+							type="button"
+							onclick={() => (coverImage = coverImage === `upload:${upload.id}` ? '' : `upload:${upload.id}`)}
+							class="absolute left-1 top-1 rounded-full p-1 transition-opacity {coverImage === `upload:${upload.id}` ? 'bg-primary text-primary-foreground opacity-100' : 'bg-black/50 text-white opacity-0 group-hover:opacity-100'}"
+							title="Imposta come copertina"
+						>
+							<Star class="h-3 w-3 {coverImage === `upload:${upload.id}` ? 'fill-current' : ''}" />
+						</button>
 						<button
 							type="button"
 							onclick={() => removeNewFile(i)}
@@ -484,29 +636,73 @@
 			</div>
 		{/if}
 
+		{#if isOptimizing}
+			<div class="mb-4 flex items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
+				<div class="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+				Conversione WebP in corso...
+			</div>
+		{/if}
+
 		<label
 			class="flex cursor-pointer items-center justify-center gap-2 rounded-md border-2 border-dashed border-input px-4 py-8 text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary"
 		>
 			<Upload class="h-5 w-5" />
-			<span>Carica immagini</span>
+			<span>{isOptimizing ? 'Conversione...' : 'Carica immagini'}</span>
 			<input
 				type="file"
 				accept="image/jpeg,image/png,image/gif,image/webp"
 				multiple
 				onchange={handleFileSelect}
+				disabled={isOptimizing}
 				class="hidden"
 			/>
 		</label>
+
+		<div class="mt-6 grid gap-4 sm:grid-cols-2">
+			<div class="sm:col-span-2">
+				<label for="image_alt" class="block text-sm font-medium">Testo alternativo immagine</label>
+				<input
+					id="image_alt"
+					type="text"
+					bind:value={imageAlt}
+					maxlength="160"
+					placeholder="Es. Appartamento luminoso a Ivrea"
+					class={inputClass}
+				/>
+			</div>
+			<div>
+				<label for="image_title" class="block text-sm font-medium">Titolo immagine</label>
+				<input
+					id="image_title"
+					type="text"
+					bind:value={imageTitle}
+					maxlength="120"
+					placeholder={title || 'Titolo immobile'}
+					class={inputClass}
+				/>
+			</div>
+			<div>
+				<label for="image_caption" class="block text-sm font-medium">Didascalia</label>
+				<input
+					id="image_caption"
+					type="text"
+					bind:value={imageCaption}
+					maxlength="220"
+					placeholder="Dettaglio utile per SEO e condivisioni"
+					class={inputClass}
+				/>
+			</div>
+		</div>
 	</div>
 
 	<!-- Actions -->
 	<div class="flex items-center gap-3">
 		<button
 			type="submit"
-			disabled={isLoading}
+			disabled={isLoading || isOptimizing}
 			class="rounded-md bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
 		>
-			{isLoading ? 'Salvataggio...' : property ? 'Aggiorna immobile' : 'Crea immobile'}
+			{isOptimizing ? 'Conversione immagini...' : isLoading ? 'Salvataggio...' : property ? 'Aggiorna immobile' : 'Crea immobile'}
 		</button>
 		<a
 			href="/admin/immobili"

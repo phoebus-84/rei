@@ -2,6 +2,11 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { pb } from '$lib/pocketbase';
+	import {
+		buildPropertyImageMetadata,
+		getSubmittedCoverImage,
+		type PropertyImageSubmitOptions
+	} from '$lib/utils';
 	import { onMount } from 'svelte';
 	import PropertyForm from '../PropertyForm.svelte';
 
@@ -19,11 +24,32 @@
 		}
 	});
 
-	async function handleSubmit(formData: FormData) {
+	async function handleSubmit(formData: FormData, options: PropertyImageSubmitOptions) {
 		isLoading = true;
 		error = '';
 		try {
-			await pb.collection('properties').update(page.params.id!, formData);
+			const updated = await pb.collection('properties').update(page.params.id!, formData);
+			const coverImage = getSubmittedCoverImage({
+				record: updated,
+				coverImage: options.coverImage,
+				coverUploadId: options.coverUploadId,
+				existingImageCountAfterRemoval: options.existingImageCountAfterRemoval,
+				optimizedImages: options.optimizedImages
+			});
+			const imageMetadata = buildPropertyImageMetadata({
+				record: updated,
+				existingMetadata: property?.image_metadata,
+				removedSourceFileNames: options.removedImages,
+				existingImageCountAfterRemoval: options.existingImageCountAfterRemoval,
+				optimizedImages: options.optimizedImages,
+				seo: options.imageSeo
+			});
+
+			await pb.collection('properties').update(updated.id, {
+				cover_image: coverImage,
+				image_metadata: imageMetadata
+			});
+
 			goto('/admin/immobili');
 		} catch (err: any) {
 			error = err.message || "Errore durante l'aggiornamento.";

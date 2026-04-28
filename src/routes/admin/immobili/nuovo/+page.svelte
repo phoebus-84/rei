@@ -1,16 +1,44 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { pb } from '$lib/pocketbase';
+	import {
+		buildPropertyImageMetadata,
+		getSubmittedCoverImage,
+		type PropertyImageSubmitOptions
+	} from '$lib/utils';
 	import PropertyForm from '../PropertyForm.svelte';
 
 	let isLoading = $state(false);
 	let error = $state('');
 
-	async function handleSubmit(formData: FormData) {
+	async function handleSubmit(formData: FormData, options: PropertyImageSubmitOptions) {
 		isLoading = true;
 		error = '';
 		try {
-			await pb.collection('properties').create(formData);
+			const created = await pb.collection('properties').create(formData);
+			const coverImage = getSubmittedCoverImage({
+				record: created,
+				coverImage: options.coverImage,
+				coverUploadId: options.coverUploadId,
+				existingImageCountAfterRemoval: options.existingImageCountAfterRemoval,
+				optimizedImages: options.optimizedImages
+			});
+			const imageMetadata = buildPropertyImageMetadata({
+				record: created,
+				existingMetadata: [],
+				removedSourceFileNames: [],
+				existingImageCountAfterRemoval: 0,
+				optimizedImages: options.optimizedImages,
+				seo: options.imageSeo
+			});
+
+			if (coverImage || imageMetadata.length > 0) {
+				await pb.collection('properties').update(created.id, {
+					cover_image: coverImage,
+					image_metadata: imageMetadata
+				});
+			}
+
 			goto('/admin/immobili');
 		} catch (err: any) {
 			error = err.message || 'Errore durante la creazione.';

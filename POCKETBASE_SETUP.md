@@ -23,11 +23,19 @@ Create these collections in PocketBase Admin Panel (`http://localhost:8090/_/`)
 | bathrooms | Number | - | Count of bathrooms |
 | area_sqm | Number | - | Area in square meters |
 | images | File | Max 10 files, images only | Property photos |
+| images_thumb_webp | File | WebP, multiple | 320x240 admin/list thumbnails |
+| images_card_webp | File | WebP, multiple | 900x675 property cards |
+| images_hero_webp | File | WebP, multiple | 1800x1200 detail/social images |
+| image_alt | Text | Max 160 chars | SEO/accessibility fallback alt text |
+| image_title | Text | Max 120 chars | SEO image title |
+| image_caption | Text | Max 220 chars | Optional caption |
+| image_metadata | JSON | - | Generated dimensions, bytes, filenames and timestamps |
 | agent | Relation | Single, users collection, type='agent' | Agent responsible |
 | amenities | JSON | - | Array like ["Wifi", "Pool", "Garage"] |
 | featured | Bool | Default: false | For homepage carousel |
 
 **API Rules:**
+
 - View: `status != 'empty'` (Public, shows non-empty properties)
 - Create: `@request.auth.id != '' && (@request.auth.type = 'agent' || @request.auth.type = 'admin')` (Agents/Admins only)
 - Update: `@request.auth.id != '' && (@request.auth.id = owner || @request.auth.type = 'admin')` (Owner or admin)
@@ -49,6 +57,7 @@ Create these collections in PocketBase Admin Panel (`http://localhost:8090/_/`)
 | saved_properties | Relation | Many, properties collection | User's saved homes |
 
 **API Rules:**
+
 - View: `@request.auth.id != '' || public_profile = true` (Auth users or public profiles)
 - Create: `@request.auth.id = ''` (Public registration only)
 - Update: `@request.auth.id = id` (Users can only edit themselves)
@@ -70,6 +79,7 @@ Create these collections in PocketBase Admin Panel (`http://localhost:8090/_/`)
 | status | Select | new, read, responded | Default: new |
 
 **API Rules:**
+
 - View: `@request.auth.id != '' && (@request.auth.type = 'agent' || @request.auth.type = 'admin')` (Agents/Admins only)
 - Create: `@request.auth.id = ''` (Public - anyone can submit)
 - Update: `@request.auth.id != '' && @request.auth.type = 'admin'` (Admin only)
@@ -81,6 +91,7 @@ Create these collections in PocketBase Admin Panel (`http://localhost:8090/_/`)
 ### Option 1: Manual Setup (Admin Panel)
 
 1. **Start PocketBase:**
+
    ```bash
    pocketbase serve
    ```
@@ -98,11 +109,13 @@ Create these collections in PocketBase Admin Panel (`http://localhost:8090/_/`)
 ### Option 2: Programmatic Setup (JavaScript)
 
 After installing PocketBase SDK:
+
 ```bash
 npm install pocketbase
 ```
 
 Use the client to create collections:
+
 ```javascript
 import PocketBase from 'pocketbase';
 
@@ -127,6 +140,7 @@ VITE_PB_ADMIN_PASSWORD=your_secure_password
 ## Verification
 
 After setup, verify in Admin Panel:
+
 - [ ] `properties` collection exists with all fields
 - [ ] `users` collection has extended fields
 - [ ] `inquiries` collection exists with correct fields
@@ -141,20 +155,36 @@ To add test properties:
 
 ```json
 {
-  "title": "Seaside Villa",
-  "slug": "seaside-villa-cork",
-  "description": "Beautiful seaside villa with ocean view",
-  "price": 450000,
-  "status": "for_sale",
-  "property_type": "house",
-  "address": "Cliff Road, Cork",
-  "city": "Cork",
-  "bedrooms": 4,
-  "bathrooms": 3,
-  "area_sqm": 250,
-  "amenities": ["Ocean View", "Pool", "Garage", "Wifi"],
-  "featured": true
+	"title": "Seaside Villa",
+	"slug": "seaside-villa-cork",
+	"description": "Beautiful seaside villa with ocean view",
+	"price": 450000,
+	"status": "for_sale",
+	"property_type": "house",
+	"address": "Cliff Road, Cork",
+	"city": "Cork",
+	"bedrooms": 4,
+	"bathrooms": 3,
+	"area_sqm": 250,
+	"amenities": ["Ocean View", "Pool", "Garage", "Wifi"],
+	"featured": true
 }
 ```
 
 Use PocketBase admin panel or the client SDK to insert sample data.
+
+---
+
+## Property Image Optimization
+
+Admin uploads are optimized in the browser before they are sent to PocketBase. Each selected image is converted to WebP in three variants:
+
+| Variant | Field               | Max size  | Used for                                      |
+| ------- | ------------------- | --------- | --------------------------------------------- |
+| thumb   | `images_thumb_webp` | 320x240   | Admin previews and small thumbnails           |
+| card    | `images_card_webp`  | 900x675   | Listing cards                                 |
+| hero    | `images_hero_webp`  | 1800x1200 | Detail gallery, Open Graph and Twitter images |
+
+The original `images` field remains in use as the compatibility source and fallback. Public image helpers prefer the WebP variant fields when present and fall back to `images` for legacy records.
+
+After applying `admin/pb_migrations/1767052000_add_property_image_variants.js`, use the admin route `/admin/immobili/backfill-images` to generate variants for existing properties. The backfill is safe to run more than once: records that already have all three variant arrays populated are skipped, originals are not deleted, and failures are reported per property in the page log.
