@@ -94,4 +94,44 @@ describe('calculateValuation', () => {
 		expect(result.breakdown.resolvedAreaKey).toBe('altri_comuni_piccoli');
 		expect(result.final).toBe(70000);
 	});
+
+	it('uses the resolved Borsino municipality base for geolocated valuations', () => {
+		const result = calculateValuation({
+			...baseInput,
+			selectedLocation: {
+				label: 'Via Torino, Ivrea, Torino, Piemonte, Italia',
+				latitude: 45.467,
+				longitude: 7.876,
+				osmId: 123,
+				osmType: 'way',
+				type: 'residential',
+				category: 'highway',
+				address: {
+					city: 'Ivrea',
+					state: 'Piemonte'
+				},
+				streetAddress: 'Via Torino',
+				city: 'Ivrea'
+			}
+		});
+
+		expect(result.breakdown.resolvedAreaKey).toBe('ivrea');
+		expect(result.breakdown.pricePerSqm).toBe(725);
+		expect(result.final).toBe(72500);
+		expect(result.min).toBe(65000);
+		expect(result.max).toBe(80000);
+	});
+
+	it('does not apply apartment floor penalties to casa intera valuations', () => {
+		const result = calculateValuation({
+			...baseInput,
+			propertyKind: 'casa_intera',
+			levelsCount: 2,
+			floor: 'terzo_piu_senza_ascensore'
+		});
+
+		expect(result.breakdown.floorMultiplier).toBe(1);
+		expect(result.breakdown.propertyKindMultiplier).toBeGreaterThan(1);
+		expect(result.final).toBe(103000);
+	});
 });

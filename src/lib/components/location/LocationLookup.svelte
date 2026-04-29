@@ -30,6 +30,7 @@
 	let isLoading = $state(false);
 	let error = $state('');
 	let isOpen = $state(false);
+	let lastSelectedValue = $state('');
 	let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 	let activeRequest = 0;
 
@@ -45,10 +46,11 @@
 			clearTimeout(debounceTimer);
 		}
 
-		if (query.length < 3 || disabled) {
+		if (query.length < 3 || disabled || query === lastSelectedValue) {
 			suggestions = [];
 			isLoading = false;
 			error = '';
+			isOpen = false;
 			return;
 		}
 
@@ -90,16 +92,20 @@
 	});
 
 	function selectSuggestion(suggestion: LocationSuggestion) {
+		lastSelectedValue = suggestion.label;
 		value = suggestion.label;
 		suggestions = [];
+		isLoading = false;
 		isOpen = false;
 		error = '';
 		onSelect(suggestion);
 	}
 
 	function clearSelection() {
+		lastSelectedValue = '';
 		value = '';
 		suggestions = [];
+		isLoading = false;
 		isOpen = false;
 		error = '';
 		onClear();

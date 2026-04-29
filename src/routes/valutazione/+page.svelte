@@ -2,15 +2,18 @@
 	import { ArrowLeft, ArrowRight, Check, LoaderCircle, MapPinned, ShieldCheck, Sparkles } from 'lucide-svelte';
 
 	import { buttonVariants } from '$lib/components/ui/button';
+	import LocationLookup from '$lib/components/location/LocationLookup.svelte';
+	import type { LocationSuggestion } from '$lib/location';
 	import { scrollReveal } from '$lib/utils/scroll-reveal';
-	import { baselineAreas } from '$lib/valuation/baseline-prices';
+	import { resolveValuationMarketArea, type ResolvedValuationMarketArea } from '$lib/valuation/market-resolver';
 	import {
 		valuationConditions,
 		valuationExtras,
 		valuationFloors,
 		type ValuationCondition,
 		type ValuationExtra,
-		type ValuationFloor
+		type ValuationFloor,
+		type ValuationPropertyKind
 	} from '$lib/valuation/engine';
 	import { valuationPrivacyVersion } from '$lib/valuation/submission';
 
@@ -19,6 +22,7 @@
 		min: number;
 		max: number;
 		currency: string;
+		resolvedMarketArea?: ResolvedValuationMarketArea | null;
 	};
 	type FieldIssues = Partial<Record<string, string[]>>;
 
@@ -131,13 +135,30 @@
 	};
 
 	const methodologyPoints = [
-		'Base di zona aggiornata su Ivrea, Canavese e comuni limitrofi.',
+		'Base geolocalizzata Borsino per i comuni della provincia di Torino.',
 		'Correttivi su stato dell’immobile, piano e presenza di ascensore.',
-		'Premialita dedicate per box, terrazzo abitabile e giardino privato.'
+		'Forbice min/max calcolata con parametri tuneable sulla base al metro quadro.'
 	];
 
+	const propertyKindLabels: Record<ValuationPropertyKind, { title: string; note: string }> = {
+		appartamento: {
+			title: 'Appartamento',
+			note: 'Usiamo piano e accessibilita come correttivi commerciali.'
+		},
+		casa_intera: {
+			title: 'Casa intera',
+			note: 'Valutiamo l’immobile come corpo unico, anche su piu livelli.'
+		}
+	};
+	const propertyKindOptions = (Object.entries(propertyKindLabels) as Array<
+		[ValuationPropertyKind, (typeof propertyKindLabels)[ValuationPropertyKind]]
+	>).map(([kind, copy]) => ({ kind, ...copy }));
+
 	let currentStep = 0;
-	let areaKey = baselineAreas[0]?.key ?? 'ivrea_centro';
+	let locationQuery = '';
+	let selectedLocation: LocationSuggestion | null = null;
+	let propertyKind: ValuationPropertyKind = 'appartamento';
+	let levelsCount = 2;
 	let squareMeters = 95;
 	let rooms = 3;
 	let condition: ValuationCondition = 'buono';
@@ -176,12 +197,21 @@
 		const issues: FieldIssues = {};
 
 		if (stepIndex === 0) {
-			if (!areaKey) issues.areaKey = ['Seleziona la zona di riferimento.'];
+			if (!selectedLocation || locationQuery !== selectedLocation.label) {
+				issues.selectedLocation = ['Seleziona una posizione precisa dai suggerimenti.'];
+			} else if (!selectedMarketArea) {
+				issues.selectedLocation = [
+					'Questa posizione non e coperta dai dati Borsino della provincia di Torino.'
+				];
+			}
 			if (!Number.isFinite(squareMeters) || squareMeters <= 0) {
 				issues.squareMeters = ['Inserisci una metratura valida.'];
 			}
 			if (!Number.isFinite(rooms) || rooms < 1) {
 				issues.rooms = ['Inserisci almeno un vano.'];
+			}
+			if (propertyKind === 'casa_intera' && (!Number.isFinite(levelsCount) || levelsCount < 1)) {
+				issues.levelsCount = ['Inserisci il numero di livelli.'];
 			}
 		}
 
@@ -227,6 +257,16 @@
 		};
 	}
 
+	function selectLocation(suggestion: LocationSuggestion) {
+		clearErrors();
+		selectedLocation = suggestion;
+	}
+
+	function clearLocation() {
+		clearErrors();
+		selectedLocation = null;
+	}
+
 	function formatCurrency(value: number) {
 		return currencyFormatter.format(value);
 	}
@@ -260,7 +300,10 @@
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
-					areaKey,
+					areaKey: selectedMarketArea?.key,
+					selectedLocation,
+					propertyKind,
+					levelsCount,
 					squareMeters,
 					rooms,
 					condition,
@@ -303,7 +346,10 @@
 		startedAt = Date.now();
 	}
 
-	$: selectedArea = baselineAreas.find((area) => area.key === areaKey) ?? baselineAreas[0];
+	$: if (selectedLocation && locationQuery !== selectedLocation.label) {
+		selectedLocation = null;
+	}
+	$: selectedMarketArea = resolveValuationMarketArea(selectedLocation);
 	$: selectedExtras = valuationExtras.filter((extra) => extras[extra]);
 	$: currentStepMeta = steps[currentStep] ?? steps[steps.length - 1];
 </script>
@@ -376,7 +422,7 @@
 							<div class="grid gap-4 md:grid-cols-3">
 								<div class="rounded-2xl bg-muted/70 p-5">
 									<p class="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">Zona</p>
-									<p class="mt-3 text-lg font-semibold text-foreground">{selectedArea?.label}</p>
+									<p class="mt-3 text-lg font-semibold text-foreground">{result.resolvedMarketArea?.label ?? selectedMarketArea?.label}</p>
 								</div>
 								<div class="rounded-2xl bg-muted/70 p-5">
 									<p class="text-xs font-semibold uppercase tracking-[0.22em] text-muted-foreground">Taglio</p>
@@ -437,17 +483,40 @@
 							{#if currentStep === 0}
 								<div class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
 									<div class="space-y-6">
-										<label class="block space-y-3">
-											<span class="text-sm font-semibold text-foreground">Zona di riferimento</span>
-											<select bind:value={areaKey} class="w-full rounded-2xl border border-border bg-background px-4 py-3 text-base text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20">
-												{#each baselineAreas as area}
-													<option value={area.key}>{area.label}</option>
-												{/each}
-											</select>
-											{#if fieldIssues.areaKey}
-												<p class="text-sm text-destructive">{fieldIssues.areaKey[0]}</p>
+										<div class="space-y-3">
+											<LocationLookup
+												bind:value={locationQuery}
+												inputId="valuation-location"
+												label="Posizione precisa"
+												placeholder="Cerca indirizzo, comune o frazione in Piemonte..."
+												selectedLabel={selectedLocation ? `Selezionata: ${selectedLocation.label}` : ''}
+												required
+												onSelect={selectLocation}
+												onClear={clearLocation}
+											/>
+											{#if fieldIssues.selectedLocation}
+												<p class="text-sm text-destructive">{fieldIssues.selectedLocation[0]}</p>
 											{/if}
-										</label>
+										</div>
+
+										<div class="space-y-3">
+											<p class="text-sm font-semibold text-foreground">Tipologia</p>
+											<div class="grid gap-3 sm:grid-cols-2">
+												{#each propertyKindOptions as option}
+													<button
+														type="button"
+														class={`rounded-2xl border p-4 text-left transition ${propertyKind === option.kind ? 'border-primary bg-primary/5 shadow-[0_20px_45px_-35px_rgba(45,122,116,0.9)]' : 'border-border bg-background hover:border-primary/35 hover:bg-primary/5'}`}
+														on:click={() => {
+															clearErrors();
+															propertyKind = option.kind;
+														}}
+													>
+														<p class="font-semibold text-foreground">{option.title}</p>
+														<p class="mt-2 text-sm leading-6 text-muted-foreground">{option.note}</p>
+													</button>
+												{/each}
+											</div>
+										</div>
 
 										<div class="grid gap-5 sm:grid-cols-2">
 											<label class="block space-y-3">
@@ -465,15 +534,29 @@
 													<p class="text-sm text-destructive">{fieldIssues.rooms[0]}</p>
 												{/if}
 											</label>
+
+											{#if propertyKind === 'casa_intera'}
+												<label class="block space-y-3 sm:col-span-2">
+													<span class="text-sm font-semibold text-foreground">Numero livelli</span>
+													<input bind:value={levelsCount} type="number" min="1" max="6" step="1" class="w-full rounded-2xl border border-border bg-background px-4 py-3 text-base text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+													{#if fieldIssues.levelsCount}
+														<p class="text-sm text-destructive">{fieldIssues.levelsCount[0]}</p>
+													{/if}
+												</label>
+											{/if}
 										</div>
 									</div>
 
 									<div class="rounded-[1.75rem] border border-brand-terracotta/15 bg-[linear-gradient(180deg,hsl(14_65%_97%),hsl(36_38%_96%))] p-6">
-										<p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-terracotta">Riferimento base</p>
+										<p class="text-xs font-semibold uppercase tracking-[0.22em] text-brand-terracotta">Base geolocalizzata</p>
 										<div class="mt-5 space-y-3">
-											<p class="font-display text-3xl font-bold tracking-tight text-foreground">{selectedArea?.label}</p>
+											<p class="font-display text-3xl font-bold tracking-tight text-foreground">{selectedMarketArea?.label ?? 'Seleziona una posizione'}</p>
 											<p class="text-base leading-7 text-muted-foreground">
-												Per questa simulazione partiamo da circa {formatCurrency(selectedArea?.pricePerSqm ?? 0)} al metro quadro e poi correggiamo con stato, piano e pertinenze.
+												{#if selectedMarketArea}
+													Per questa simulazione partiamo da {formatCurrency(selectedMarketArea.pricePerSqmBase)} al metro quadro, poi correggiamo con stato, tipologia e pertinenze.
+												{:else}
+													Scegli un indirizzo dai suggerimenti per agganciare la base Borsino del comune corretto.
+												{/if}
 											</p>
 										</div>
 									</div>
@@ -502,6 +585,7 @@
 										{/if}
 									</div>
 
+									{#if propertyKind === 'appartamento'}
 									<div class="space-y-4">
 										<p class="text-sm font-semibold text-foreground">Piano e accessibilità</p>
 										<div class="grid gap-4 md:grid-cols-2">
@@ -523,6 +607,7 @@
 											<p class="text-sm text-destructive">{fieldIssues.floor[0]}</p>
 										{/if}
 									</div>
+									{/if}
 
 									<div class="space-y-4">
 										<p class="text-sm font-semibold text-foreground">Pertinenze che incidono</p>
@@ -607,7 +692,7 @@
 							<div class="flex flex-col gap-3 border-t border-border/70 pt-6 sm:flex-row sm:items-center sm:justify-between">
 								<div class="text-sm text-muted-foreground">
 									{#if currentStep === 0}
-										Partiamo dalla base: dove si trova e quanto misura.
+										Partiamo dalla base: posizione precisa, tipologia e metratura.
 									{:else if currentStep === 1}
 										Aggiungiamo gli elementi che cambiano davvero il prezzo percepito.
 									{:else}
@@ -672,10 +757,18 @@
 					<div class="space-y-4 rounded-[1.6rem] bg-white/75 p-5">
 						<div class="flex items-center justify-between gap-4">
 							<p class="text-xs font-semibold uppercase tracking-[0.24em] text-primary/70">La tua bozza</p>
-							<p class="text-sm font-medium text-muted-foreground">{selectedArea?.label}</p>
+											<p class="text-sm font-medium text-muted-foreground">{selectedMarketArea?.label ?? 'Posizione da scegliere'}</p>
 						</div>
 
 						<div class="grid gap-3 text-sm text-muted-foreground">
+									<div class="flex items-start justify-between gap-4 border-b border-border/60 pb-3">
+										<span>Posizione</span>
+										<span class="max-w-[12rem] text-right font-semibold text-foreground">{selectedLocation?.label ?? 'Da scegliere'}</span>
+									</div>
+									<div class="flex items-center justify-between gap-4 border-b border-border/60 pb-3">
+										<span>Tipologia</span>
+										<span class="font-semibold text-foreground">{propertyKindLabels[propertyKind].title}</span>
+									</div>
 							<div class="flex items-center justify-between gap-4 border-b border-border/60 pb-3">
 								<span>Superficie</span>
 								<span class="font-semibold text-foreground">{squareMeters} m²</span>
@@ -688,9 +781,9 @@
 								<span>Stato</span>
 								<span class="font-semibold text-foreground">{conditionLabels[condition].title}</span>
 							</div>
-							<div class="flex items-center justify-between gap-4 pb-1">
+									<div class="flex items-center justify-between gap-4 pb-1">
 								<span>Piano</span>
-								<span class="text-right font-semibold text-foreground">{floorLabels[floor].title}</span>
+										<span class="text-right font-semibold text-foreground">{propertyKind === 'casa_intera' ? `${levelsCount} livelli` : floorLabels[floor].title}</span>
 							</div>
 						</div>
 

@@ -1,5 +1,12 @@
 import { getBasePrice } from './baseline-prices';
-import type { ValuationCondition, ValuationExtra, ValuationFloor, ValuationResult } from './engine';
+import type {
+	ValuationCondition,
+	ValuationExtra,
+	ValuationFloor,
+	ValuationPropertyKind,
+	ValuationResult
+} from './engine';
+import type { ResolvedValuationMarketArea, ValuationLocation } from './market-resolver';
 
 export type ValuationEmailPayload = {
 	fullName: string;
@@ -11,7 +18,11 @@ export type ValuationEmailPayload = {
 	sourceUrl: string;
 	utm?: Record<string, string>;
 	property: {
-		areaKey: string;
+		areaKey?: string;
+		selectedLocation?: ValuationLocation;
+		resolvedMarketArea?: ResolvedValuationMarketArea | null;
+		propertyKind?: ValuationPropertyKind;
+		levelsCount?: number;
 		squareMeters: number;
 		rooms: number;
 		condition: ValuationCondition;
@@ -64,6 +75,11 @@ const extraLabels: Record<ValuationExtra, { it: string; en: string }> = {
 	terrazzo_abitabile: { it: 'Terrazzo abitabile', en: 'Large terrace' }
 };
 
+const propertyKindLabels: Record<ValuationPropertyKind, { it: string; en: string }> = {
+	appartamento: { it: 'Appartamento', en: 'Apartment' },
+	casa_intera: { it: 'Casa intera', en: 'Whole house' }
+};
+
 function isItalian(locale: string) {
 	return locale.toLowerCase().startsWith('it');
 }
@@ -106,13 +122,29 @@ function formatExtras(extras: ValuationEmailPayload['property']['extras'], local
 
 function renderSummaryRows(payload: ValuationEmailPayload) {
 	const locale = payload.locale;
-	const area = getBasePrice(payload.property.areaKey);
+	const area = getEmailArea(payload);
 	const extraValues = formatExtras(payload.property.extras, locale);
+	const locationLabel = payload.property.selectedLocation?.label;
 
-	return [
+	const rows = [
+		...(locationLabel
+			? [
+					{
+						label: isItalian(locale) ? 'Posizione' : 'Location',
+						value: locationLabel
+					}
+				]
+			: []),
 		{
-			label: isItalian(locale) ? 'Zona' : 'Area',
+			label: isItalian(locale) ? 'Base di mercato' : 'Market basis',
 			value: area.label
+		},
+		{
+			label: isItalian(locale) ? 'Tipologia' : 'Property type',
+			value:
+				propertyKindLabels[payload.property.propertyKind || 'appartamento'][
+					isItalian(locale) ? 'it' : 'en'
+				]
 		},
 		{
 			label: isItalian(locale) ? 'Superficie' : 'Surface',
@@ -135,6 +167,25 @@ function renderSummaryRows(payload: ValuationEmailPayload) {
 			value: extraValues.join(', ')
 		}
 	];
+
+	if (payload.property.propertyKind === 'casa_intera') {
+		rows.splice(3, 0, {
+			label: isItalian(locale) ? 'Livelli' : 'Levels',
+			value: String(payload.property.levelsCount || 1)
+		});
+	}
+
+	return rows;
+}
+
+function getEmailArea(payload: ValuationEmailPayload) {
+	if (payload.property.resolvedMarketArea) {
+		return {
+			label: payload.property.resolvedMarketArea.label
+		};
+	}
+
+	return getBasePrice(payload.property.areaKey || '');
 }
 
 function renderSummaryTable(rows: Array<{ label: string; value: string }>) {
@@ -170,7 +221,7 @@ export function renderProspectValuationEmail(
 	branding: ValuationEmailBranding
 ): ValuationEmailContent {
 	const italian = isItalian(payload.locale);
-	const area = getBasePrice(payload.property.areaKey);
+	const area = getEmailArea(payload);
 	const range = `${formatCurrency(payload.valuation.min, payload.valuation.currency, payload.locale)} - ${formatCurrency(payload.valuation.max, payload.valuation.currency, payload.locale)}`;
 	const subject = italian
 		? `La tua stima orientativa REI per ${area.label}`
@@ -257,7 +308,7 @@ export function renderAgentNotificationEmail(
 	payload: ValuationEmailPayload,
 	branding: ValuationEmailBranding
 ): ValuationEmailContent {
-	const area = getBasePrice(payload.property.areaKey);
+	const area = getEmailArea(payload);
 	const range = `${formatCurrency(payload.valuation.min, payload.valuation.currency, 'it')} - ${formatCurrency(payload.valuation.max, payload.valuation.currency, 'it')}`;
 	const subject = `Nuova lead valutazione · ${area.label} · ${range}`;
 	const rows = renderSummaryRows({ ...payload, locale: 'it' });

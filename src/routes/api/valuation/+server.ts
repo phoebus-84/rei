@@ -100,6 +100,9 @@ export const POST: RequestHandler = async ({ getClientAddress, request, url }) =
 
 	const valuation = calculateValuation({
 		areaKey: submission.areaKey,
+		selectedLocation: submission.selectedLocation,
+		propertyKind: submission.propertyKind,
+		levelsCount: submission.levelsCount,
 		squareMeters: submission.squareMeters,
 		rooms: submission.rooms,
 		condition: submission.condition,
@@ -115,6 +118,10 @@ export const POST: RequestHandler = async ({ getClientAddress, request, url }) =
 		await pb.collection('valuation_leads').create({
 			property_data: {
 				areaKey: submission.areaKey,
+				selectedLocation: submission.selectedLocation,
+				resolvedMarketArea: valuation.breakdown.resolvedMarketArea,
+				propertyKind: submission.propertyKind,
+				levelsCount: submission.levelsCount,
 				squareMeters: submission.squareMeters,
 				rooms: submission.rooms,
 				condition: submission.condition,
@@ -149,6 +156,10 @@ export const POST: RequestHandler = async ({ getClientAddress, request, url }) =
 			utm: submission.utm,
 			property: {
 				areaKey: submission.areaKey,
+				selectedLocation: submission.selectedLocation,
+				resolvedMarketArea: valuation.breakdown.resolvedMarketArea,
+				propertyKind: submission.propertyKind,
+				levelsCount: submission.levelsCount,
 				squareMeters: submission.squareMeters,
 				rooms: submission.rooms,
 				condition: submission.condition,
@@ -161,7 +172,8 @@ export const POST: RequestHandler = async ({ getClientAddress, request, url }) =
 		return json({
 			min: valuation.min,
 			max: valuation.max,
-			currency: valuation.currency
+			currency: valuation.currency,
+			resolvedMarketArea: valuation.breakdown.resolvedMarketArea
 		});
 	} catch (error) {
 		console.error('Errore nel salvataggio della valutazione:', error);
