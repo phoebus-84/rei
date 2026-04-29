@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
+	import LocationLookup from '$lib/components/location/LocationLookup.svelte';
+	import type { LocationSuggestion } from '$lib/location';
 	import type { RecordModel } from 'pocketbase';
 	import {
 		getPropertyVariantUrl,
@@ -20,6 +22,13 @@
 		property_type?: string;
 		address?: string;
 		city?: string;
+		latitude?: number;
+		longitude?: number;
+		location_label?: string;
+		location_osm_id?: number;
+		location_osm_type?: string;
+		location_raw?: unknown;
+		location_geocoded_at?: string;
 		bedrooms?: number;
 		bathrooms?: number;
 		area_sqm?: number;
@@ -71,6 +80,14 @@
 	let propertyType = $state(initialProperty?.property_type ?? 'apartment');
 	let address = $state(initialProperty?.address ?? '');
 	let city = $state(initialProperty?.city ?? '');
+	let latitude = $state<number | null>(initialProperty?.latitude ?? null);
+	let longitude = $state<number | null>(initialProperty?.longitude ?? null);
+	let locationLabel = $state(initialProperty?.location_label ?? '');
+	let locationOsmId = $state<number | null>(initialProperty?.location_osm_id ?? null);
+	let locationOsmType = $state(initialProperty?.location_osm_type ?? '');
+	let locationRaw = $state<unknown>(initialProperty?.location_raw ?? null);
+	let locationGeocodedAt = $state(initialProperty?.location_geocoded_at ?? '');
+	let locationSearch = $state(initialProperty?.location_label ?? [initialProperty?.address, initialProperty?.city].filter(Boolean).join(', '));
 	let bedrooms = $state<number>(initialProperty?.bedrooms ?? 0);
 	let bathrooms = $state<number>(initialProperty?.bathrooms ?? 0);
 	let areaSqm = $state<number>(initialProperty?.area_sqm ?? 0);
@@ -205,6 +222,28 @@
 		};
 	}
 
+	function handleLocationSelect(suggestion: LocationSuggestion) {
+		address = suggestion.streetAddress || address;
+		city = suggestion.city || city;
+		latitude = suggestion.latitude;
+		longitude = suggestion.longitude;
+		locationLabel = suggestion.label;
+		locationOsmId = suggestion.osmId;
+		locationOsmType = suggestion.osmType;
+		locationRaw = suggestion;
+		locationGeocodedAt = new Date().toISOString();
+	}
+
+	function clearLocation() {
+		latitude = null;
+		longitude = null;
+		locationLabel = '';
+		locationOsmId = null;
+		locationOsmType = '';
+		locationRaw = null;
+		locationGeocodedAt = '';
+	}
+
 	onDestroy(() => {
 		for (const upload of newUploads) {
 			URL.revokeObjectURL(upload.previewUrl);
@@ -222,6 +261,13 @@
 		formData.append('property_type', propertyType);
 		formData.append('address', address);
 		formData.append('city', city);
+		formData.append('latitude', latitude === null ? '' : String(latitude));
+		formData.append('longitude', longitude === null ? '' : String(longitude));
+		formData.append('location_label', locationLabel);
+		formData.append('location_osm_id', locationOsmId === null ? '' : String(locationOsmId));
+		formData.append('location_osm_type', locationOsmType);
+		formData.append('location_raw', JSON.stringify(locationRaw));
+		formData.append('location_geocoded_at', locationGeocodedAt);
 		formData.append('bedrooms', String(bedrooms));
 		formData.append('bathrooms', String(bathrooms));
 		formData.append('area_sqm', String(areaSqm));
@@ -402,12 +448,33 @@
 		<h2 class="mb-4 text-lg font-semibold">Posizione</h2>
 		<div class="grid gap-4 sm:grid-cols-2">
 			<div class="sm:col-span-2">
+				<LocationLookup
+					bind:value={locationSearch}
+					inputId="property-location-lookup"
+					label="Lookup indirizzo"
+					placeholder="Cerca via, civico o comune..."
+					selectedLabel={locationLabel}
+					onSelect={handleLocationSelect}
+					onClear={clearLocation}
+				/>
+			</div>
+			<div class="sm:col-span-2">
 				<label for="address" class="block text-sm font-medium">Indirizzo *</label>
 				<input id="address" type="text" bind:value={address} required class={inputClass} />
 			</div>
 			<div>
 				<label for="city" class="block text-sm font-medium">Città *</label>
 				<input id="city" type="text" bind:value={city} required class={inputClass} />
+			</div>
+			<div>
+				<label for="coordinates" class="block text-sm font-medium">Coordinate</label>
+				<input
+					id="coordinates"
+					type="text"
+					value={latitude !== null && longitude !== null ? `${latitude.toFixed(6)}, ${longitude.toFixed(6)}` : 'Non impostate'}
+					readonly
+					class="{inputClass} text-muted-foreground"
+				/>
 			</div>
 		</div>
 	</div>

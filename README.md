@@ -25,6 +25,18 @@ npm run dev
 npm run dev -- --open
 ```
 
+## Location Lookup
+
+Property geocoding and nearby listing filters use the app endpoint at `/api/geocode`, which proxies Nominatim search server-side. Configure these optional environment variables in deployment:
+
+```bash
+NOMINATIM_BASE_URL=https://nominatim.openstreetmap.org
+NOMINATIM_USER_AGENT="REI Immobiliare/1.0 (contact@example.com)"
+NOMINATIM_EMAIL=contact@example.com
+```
+
+The public Nominatim service requires identifying requests, caching, a maximum of one upstream request per second, and the ability to switch providers. Browser code should keep calling `/api/geocode`, not `nominatim.openstreetmap.org` directly.
+
 ## Building
 
 To create a production version of your app:

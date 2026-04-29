@@ -1,4 +1,5 @@
 import { pb } from '$lib/pocketbase';
+import { calculateDistanceKm, parseCoordinate } from '$lib/location';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ url }) => {
@@ -22,6 +23,13 @@ export const load: PageServerLoad = async ({ url }) => {
 	const garage = url.searchParams.get('garage');
 	const parking = url.searchParams.get('parking');
 	const cellar = url.searchParams.get('cellar');
+	const nearbyLat = parseCoordinate(url.searchParams.get('nearbyLat'), -90, 90);
+	const nearbyLon = parseCoordinate(url.searchParams.get('nearbyLon'), -180, 180);
+	const requestedRadiusKm = Number(url.searchParams.get('radiusKm') || '10');
+	const radiusKm = Number.isFinite(requestedRadiusKm)
+		? Math.min(Math.max(requestedRadiusKm, 1), 100)
+		: 10;
+	const hasNearbyFilter = nearbyLat !== null && nearbyLon !== null;
 
 	const validHeating = ['autonomo', 'centralizzato', 'a_pavimento', 'assente'];
 	const validCondition = ['nuovo', 'ristrutturato', 'abitabile', 'da_ristrutturare'];
@@ -86,6 +94,58 @@ export const load: PageServerLoad = async ({ url }) => {
 	}
 
 	try {
+		if (hasNearbyFilter) {
+			const allMatchingProperties = await pb.collection('properties').getFullList({
+				filter,
+				sort: '-featured,-created',
+				expand: 'agent'
+			});
+			type PropertyRecord = (typeof allMatchingProperties)[number];
+
+			const nearbyProperties: Array<PropertyRecord & { distance_km: number }> = [];
+
+			for (const property of allMatchingProperties) {
+				const latitude =
+					typeof property.latitude === 'number' ? property.latitude : Number(property.latitude);
+				const longitude =
+					typeof property.longitude === 'number' ? property.longitude : Number(property.longitude);
+
+				if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+					continue;
+				}
+
+				const distanceKm = calculateDistanceKm(nearbyLat, nearbyLon, latitude, longitude);
+
+				if (distanceKm > radiusKm) {
+					continue;
+				}
+
+				nearbyProperties.push({
+					...property,
+					distance_km: distanceKm
+				});
+			}
+
+			nearbyProperties.sort((a, b) => a.distance_km - b.distance_km);
+
+			const totalItems = nearbyProperties.length;
+			const totalPages = Math.ceil(totalItems / pageSize);
+			const start = (page - 1) * pageSize;
+
+			return {
+				properties: nearbyProperties.slice(start, start + pageSize),
+				totalItems,
+				totalPages,
+				currentPage: page,
+				pageSize,
+				nearby: {
+					latitude: nearbyLat,
+					longitude: nearbyLon,
+					radiusKm
+				}
+			};
+		}
+
 		const result = await pb.collection('properties').getList(page, pageSize, {
 			filter,
 			sort: '-featured,-created',

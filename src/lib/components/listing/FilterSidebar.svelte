@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import LocationLookup from '$lib/components/location/LocationLookup.svelte';
+	import type { LocationSuggestion } from '$lib/location';
 	import { Filter, X } from 'lucide-svelte';
 
 	export let isOpen = false;
@@ -12,6 +14,10 @@
 			status: p.get('status') || 'for_sale',
 			minPrice: p.get('minPrice') || '',
 			maxPrice: p.get('maxPrice') || '',
+			nearbyLabel: p.get('nearbyLabel') || '',
+			nearbyLat: p.get('nearbyLat') || '',
+			nearbyLon: p.get('nearbyLon') || '',
+			radiusKm: p.get('radiusKm') || '10',
 			propertyType: p.get('type') || '',
 			bedrooms: p.get('minBedrooms') ? p.get('minBedrooms') + '+' : p.get('bedrooms') || '',
 			minRooms: p.get('minRooms') ? (parseInt(p.get('minRooms')!) >= 5 ? '5+' : p.get('minRooms')!) : '',
@@ -32,6 +38,10 @@
 	let status = applied.status;
 	let minPrice: string | number = applied.minPrice;
 	let maxPrice: string | number = applied.maxPrice;
+	let nearbyLabel = applied.nearbyLabel;
+	let nearbyLat = applied.nearbyLat;
+	let nearbyLon = applied.nearbyLon;
+	let radiusKm = applied.radiusKm;
 	let propertyType = applied.propertyType;
 	let bedrooms = applied.bedrooms;
 	let minRooms = applied.minRooms;
@@ -49,6 +59,10 @@
 		keyword !== applied.keyword ||
 		String(minPrice) !== String(applied.minPrice) ||
 		String(maxPrice) !== String(applied.maxPrice) ||
+		nearbyLabel !== applied.nearbyLabel ||
+		nearbyLat !== applied.nearbyLat ||
+		nearbyLon !== applied.nearbyLon ||
+		radiusKm !== applied.radiusKm ||
 		propertyType !== applied.propertyType ||
 		bedrooms !== applied.bedrooms ||
 		minRooms !== applied.minRooms ||
@@ -74,6 +88,13 @@
 
 	const bedroomOptions = ['1', '2', '3', '4+'];
 	const roomOptions = ['2', '3', '4', '5+'];
+	const radiusOptions = [
+		{ value: '2', label: '2 km' },
+		{ value: '5', label: '5 km' },
+		{ value: '10', label: '10 km' },
+		{ value: '20', label: '20 km' },
+		{ value: '50', label: '50 km' }
+	];
 
 	const heatingOptions = [
 		{ value: 'autonomo', label: 'Autonomo' },
@@ -96,6 +117,12 @@
 		params.set('status', status);
 		if (minPrice) params.set('minPrice', minPrice.toString());
 		if (maxPrice) params.set('maxPrice', maxPrice.toString());
+		if (nearbyLat && nearbyLon) {
+			params.set('nearbyLat', nearbyLat);
+			params.set('nearbyLon', nearbyLon);
+			params.set('radiusKm', radiusKm);
+			if (nearbyLabel) params.set('nearbyLabel', nearbyLabel);
+		}
 		if (propertyType) params.set('type', propertyType);
 		if (bedrooms && bedrooms !== 'Any') {
 			if (bedrooms === '4+') {
@@ -127,6 +154,10 @@
 		status = 'for_sale';
 		minPrice = '';
 		maxPrice = '';
+		nearbyLabel = '';
+		nearbyLat = '';
+		nearbyLon = '';
+		radiusKm = '10';
 		propertyType = '';
 		bedrooms = '';
 		minRooms = '';
@@ -152,6 +183,18 @@
 		if (status === value) return;
 		status = value;
 		applyFilters();
+	}
+
+	function handleNearbySelect(suggestion: LocationSuggestion) {
+		nearbyLabel = suggestion.label;
+		nearbyLat = String(suggestion.latitude);
+		nearbyLon = String(suggestion.longitude);
+	}
+
+	function clearNearby() {
+		nearbyLabel = '';
+		nearbyLat = '';
+		nearbyLon = '';
 	}
 </script>
 
@@ -192,6 +235,32 @@
 			placeholder="Città, CAP, indirizzo..."
 			class="mt-2 w-full rounded-md border border-input bg-background px-4 py-2 text-foreground placeholder-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring"
 		/>
+	</div>
+
+	<!-- Nearby Search -->
+	<div class="mb-6">
+		<LocationLookup
+			bind:value={nearbyLabel}
+			inputId="nearby-location-lookup"
+			label="Vicino a"
+			placeholder="Comune, via o punto di riferimento..."
+			selectedLabel={nearbyLat && nearbyLon ? `Raggio ${radiusKm} km` : ''}
+			onSelect={handleNearbySelect}
+			onClear={clearNearby}
+		/>
+		<div class="mt-3">
+			<label for="nearby-radius" class="block text-sm font-medium text-foreground mb-2">Distanza massima</label>
+			<select
+				id="nearby-radius"
+				bind:value={radiusKm}
+				disabled={!nearbyLat || !nearbyLon}
+				class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-60"
+			>
+				{#each radiusOptions as option (option.value)}
+					<option value={option.value}>{option.label}</option>
+				{/each}
+			</select>
+		</div>
 	</div>
 
 	<!-- Status Toggle -->

@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { currentUser } from '$lib/stores/auth';
 	import { getPropertyCoverUrl, getPropertyImageAlt, formatCurrency, formatArea } from '$lib/utils';
+	import { formatDistanceKm } from '$lib/location';
 	import { Heart, MapPin, Bed, Bath, Square, DoorOpen, ArrowUpDown } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { RecordModel } from 'pocketbase';
@@ -108,6 +109,7 @@
 		rented: { bg: 'bg-muted-foreground/80', text: 'Affittato' }
 	};
 	const badge = badgeInfo[property.status as keyof typeof badgeInfo] || badgeInfo.for_sale;
+	$: distanceKm = typeof property.distance_km === 'number' ? property.distance_km : null;
 </script>
 
 <div
@@ -171,6 +173,11 @@
 			<MapPin size={16} />
 			<span class="truncate">{property.address}, {property.city}</span>
 		</div>
+		{#if distanceKm !== null}
+			<div class="text-xs font-medium text-primary">
+				{formatDistanceKm(distanceKm)} dalla posizione cercata
+			</div>
+		{/if}
 
 		<!-- Specs Row -->
 		<div class="border-t border-border pt-3">
