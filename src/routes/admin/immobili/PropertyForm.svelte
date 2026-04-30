@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { pb } from '$lib/pocketbase';
 	import LocationLookup from '$lib/components/location/LocationLookup.svelte';
-	import type { LocationSuggestion } from '$lib/location';
+	import { toPocketBaseOsmType, type LocationSuggestion } from '$lib/location';
 	import type { RecordModel } from 'pocketbase';
 	import {
 		getPropertyVariantUrl,
@@ -229,7 +229,7 @@
 		longitude = suggestion.longitude;
 		locationLabel = suggestion.label;
 		locationOsmId = suggestion.osmId;
-		locationOsmType = suggestion.osmType;
+		locationOsmType = toPocketBaseOsmType(suggestion.osmType);
 		locationRaw = suggestion;
 		locationGeocodedAt = new Date().toISOString();
 	}
@@ -265,7 +265,7 @@
 		formData.append('longitude', longitude === null ? '' : String(longitude));
 		formData.append('location_label', locationLabel);
 		formData.append('location_osm_id', locationOsmId === null ? '' : String(locationOsmId));
-		formData.append('location_osm_type', locationOsmType);
+		formData.append('location_osm_type', toPocketBaseOsmType(locationOsmType));
 		formData.append('location_raw', JSON.stringify(locationRaw));
 		formData.append('location_geocoded_at', locationGeocodedAt);
 		formData.append('bedrooms', String(bedrooms));

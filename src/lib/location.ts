@@ -11,6 +11,21 @@ export type LocationSuggestion = {
 	city: string;
 };
 
+const pocketBaseOsmTypes: Record<string, 'N' | 'W' | 'R'> = {
+	n: 'N',
+	node: 'N',
+	w: 'W',
+	way: 'W',
+	r: 'R',
+	relation: 'R'
+};
+
+export function toPocketBaseOsmType(value: string | null | undefined) {
+	if (!value) return '';
+
+	return pocketBaseOsmTypes[value.trim().toLowerCase()] ?? '';
+}
+
 export function parseCoordinate(value: string | null, min: number, max: number) {
 	if (!value) return null;
 	const parsed = Number(value);

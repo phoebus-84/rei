@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { calculateDistanceKm, formatDistanceKm, parseCoordinate } from './location';
+import {
+	calculateDistanceKm,
+	formatDistanceKm,
+	parseCoordinate,
+	toPocketBaseOsmType
+} from './location';
 
 describe('location helpers', () => {
 	it('parses coordinates only inside accepted bounds', () => {
@@ -20,5 +25,14 @@ describe('location helpers', () => {
 		expect(formatDistanceKm(0.42)).toBe('420 m');
 		expect(formatDistanceKm(4.25)).toBe('4,3 km');
 		expect(formatDistanceKm(18.2)).toBe('18 km');
+	});
+
+	it('normalizes Nominatim OSM types for PocketBase one-character fields', () => {
+		expect(toPocketBaseOsmType('node')).toBe('N');
+		expect(toPocketBaseOsmType('way')).toBe('W');
+		expect(toPocketBaseOsmType('relation')).toBe('R');
+		expect(toPocketBaseOsmType('w')).toBe('W');
+		expect(toPocketBaseOsmType('unknown')).toBe('');
+		expect(toPocketBaseOsmType(null)).toBe('');
 	});
 });
