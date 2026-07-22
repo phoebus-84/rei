@@ -61,12 +61,12 @@ export async function sendValuationEmails(
 	}
 
 	const branding = {
-		brandName: 'REI Immobiliare',
-		brandEmail: 'info@rei-immobiliare.it',
+		brandName: 'REI Casa',
+		brandEmail: 'info@reicasa.it',
 		brandPhone: '+39 0125 282335',
-		siteUrl: env.SITE_URL || 'https://rei-immobiliare.it',
+		siteUrl: env.SITE_URL || 'https://reicasa.it',
 		bookingUrl: env.VALUATION_BOOKING_URL || 'tel:+390125282335',
-		logoUrl: `${env.SITE_URL || 'https://rei-immobiliare.it'}/email/rei-logo.png`
+		logoUrl: `${env.SITE_URL || 'https://reicasa.it'}/email/rei-logo.png`
 	};
 
 	const prospectEmail = renderProspectValuationEmail(payload, branding);

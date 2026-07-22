@@ -27,12 +27,16 @@ export async function createPocketBaseAdmin() {
 	try {
 		await pb.admins.authWithPassword(adminEmail, adminPassword);
 	} catch (error) {
-		const status = typeof error === 'object' && error !== null && 'status' in error ? error.status : null;
+		const status =
+			typeof error === 'object' && error !== null && 'status' in error ? error.status : null;
 
 		if (status !== 404) {
-			throw new Error(`PocketBase admin authentication failed for ${pbUrl}. Check PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD.`, {
-				cause: error
-			});
+			throw new Error(
+				`PocketBase admin authentication failed for ${pbUrl}. Check PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD.`,
+				{
+					cause: error
+				}
+			);
 		}
 
 		try {

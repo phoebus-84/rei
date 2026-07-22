@@ -10,7 +10,7 @@
 		<div class="col-span-full xl:col-span-2">
 			<a href="/" class="flex text-xl font-bold">
 				<img src={logo} alt="REI Logo" class="mr-2 h-8 w-auto" />
-				REI Immobiliare
+				REI Casa
 			</a>
 			<p class="mt-4 text-muted-foreground">
 				La tua agenzia di fiducia a Ivrea e nel Canavese. Valorizziamo il tuo patrimonio con
@@ -21,8 +21,8 @@
 		<div class="flex flex-col gap-2">
 			<h3 class="text-lg font-bold">Contatti</h3>
 			<div>
-				<a href="mailto:info@rei-immobiliare.it" class="opacity-60 hover:opacity-100">
-					info@rei-immobiliare.it
+				<a href="mailto:info@reicasa.it" class="opacity-60 hover:opacity-100">
+					info@reicasa.it
 				</a>
 			</div>
 			<div>
@@ -81,6 +81,6 @@
 	</section>
 
 	<section class="container pb-14 text-center">
-		<h3>&copy; {year} REI Immobiliare — {m.footer_copyright()}</h3>
+		<h3>&copy; {year} REI Casa — {m.footer_copyright()}</h3>
 	</section>
 </footer>

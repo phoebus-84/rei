@@ -22,7 +22,7 @@
 			<!-- Logo -->
 			<a href="/" class="flex items-center gap-2 text-2xl font-bold text-gray-900">
 				<Home size={28} class="text-blue-600" />
-				<span>REI Immobiliare</span>
+				<span>REI Casa</span>
 			</a>
 
 			<!-- Desktop Menu -->

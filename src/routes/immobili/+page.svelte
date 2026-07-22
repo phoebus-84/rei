@@ -22,10 +22,10 @@
 </script>
 
 <svelte:head>
-	<title>Immobili in Vendita e Affitto | REI Immobiliare</title>
+	<title>Immobili in Vendita e Affitto | REI Casa</title>
 	<meta
 		name="description"
-		content="Scopri la nostra selezione di immobili in vendita e affitto. Trova la tua casa ideale con REI Immobiliare."
+		content="Scopri la nostra selezione di immobili in vendita e affitto. Trova la tua casa ideale con REI Casa."
 	/>
 </svelte:head>
 

@@ -11,10 +11,10 @@
 		tagline: 'Real Estate Invest',
 		role: 'Valorizziamo il tuo patrimonio immobiliare',
 		phone: '+39 0125 282335',
-		email: 'info@rei-immobiliare.it',
+		email: 'info@reicasa.it',
 		address: 'Via Jervis — Ivrea (TO)',
-		web: 'rei-immobiliare.it',
-		url: 'https://rei-immobiliare.it'
+		web: 'reicasa.it',
+		url: 'https://reicasa.it'
 	};
 
 	// ── QR code generation ──────────────────────────────────────────────────
@@ -63,7 +63,7 @@
 		const vcf = [
 			'BEGIN:VCARD',
 			'VERSION:3.0',
-			'FN:REI Immobiliare',
+			'FN:REI Casa',
 			'ORG:REI — Real Estate Invest',
 			`TEL;TYPE=WORK,VOICE:${card.phone}`,
 			`EMAIL;TYPE=WORK:${card.email}`,
@@ -74,17 +74,17 @@
 		const blob = new Blob([vcf], { type: 'text/vcard' });
 		const a = document.createElement('a');
 		a.href = URL.createObjectURL(blob);
-		a.download = 'rei-immobiliare.vcf';
+		a.download = 'reicasa.vcf';
 		a.click();
 		URL.revokeObjectURL(a.href);
 	}
 </script>
 
 <svelte:head>
-	<title>Biglietto da Visita — REI Immobiliare</title>
+	<title>Biglietto da Visita — REI Casa</title>
 	<meta
 		name="description"
-		content="Biglietto da visita digitale di REI Immobiliare — Real Estate Invest, agenzia a Ivrea e nel Canavese."
+		content="Biglietto da visita digitale di REI Casa — Real Estate Invest, agenzia a Ivrea e nel Canavese."
 	/>
 </svelte:head>
 
@@ -246,7 +246,7 @@
 						</a>
 
 						<a
-							href="mailto:info@rei-immobiliare.it"
+							href="mailto:info@reicasa.it"
 							class="group flex items-center gap-2.5 text-sm transition-colors hover:text-brand-amber"
 						>
 							<Mail class="h-3.5 w-3.5 shrink-0 opacity-80" />

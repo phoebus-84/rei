@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>{m.privacy_policy_title()} | REI Immobiliare</title>
+	<title>{m.privacy_policy_title()} | REI Casa</title>
 </svelte:head>
 
 <section class="container mx-auto max-w-3xl px-4 py-16">
@@ -72,8 +72,8 @@
 		</ul>
 		<p class="leading-relaxed text-muted-foreground">
 			Per esercitare i propri diritti, contattare il Titolare all'indirizzo email:
-			<a href="mailto:info@rei-immobiliare.it" class="text-primary hover:underline">
-				info@rei-immobiliare.it
+			<a href="mailto:info@reicasa.it" class="text-primary hover:underline">
+				info@reicasa.it
 			</a>
 		</p>
 	</article>

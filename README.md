@@ -31,7 +31,7 @@ Property geocoding and nearby listing filters use the app endpoint at `/api/geoc
 
 ```bash
 NOMINATIM_BASE_URL=https://nominatim.openstreetmap.org
-NOMINATIM_USER_AGENT="REI Immobiliare/1.0 (contact@example.com)"
+NOMINATIM_USER_AGENT="REI Casa/1.0 (contact@example.com)"
 NOMINATIM_EMAIL=contact@example.com
 ```
 

@@ -39,8 +39,8 @@
 </script>
 
 <svelte:head>
-	<title>Accedi | REI Immobiliare</title>
-	<meta name="description" content="Accedi al tuo account REI Immobiliare" />
+	<title>Accedi | REI Casa</title>
+	<meta name="description" content="Accedi al tuo account REI Casa" />
 </svelte:head>
 
 <main class="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">

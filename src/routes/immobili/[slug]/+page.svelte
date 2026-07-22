@@ -60,7 +60,7 @@
 </script>
 
 <svelte:head>
-	<title>{property.title} | REI Immobiliare</title>
+	<title>{property.title} | REI Casa</title>
 	<meta name="description" content={property.description || property.title} />
 	<meta property="og:title" content={property.title} />
 	<meta property="og:description" content={property.description || ''} />

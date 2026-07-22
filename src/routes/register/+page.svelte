@@ -88,8 +88,8 @@
 </script>
 
 <svelte:head>
-	<title>Registrati | REI Immobiliare</title>
-	<meta name="description" content="Crea un account REI Immobiliare" />
+	<title>Registrati | REI Casa</title>
+	<meta name="description" content="Crea un account REI Casa" />
 </svelte:head>
 
 <main class="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">

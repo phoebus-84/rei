@@ -7,12 +7,12 @@ import {
 } from './email-content';
 
 const branding = {
-	brandName: 'REI Immobiliare',
-	brandEmail: 'info@rei-immobiliare.it',
+	brandName: 'REI Casa',
+	brandEmail: 'info@reicasa.it',
 	brandPhone: '+39 0125 282335',
-	siteUrl: 'https://rei-immobiliare.it',
+	siteUrl: 'https://reicasa.it',
 	bookingUrl: 'tel:+390125282335',
-	logoUrl: 'https://rei-immobiliare.it/email/rei-logo.png'
+	logoUrl: 'https://reicasa.it/email/rei-logo.png'
 };
 
 const payload: ValuationEmailPayload = {
@@ -22,7 +22,7 @@ const payload: ValuationEmailPayload = {
 	locale: 'it',
 	privacyVersion: '2026-04-25',
 	consentTimestamp: '2026-04-25T10:00:00.000Z',
-	sourceUrl: 'https://rei-immobiliare.it/valutazione?utm_source=test',
+	sourceUrl: 'https://reicasa.it/valutazione?utm_source=test',
 	utm: {
 		utm_source: 'test',
 		utm_medium: 'email'

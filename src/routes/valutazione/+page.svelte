@@ -355,7 +355,7 @@
 </script>
 
 <svelte:head>
-	<title>Valutazione Immobiliare Online | REI Immobiliare</title>
+	<title>Valutazione Immobiliare Online | REI Casa</title>
 	<meta
 		name="description"
 		content="Richiedi una stima orientativa del tuo immobile a Ivrea e nel Canavese. Zona, stato, piano e pertinenze: tre passi, poi sblocchi la valutazione REI."
@@ -442,7 +442,7 @@
 									</p>
 									<div class="mt-6 flex flex-col gap-3 sm:flex-row">
 										<a href="tel:+390125282335" class={buttonVariants({ variant: 'default', size: 'lg' })}>Parla con REI</a>
-										<a href="mailto:info@rei-immobiliare.it" class={buttonVariants({ variant: 'outline', size: 'lg' })}>Invia documenti</a>
+										<a href="mailto:info@reicasa.it" class={buttonVariants({ variant: 'outline', size: 'lg' })}>Invia documenti</a>
 									</div>
 								</div>
 
@@ -664,7 +664,7 @@
 										<label class="flex items-start gap-3">
 											<input bind:checked={privacyAccepted} type="checkbox" class="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary" />
 											<span class="text-sm leading-6 text-muted-foreground">
-												Acconsento al trattamento dei dati per ricevere la stima orientativa e l’eventuale ricontatto operativo da parte di REI Immobiliare.
+												Acconsento al trattamento dei dati per ricevere la stima orientativa e l’eventuale ricontatto operativo da parte di REI Casa.
 											</span>
 										</label>
 										{#if fieldIssues.privacyAccepted}

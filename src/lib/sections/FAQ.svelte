@@ -76,7 +76,7 @@
 	>
 		Hai ancora dubbi?
 		<a
-			href="mailto:info@rei-immobiliare.it"
+			href="mailto:info@reicasa.it"
 			class="border-primary text-primary transition-all hover:border-b-2">Scrivici</a
 		>
 	</h3>

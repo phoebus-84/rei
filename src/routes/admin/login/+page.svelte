@@ -45,7 +45,7 @@
 </script>
 
 <svelte:head>
-	<title>Admin Login | REI Immobiliare</title>
+	<title>Admin Login | REI Casa</title>
 </svelte:head>
 
 <main class="flex min-h-screen items-center justify-center bg-muted/30 px-4">
