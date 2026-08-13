@@ -80,3 +80,16 @@ export function isPropertySeoIntent(intent: SeoIntent): intent is PropertySeoInt
 export function getSeoIntentDefinition(intent: SeoIntent): SeoIntentDefinition {
 	return seoIntentDefinitions[intent];
 }
+
+export function getSerializableSeoIntentDefinition(intent: SeoIntent) {
+	const definition = getSeoIntentDefinition(intent);
+
+	return {
+		intent: definition.intent,
+		hubTitle: definition.hubTitle,
+		hubDescription: definition.hubDescription,
+		hubEyebrow: definition.hubEyebrow,
+		contract: definition.contract,
+		inventoryLabel: definition.inventoryLabel
+	};
+}

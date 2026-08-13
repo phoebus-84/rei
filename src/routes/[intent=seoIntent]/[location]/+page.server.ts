@@ -5,7 +5,12 @@ import {
 	buildSeoMetadata,
 	getSeoMarketData
 } from '$lib/seo/domain';
-import { getSeoIntentDefinition, isPropertySeoIntent, isSeoIntent } from '$lib/seo/intents';
+import {
+	getSeoIntentDefinition,
+	getSerializableSeoIntentDefinition,
+	isPropertySeoIntent,
+	isSeoIntent
+} from '$lib/seo/intents';
 import { getNearbySeoPages, getSeoPage } from '$lib/server/seo-pages';
 import { getPropertiesForSeoLocation } from '$lib/server/property-search';
 import type { PageServerLoad } from './$types';
@@ -19,7 +24,8 @@ export const load: PageServerLoad = async ({ params, url, setHeaders }) => {
 	const seoPage = await getSeoPage(params.intent, params.location);
 	if (!seoPage || !seoPage.enabled) throw error(404, 'Pagina locale non trovata');
 
-	const definition = getSeoIntentDefinition(seoPage.intent);
+	const intentDefinition = getSeoIntentDefinition(seoPage.intent);
+	const definition = getSerializableSeoIntentDefinition(seoPage.intent);
 	const nearbyPages = await getNearbySeoPages(seoPage);
 	const nearbyLocations = nearbyPages.map((page) => page.location);
 	const nearbyLinks = buildNearbyLinks(seoPage.location, seoPage.intent, nearbyLocations);
@@ -39,10 +45,10 @@ export const load: PageServerLoad = async ({ params, url, setHeaders }) => {
 			: 'public, max-age=0, s-maxage=1800, stale-while-revalidate=3600'
 	});
 
-	if (isPropertySeoIntent(seoPage.intent) && definition.contract) {
+	if (isPropertySeoIntent(seoPage.intent) && intentDefinition.contract) {
 		const inventory = await getPropertiesForSeoLocation({
 			location: seoPage.location,
-			contract: definition.contract,
+			contract: intentDefinition.contract,
 			nearbyLocations,
 			page: pageNumber,
 			sort: url.searchParams.get('sort') || undefined

@@ -1,12 +1,12 @@
 import { error } from '@sveltejs/kit';
-import { getSeoIntentDefinition, isSeoIntent } from '$lib/seo/intents';
+import { getSerializableSeoIntentDefinition, isSeoIntent } from '$lib/seo/intents';
 import { getEnabledSeoPages } from '$lib/server/seo-pages';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, url, setHeaders }) => {
 	if (!isSeoIntent(params.intent)) throw error(404, 'Pagina non trovata');
 
-	const definition = getSeoIntentDefinition(params.intent);
+	const definition = getSerializableSeoIntentDefinition(params.intent);
 	const pages = await getEnabledSeoPages(params.intent);
 
 	setHeaders({
