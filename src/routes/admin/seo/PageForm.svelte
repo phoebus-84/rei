@@ -3,7 +3,8 @@
 	import type { SeoIntent } from '$lib/seo/types';
 	import { getSeoIntentDefinition } from '$lib/seo/intents';
 	import { seoIntentOptions } from '$lib/admin/seo';
-	import { Eye, FileText } from 'lucide-svelte';
+	import RichText from '$lib/components/seo/RichText.svelte';
+	import { Code2, Eye, FileText } from 'lucide-svelte';
 
 	type Values = {
 		locationId: string;
@@ -44,6 +45,7 @@
 	let intro = $state(seoPage?.intro ?? '');
 	// svelte-ignore state_referenced_locally
 	let content = $state(seoPage?.content ?? '');
+	let editorMode = $state<'write' | 'preview'>('write');
 
 	const inputClass =
 		'w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20';
@@ -135,11 +137,31 @@
 				<span class="text-sm font-medium">Introduzione</span>
 				<textarea bind:value={intro} rows="4" class={inputClass} placeholder={template.locationIntro(previewName)}></textarea>
 			</label>
-			<label class="block space-y-2">
-				<span class="text-sm font-medium">Contenuto editoriale HTML</span>
-				<textarea bind:value={content} rows="12" class={`${inputClass} font-mono`} placeholder="<h2>Approfondimento locale</h2>\n<p>Contenuto verificato…</p>"></textarea>
-				<small class="leading-5 text-muted-foreground">HTML fidato inserito dagli amministratori. Non aggiungere script, iframe o fatti locali non verificati.</small>
-			</label>
+			<div class="space-y-2">
+				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+					<span class="text-sm font-medium">Contenuto editoriale HTML</span>
+					<div class="inline-flex w-fit rounded-md border bg-muted/40 p-1" aria-label="Modalità editor">
+						<button type="button" onclick={() => (editorMode = 'write')} class={`inline-flex items-center gap-2 rounded px-3 py-1.5 text-xs font-semibold ${editorMode === 'write' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
+							<Code2 class="h-3.5 w-3.5" /> HTML
+						</button>
+						<button type="button" onclick={() => (editorMode = 'preview')} class={`inline-flex items-center gap-2 rounded px-3 py-1.5 text-xs font-semibold ${editorMode === 'preview' ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>
+							<Eye class="h-3.5 w-3.5" /> Anteprima
+						</button>
+					</div>
+				</div>
+				{#if editorMode === 'write'}
+					<textarea bind:value={content} rows="16" class={`${inputClass} font-mono leading-6`} placeholder="<h2>Approfondimento locale</h2>\n<p>Contenuto verificato…</p>"></textarea>
+				{:else}
+					<div class="min-h-96 rounded-md border border-input bg-card px-5 py-6 sm:px-8">
+						{#if content.trim()}
+							<RichText html={content} compact />
+						{:else}
+							<p class="text-sm text-muted-foreground">Scrivi del contenuto HTML per visualizzarne l’anteprima.</p>
+						{/if}
+					</div>
+				{/if}
+				<small class="block leading-5 text-muted-foreground">L’anteprima usa la stessa tipografia Tailwind della pagina pubblica. HTML fidato: non aggiungere script, iframe o fatti locali non verificati.</small>
+			</div>
 		</div>
 	</section>
 

@@ -82,6 +82,65 @@
 	}
 }
 
+@layer components {
+	/* Editorial HTML authored in the SEO admin. Child selectors keep raw semantic tags styled. */
+	.seo-rich-text {
+		@apply text-[1.0625rem] leading-8 text-muted-foreground;
+	}
+	.seo-rich-text > :first-child {
+		@apply mt-0;
+	}
+	.seo-rich-text > :last-child {
+		@apply mb-0;
+	}
+	.seo-rich-text h2 {
+		@apply mb-4 mt-12 font-display text-2xl font-bold leading-tight tracking-tight text-foreground sm:text-3xl;
+	}
+	.seo-rich-text h3 {
+		@apply mb-3 mt-9 font-display text-xl font-bold leading-snug text-foreground sm:text-2xl;
+	}
+	.seo-rich-text p {
+		@apply my-5;
+	}
+	.seo-rich-text a {
+		@apply font-semibold text-primary underline decoration-primary/30 decoration-2 underline-offset-4 transition-colors hover:text-brand-terracotta hover:decoration-brand-terracotta/40;
+	}
+	.seo-rich-text strong {
+		@apply font-semibold text-foreground;
+	}
+	.seo-rich-text ul {
+		@apply my-6 space-y-3 pl-0;
+	}
+	.seo-rich-text ul > li {
+		@apply relative list-none pl-7;
+	}
+	.seo-rich-text ul > li::before {
+		content: '';
+		@apply absolute left-0 top-[0.72rem] h-2 w-2 rounded-full bg-brand-terracotta;
+	}
+	.seo-rich-text ol {
+		@apply my-6 list-decimal space-y-3 pl-7 marker:font-semibold marker:text-primary;
+	}
+	.seo-rich-text blockquote {
+		@apply my-8 border-l-2 border-brand-terracotta bg-brand-terracotta/5 px-6 py-5 font-display text-xl leading-8 text-foreground;
+	}
+	.seo-rich-text hr {
+		@apply my-10 border-border;
+	}
+	.seo-rich-text--compact {
+		@apply text-sm leading-6;
+	}
+	.seo-rich-text--compact h2 {
+		@apply mb-3 mt-8 text-xl sm:text-2xl;
+	}
+	.seo-rich-text--compact h3 {
+		@apply mb-2 mt-6 text-lg sm:text-xl;
+	}
+	.seo-rich-text--compact p {
+		@apply my-3;
+	}
+}
+
 @layer utilities {
 	/* Fluid display type — scales smoothly between viewports */
 	.text-fluid-hero {

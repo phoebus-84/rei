@@ -5,6 +5,7 @@
 	import JsonLd from '$lib/components/seo/JsonLd.svelte';
 	import MarketData from '$lib/components/seo/MarketData.svelte';
 	import NearbyLocations from '$lib/components/seo/NearbyLocations.svelte';
+	import RichText from '$lib/components/seo/RichText.svelte';
 	import FilterSidebar from '$lib/components/listing/FilterSidebar.svelte';
 	import PropertyCard from '$lib/components/listing/PropertyCard.svelte';
 	import ValuationExperience from '$lib/components/valuation/ValuationExperience.svelte';
@@ -183,10 +184,7 @@
 
 	{#if data.copy.content}
 		<section class="container py-14 sm:py-20">
-			<div class="prose prose-lg max-w-3xl prose-headings:font-display prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary">
-				<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-				{@html data.copy.content}
-			</div>
+			<RichText html={data.copy.content} class="max-w-3xl" />
 		</section>
 	{/if}
 
