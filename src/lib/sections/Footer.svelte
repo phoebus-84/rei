@@ -58,6 +58,11 @@
 				</a>
 			</div>
 			<div>
+				<a href="/immobili" class="text-sm opacity-50 hover:opacity-100">
+					Tutti gli immobili
+				</a>
+			</div>
+			<div>
 				<a href="/valutazione-casa" class="opacity-60 hover:opacity-100">
 					Valutazione casa
 				</a>

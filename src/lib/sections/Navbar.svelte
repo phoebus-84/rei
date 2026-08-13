@@ -14,6 +14,7 @@
 	interface RouteProps {
 		href: string;
 		label: string;
+		secondary?: boolean;
 	}
 
 	const routeList: RouteProps[] = [
@@ -21,6 +22,7 @@
 		{ href: '/#features', label: 'Servizi' },
 		{ href: '/case-in-vendita', label: 'Case in vendita' },
 		{ href: '/case-in-affitto', label: 'Affitti' },
+		{ href: '/immobili', label: 'Tutti gli immobili', secondary: true },
 		{ href: '/#vantaggi', label: 'Vantaggi' },
 		{ href: '/#faq', label: 'Domande Frequenti' }
 	];
@@ -46,10 +48,10 @@
 
 		<!-- Desktop Navigation -->
 		<nav class="hidden items-center gap-1 md:flex" aria-label="Navigazione principale">
-			{#each routeList as { href, label }}
+			{#each routeList as { href, label, secondary }}
 				<a
 					{href}
-					class="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-primary {isActive(href, $page.url.pathname) ? 'text-primary' : ''}"
+					class="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm transition-colors hover:bg-muted hover:text-primary {secondary ? 'font-normal text-muted-foreground' : 'font-medium'} {isActive(href, $page.url.pathname) ? 'text-primary' : ''}"
 					aria-current={isActive(href, $page.url.pathname) ? 'page' : undefined}
 				>
 					{label}
@@ -83,11 +85,11 @@
 						</SheetTitle>
 					</SheetHeader>
 					<nav class="mt-8 flex flex-col gap-4" aria-label="Menu mobile">
-						{#each routeList as { href, label }}
+						{#each routeList as { href, label, secondary }}
 							<a
 								{href}
 								on:click={() => (isOpen = false)}
-								class="text-lg font-medium transition-colors hover:text-primary {isActive(href, $page.url.pathname) ? 'text-primary' : ''}"
+								class="transition-colors hover:text-primary {secondary ? 'ml-4 border-l border-border pl-4 text-sm font-medium text-muted-foreground' : 'text-lg font-medium'} {isActive(href, $page.url.pathname) ? 'text-primary' : ''}"
 							>
 								{label}
 							</a>
