@@ -3,7 +3,15 @@
 	import { goto } from '$app/navigation';
 	import { pb } from '$lib/pocketbase';
 	import { onMount } from 'svelte';
-	import { Building2, MessageSquare, LayoutDashboard, LogOut, Menu, X } from 'lucide-svelte';
+	import {
+		Building2,
+		FileSearch,
+		MessageSquare,
+		LayoutDashboard,
+		LogOut,
+		Menu,
+		X
+	} from 'lucide-svelte';
 
 	let { children } = $props();
 	let checked = $state(false);
@@ -35,6 +43,7 @@
 	const navItems = [
 		{ href: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
 		{ href: '/admin/immobili', label: 'Immobili', icon: Building2, exact: false },
+		{ href: '/admin/seo', label: 'SEO locale', icon: FileSearch, exact: false },
 		{ href: '/admin/richieste', label: 'Richieste', icon: MessageSquare, exact: false }
 	];
 
