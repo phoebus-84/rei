@@ -52,7 +52,7 @@ Recommended index:
 CREATE UNIQUE INDEX idx_seo_pages_location_intent ON seo_pages (location, intent)
 ```
 
-**Important:** both `location` and `intent` must have their field-level `Unique` option disabled. Only the compound index above should be unique. Making either field unique limits the collection to one page per municipality or one page per intent and prevents the intended three combinations per location.
+The generated index name may differ in PocketBase (for example `idx_I30suXT3HC`); what matters is that it is a single unique index containing both `location` and `intent`. Ensure the `intent` select explicitly includes all three documented values, particularly `valutazione-casa`, or valuation drafts will fail with `validation_invalid_value`.
 
 PocketBase's built-in `updated` field is used for sitemap `lastmod`; no synthetic timestamp is generated.
 
