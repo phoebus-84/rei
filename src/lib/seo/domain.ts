@@ -34,10 +34,10 @@ export function buildNearbyLinks(
 	intent: SeoIntent,
 	enabledLocations: SeoLocation[]
 ): SeoLink[] {
-	const enabledBySlug = new Map(enabledLocations.map((item) => [item.slug, item]));
+	const enabledById = new Map(enabledLocations.map((item) => [item.id, item]));
 
-	return location.nearbyLocationSlugs.flatMap((slug) => {
-		const nearby = enabledBySlug.get(slug);
+	return location.nearbyLocationIds.flatMap((id) => {
+		const nearby = enabledById.get(id);
 		if (!nearby) return [];
 
 		return [

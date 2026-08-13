@@ -10,7 +10,7 @@ const ivrea: SeoLocation = {
 	region: 'Piemonte',
 	latitude: 45.467,
 	longitude: 7.876,
-	nearbyLocationSlugs: ['cuorgne', 'burolo']
+	nearbyLocationIds: ['cuorgne-id', 'burolo-id']
 };
 
 const cuorgne: SeoLocation = {
@@ -18,7 +18,7 @@ const cuorgne: SeoLocation = {
 	id: 'cuorgne-id',
 	slug: 'cuorgne',
 	name: 'Cuorgnè',
-	nearbyLocationSlugs: ['ivrea']
+	nearbyLocationIds: ['ivrea-id']
 };
 
 const page: SeoPage = {

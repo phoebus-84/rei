@@ -22,7 +22,7 @@ const basePage: SeoPageWithLocation = {
 		region: 'Piemonte',
 		latitude: null,
 		longitude: null,
-		nearbyLocationSlugs: []
+		nearbyLocationIds: []
 	}
 };
 

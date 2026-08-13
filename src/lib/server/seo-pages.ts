@@ -50,19 +50,27 @@ export async function getEnabledSeoPages(intent?: SeoIntent): Promise<SeoPageWit
 }
 
 export async function getNearbySeoPages(page: SeoPageWithLocation) {
-	if (page.location.nearbyLocationSlugs.length === 0) return [];
+	if (page.location.nearbyLocationIds.length === 0) return [];
 
-	const locationFilter = page.location.nearbyLocationSlugs
-		.map((slug) => `location.slug = ${filterValue(slug)}`)
+	const locationFilter = page.location.nearbyLocationIds
+		.map((id) => `location = ${filterValue(id)}`)
 		.join(' || ');
 	const records = await pb.collection('seo_pages').getFullList({
 		filter: `enabled = true && intent = ${filterValue(page.intent)} && (${locationFilter})`,
 		expand: 'location'
 	});
-	return records.flatMap((record) => {
+	const order = new Map(page.location.nearbyLocationIds.map((id, index) => [id, index]));
+
+	return records
+		.sort(
+			(left, right) =>
+				(order.get(stringValue(left.location)) ?? Number.MAX_SAFE_INTEGER) -
+				(order.get(stringValue(right.location)) ?? Number.MAX_SAFE_INTEGER)
+		)
+		.flatMap((record) => {
 		const location = record.expand?.location;
-		return location ? [{ ...mapSeoPage(record), location: mapSeoLocation(location) }] : [];
-	});
+			return location ? [{ ...mapSeoPage(record), location: mapSeoLocation(location) }] : [];
+		});
 }
 
 export async function getNearbySeoLinks(page: SeoPageWithLocation) {
@@ -83,7 +91,7 @@ export function mapSeoLocation(record: RecordModel): SeoLocation {
 		region: stringValue(record.region),
 		latitude: numberValue(record.latitude),
 		longitude: numberValue(record.longitude),
-		nearbyLocationSlugs: stringArray(record.nearby_location_slugs)
+		nearbyLocationIds: stringArray(record.nearby_locations)
 	};
 }
 

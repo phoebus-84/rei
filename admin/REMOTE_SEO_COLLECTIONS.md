@@ -6,15 +6,15 @@ These collections must be created manually on the remote PocketBase instance. No
 
 Public listing/view rules may be open (`true`) because this is public page configuration. Restrict create/update/delete to the existing admin policy.
 
-| Field                   | Type   | Required | Notes                                           |
-| ----------------------- | ------ | -------: | ----------------------------------------------- |
-| `slug`                  | text   |      yes | ASCII canonical URL slug; add a unique index    |
-| `name`                  | text   |      yes | Correct visible Italian name, including accents |
-| `province`              | text   |       no | Example: `Torino`                               |
-| `region`                | text   |       no | Example: `Piemonte`                             |
-| `latitude`              | number |       no | Used to prefill the valuation location          |
-| `longitude`             | number |       no | Used to prefill the valuation location          |
-| `nearby_location_slugs` | JSON   |       no | Array of explicit canonical slugs               |
+| Field              | Type     | Required | Notes                                                           |
+| ------------------ | -------- | -------: | --------------------------------------------------------------- |
+| `slug`             | text     |      yes | ASCII canonical URL slug; add a unique index                    |
+| `name`             | text     |      yes | Correct visible Italian name, including accents                 |
+| `province`         | text     |       no | Example: `Torino`                                               |
+| `region`           | text     |       no | Example: `Piemonte`                                             |
+| `latitude`         | number   |       no | Used to prefill the valuation location                          |
+| `longitude`        | number   |       no | Used to prefill the valuation location                          |
+| `nearby_locations` | relation |       no | Multiple self-relation to `seo_locations`; no cascade deletion  |
 
 Recommended index:
 
@@ -56,7 +56,7 @@ PocketBase's built-in `updated` field is used for sitemap `lastmod`; no syntheti
 
 The rollout can start with these canonical locations and explicit relationships:
 
-| Slug                | Name              | Nearby slugs                                         |
+| Slug                | Name              | Nearby locations                                     |
 | ------------------- | ----------------- | ---------------------------------------------------- |
 | `ivrea`             | Ivrea             | `banchette`, `burolo`, `bollengo`, `pavone-canavese` |
 | `banchette`         | Banchette         | `ivrea`, `pavone-canavese`                           |
@@ -80,3 +80,5 @@ Suggested initial `seo_pages` are deliberately curated rather than exhaustive:
 Set `indexable` per record. A zero-inventory municipality can remain indexable by leaving this flag enabled; inventory does not silently override the editorial decision.
 
 Coordinates should be entered from the agency's verified geographic source. Do not invent them: valuation prefilling is simply omitted when either coordinate is absent, while market data still resolves by canonical municipality name.
+
+The nearby relation is intentionally directional: selecting Burolo as nearby from Ivrea does not automatically make Ivrea nearby from Burolo. Configure both directions when that is the intended editorial relationship. A relation is preferred to JSON slugs because PocketBase validates referenced records, the admin can provide a multiple selector, and renaming a slug cannot leave stale nearby values.

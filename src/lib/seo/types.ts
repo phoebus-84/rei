@@ -12,7 +12,7 @@ export type SeoLocation = {
 	region: string;
 	latitude: number | null;
 	longitude: number | null;
-	nearbyLocationSlugs: string[];
+	nearbyLocationIds: string[];
 };
 
 export type SeoPage = {
