@@ -216,7 +216,7 @@
 
 <!-- Sidebar -->
 <aside
-	class={`fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-y-auto rounded-t-2xl bg-card p-6 transition-transform duration-300 lg:static lg:max-h-none lg:w-80 lg:rounded-none lg:border-r lg:border-border lg:p-6 ${
+	class={`fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-y-auto rounded-t-2xl bg-card p-6 transition-transform duration-300 lg:sticky lg:top-16 lg:z-40 lg:h-[calc(100vh-4rem)] lg:max-h-none lg:w-80 lg:rounded-none lg:border-r lg:border-border lg:p-6 ${
 		isOpen ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'
 	}`}
 >
