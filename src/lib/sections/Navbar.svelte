@@ -7,8 +7,10 @@
 		SheetTrigger
 	} from '$lib/components/ui/sheet';
 	import { buttonVariants } from '$lib/components/ui/button';
-	import { Menu, Phone, Mail } from 'lucide-svelte';
+	import { onMount } from 'svelte';
+	import { ChevronDown, MapPin, Menu, Phone, Mail } from 'lucide-svelte';
 	import { page } from '$app/stores';
+	import { pb } from '$lib/pocketbase';
 	import logo from '../assets/logo.png';
 
 	interface RouteProps {
@@ -26,7 +28,26 @@
 		{ href: '/#faq', label: 'Domande Frequenti' }
 	];
 
+	type LocalValuationPage = { id: string; location: { slug: string; name: string } };
+
 	let isOpen = false;
+	let localValuationPages: LocalValuationPage[] = [];
+
+	onMount(async () => {
+		try {
+			const records = await pb.collection('seo_pages').getFullList({
+				filter: 'enabled = true && intent = "valutazione-casa"',
+				sort: 'location.name',
+				expand: 'location'
+			});
+			localValuationPages = records.flatMap((record) => {
+				const location = record.expand?.location;
+				return location ? [{ id: record.id, location: { slug: location.slug, name: location.name } }] : [];
+			});
+		} catch (error) {
+			console.error('Errore nel caricamento delle valutazioni locali:', error);
+		}
+	});
 
 	function isActive(href: string, pathname: string): boolean {
 		if (href.startsWith('/#')) return pathname === '/';
@@ -48,13 +69,46 @@
 		<!-- Desktop Navigation -->
 		<nav class="hidden items-center gap-1 md:flex" aria-label="Navigazione principale">
 			{#each routeList as { href, label, secondary }}
-				<a
-					{href}
-					class="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm transition-colors hover:bg-muted hover:text-primary {secondary ? 'font-normal text-muted-foreground' : 'font-medium'} {isActive(href, $page.url.pathname) ? 'text-primary' : ''}"
-					aria-current={isActive(href, $page.url.pathname) ? 'page' : undefined}
-				>
-					{label}
-				</a>
+				{#if href === '/valutazione'}
+					<div class="group relative">
+						<a
+							{href}
+							class="inline-flex h-10 items-center justify-center gap-1 rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-primary {isActive(href, $page.url.pathname) ? 'text-primary' : ''}"
+							aria-current={isActive(href, $page.url.pathname) ? 'page' : undefined}
+						>
+							{label}<ChevronDown class="h-3.5 w-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
+						</a>
+						<div class="invisible absolute left-0 top-full z-50 w-72 translate-y-1 border border-border bg-card p-2 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+							<div class="border-b border-border px-3 py-2">
+								<p class="text-xs font-semibold uppercase tracking-[0.14em] text-primary">Valutazioni locali</p>
+								<p class="mt-1 text-xs leading-4 text-muted-foreground">Scegli un comune o avvia una stima generale.</p>
+							</div>
+							{#if localValuationPages.length > 0}
+								<div class="mt-1 max-h-64 overflow-y-auto py-1">
+									{#each localValuationPages as localPage (localPage.id)}
+										<a href={`/valutazione-casa/${localPage.location.slug}`} class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted hover:text-primary">
+											<MapPin class="h-3.5 w-3.5 shrink-0 text-brand-terracotta" />
+											Valuta casa a {localPage.location.name}
+										</a>
+									{/each}
+								</div>
+							{:else}
+								<p class="px-3 py-4 text-xs leading-5 text-muted-foreground">Le valutazioni locali saranno disponibili a breve.</p>
+							{/if}
+							<a href="/valutazione" class="mt-1 flex items-center gap-2 border-t border-border px-3 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5">
+								<Mail class="h-3.5 w-3.5" /> Avvia valutazione generale
+							</a>
+						</div>
+					</div>
+				{:else}
+					<a
+						{href}
+						class="inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm transition-colors hover:bg-muted hover:text-primary {secondary ? 'font-normal text-muted-foreground' : 'font-medium'} {isActive(href, $page.url.pathname) ? 'text-primary' : ''}"
+						aria-current={isActive(href, $page.url.pathname) ? 'page' : undefined}
+					>
+						{label}
+					</a>
+				{/if}
 			{/each}
 		</nav>
 
@@ -92,6 +146,14 @@
 							>
 								{label}
 							</a>
+							{#if href === '/valutazione' && localValuationPages.length > 0}
+								<div class="ml-4 space-y-1 border-l border-border py-1 pl-4">
+									<p class="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Comuni</p>
+									{#each localValuationPages as localPage (localPage.id)}
+										<a href={`/valutazione-casa/${localPage.location.slug}`} on:click={() => (isOpen = false)} class="flex items-center gap-2 py-1.5 text-sm font-medium text-muted-foreground hover:text-primary"><MapPin class="h-3.5 w-3.5" /> {localPage.location.name}</a>
+									{/each}
+								</div>
+							{/if}
 						{/each}
 						<div class="mt-4 space-y-3 border-t pt-4">
 							<a href="/valutazione" class="{buttonVariants({ variant: 'default' })} w-full">
