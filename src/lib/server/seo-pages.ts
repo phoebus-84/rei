@@ -29,18 +29,24 @@ export async function getSeoPage(
 
 export async function getEnabledSeoPages(intent?: SeoIntent): Promise<SeoPageWithLocation[]> {
 	const intentFilter = intent ? ` && intent = ${filterValue(intent)}` : '';
-	const records = await pb.collection('seo_pages').getFullList({
-		filter: `enabled = true && location.slug != ""${intentFilter}`,
-		sort: 'location.name,intent',
-		expand: 'location'
-	});
 
-	return records.flatMap((record) => {
-		const locationRecord = record.expand?.location;
-		if (!locationRecord) return [];
+	try {
+		const records = await pb.collection('seo_pages').getFullList({
+			filter: `enabled = true && location.slug != ""${intentFilter}`,
+			sort: 'location.name,intent',
+			expand: 'location'
+		});
 
-		return [{ ...mapSeoPage(record), location: mapSeoLocation(locationRecord) }];
-	});
+		return records.flatMap((record) => {
+			const locationRecord = record.expand?.location;
+			if (!locationRecord) return [];
+
+			return [{ ...mapSeoPage(record), location: mapSeoLocation(locationRecord) }];
+		});
+	} catch (error) {
+		if (isNotFound(error)) return [];
+		throw error;
+	}
 }
 
 export async function getNearbySeoPages(page: SeoPageWithLocation) {
