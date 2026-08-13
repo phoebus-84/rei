@@ -19,7 +19,8 @@
 	const routeList: RouteProps[] = [
 		{ href: '/#about', label: 'Chi Siamo' },
 		{ href: '/#features', label: 'Servizi' },
-		{ href: '/immobili', label: 'Immobili' },
+		{ href: '/case-in-vendita', label: 'Case in vendita' },
+		{ href: '/case-in-affitto', label: 'Affitti' },
 		{ href: '/#vantaggi', label: 'Vantaggi' },
 		{ href: '/#faq', label: 'Domande Frequenti' }
 	];

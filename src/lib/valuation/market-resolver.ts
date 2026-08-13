@@ -57,6 +57,14 @@ export function normalizeItalianPlaceName(value: string) {
 		.replace(/\s+/g, ' ');
 }
 
+export function resolveValuationMarketAreaByMunicipality(
+	municipality: string
+): ResolvedValuationMarketArea | null {
+	const area = municipalityByNormalizedName.get(normalizeItalianPlaceName(municipality));
+
+	return area ? toResolvedMarketArea(area, 'exact', 'Comune richiesto') : null;
+}
+
 export function resolveValuationMarketArea(
 	location: ValuationLocation | null | undefined
 ): ResolvedValuationMarketArea | null {

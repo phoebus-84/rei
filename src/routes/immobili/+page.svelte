@@ -27,6 +27,8 @@
 		name="description"
 		content="Scopri la nostra selezione di immobili in vendita e affitto. Trova la tua casa ideale con REI Casa."
 	/>
+	<meta name="robots" content={$page.url.searchParams.size > 0 ? 'noindex,follow' : 'index,follow'} />
+	<link rel="canonical" href={`${$page.url.origin}/immobili`} />
 </svelte:head>
 
 <div class="flex min-h-screen bg-background lg:gap-0">

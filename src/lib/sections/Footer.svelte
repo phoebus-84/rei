@@ -48,8 +48,18 @@
 				</a>
 			</div>
 			<div>
-				<a href="/immobili" class="opacity-60 hover:opacity-100">
-					Immobili
+				<a href="/case-in-vendita" class="opacity-60 hover:opacity-100">
+					Case in vendita
+				</a>
+			</div>
+			<div>
+				<a href="/case-in-affitto" class="opacity-60 hover:opacity-100">
+					Case in affitto
+				</a>
+			</div>
+			<div>
+				<a href="/valutazione-casa" class="opacity-60 hover:opacity-100">
+					Valutazione casa
 				</a>
 			</div>
 			<div>

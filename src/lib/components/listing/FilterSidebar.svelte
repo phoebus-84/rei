@@ -6,12 +6,15 @@
 	import { Filter, X } from 'lucide-svelte';
 
 	export let isOpen = false;
+	export let defaultKeyword = '';
+	export let defaultStatus = 'for_sale';
+	export let hideStatusToggle = false;
 
 	// Read current URL params as the "applied" baseline
 	function readParams(p: URLSearchParams) {
 		return {
-			keyword: p.get('keyword') || '',
-			status: p.get('status') || 'for_sale',
+			keyword: p.get('keyword') || defaultKeyword,
+			status: p.get('status') || defaultStatus,
 			minPrice: p.get('minPrice') || '',
 			maxPrice: p.get('maxPrice') || '',
 			nearbyLabel: p.get('nearbyLabel') || '',
@@ -150,8 +153,8 @@
 	}
 
 	function resetFilters() {
-		keyword = '';
-		status = 'for_sale';
+		keyword = defaultKeyword;
+		status = defaultStatus;
 		minPrice = '';
 		maxPrice = '';
 		nearbyLabel = '';
@@ -167,7 +170,10 @@
 		hasGarage = false;
 		hasParking = false;
 		hasCellar = false;
-		goto('/immobili', { replaceState: true });
+		const params = new URLSearchParams();
+		if (defaultKeyword) params.set('keyword', defaultKeyword);
+		params.set('status', defaultStatus);
+		goto(`/immobili?${params.toString()}`, { replaceState: true });
 		isOpen = false;
 	}
 
@@ -264,23 +270,25 @@
 	</div>
 
 	<!-- Status Toggle -->
-	<div class="mb-6">
-		<label class="block text-sm font-medium text-foreground mb-3">Tipo</label>
-		<div class="flex gap-2">
-			{#each statusOptions as opt (opt.value)}
-				<button
-					on:click={() => switchStatus(opt.value)}
-					class={`flex-1 rounded-md py-2 px-3 font-medium transition-all ${
-						status === opt.value
-							? 'bg-primary text-primary-foreground'
-							: 'bg-muted text-foreground hover:bg-muted/80'
-					}`}
-				>
-					{opt.label}
-				</button>
-			{/each}
+	{#if !hideStatusToggle}
+		<div class="mb-6">
+			<label class="block text-sm font-medium text-foreground mb-3">Tipo</label>
+			<div class="flex gap-2">
+				{#each statusOptions as opt (opt.value)}
+					<button
+						on:click={() => switchStatus(opt.value)}
+						class={`flex-1 rounded-md py-2 px-3 font-medium transition-all ${
+							status === opt.value
+								? 'bg-primary text-primary-foreground'
+								: 'bg-muted text-foreground hover:bg-muted/80'
+						}`}
+					>
+						{opt.label}
+					</button>
+				{/each}
+			</div>
 		</div>
-	</div>
+	{/if}
 
 	<!-- Price Range -->
 	<div class="mb-6">

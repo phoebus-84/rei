@@ -2,7 +2,11 @@ import { pb } from '$lib/pocketbase';
 import { calculateDistanceKm, parseCoordinate } from '$lib/location';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ url }) => {
+export const load: PageServerLoad = async ({ url, setHeaders }) => {
+	setHeaders({
+		'cache-control': 'public, max-age=0, s-maxage=300, stale-while-revalidate=600'
+	});
+
 	const page = parseInt(url.searchParams.get('page') || '1');
 	const pageSize = 12;
 
