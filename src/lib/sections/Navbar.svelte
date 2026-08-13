@@ -21,7 +21,7 @@
 		{ href: '/#about', label: 'Chi Siamo' },
 		{ href: '/case-in-vendita', label: 'Case in vendita' },
 		{ href: '/case-in-affitto', label: 'Affitti' },
-		{ href: '/valutazione-casa', label: 'Valutazione casa' },
+		{ href: '/valutazione', label: 'Valutazione casa' },
 		{ href: '/immobili', label: 'Tutti gli immobili', secondary: true },
 		{ href: '/#faq', label: 'Domande Frequenti' }
 	];
